@@ -8,22 +8,34 @@ import AuthorNote from "../components/AuthorNote.astro";
  * Set `site.cvPdf` once you have a real PDF and the download button
  * appears. Nothing here is invented: empty sections are omitted.
  */
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Icon from '../components/Icon.astro';
-import { site, socials, isLive } from '../config/site';
-import { cv } from '../data/cv';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { site, socials, isLive } from "../config/site";
+import { cv } from "../data/cv";
 
 const contactLinks = [
-  ...(site.email ? [{ label: site.email, href: `mailto:${site.email}`, icon: 'mail' as const }] : []),
-  ...socials.filter((social) => isLive(social.href)).slice(0, 2).map((social) => ({
-    label: social.label,
-    href: social.href!,
-    icon: social.icon,
-  })),
+  ...(site.email
+    ? [
+        {
+          label: site.email,
+          href: `mailto:${site.email}`,
+          icon: "mail" as const,
+        },
+      ]
+    : []),
+  ...socials
+    .filter((social) => isLive(social.href))
+    .slice(0, 2)
+    .map((social) => ({
+      label: social.label,
+      href: social.href!,
+      icon: social.icon,
+    })),
 ];
 
 const showSummary = !cv.summaryIsPlaceholder;
-const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.length > 0;
+const hasContent =
+  cv.education.length + cv.experience.length + cv.selectedWork.length > 0;
 ---
 
 <BaseLayout
@@ -38,12 +50,14 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
         About
       </a>
       <div class="cv-toolbar__actions">
-        {site.cvPdf && (
-          <a class="btn btn--sm btn--primary" href={site.cvPdf} download>
-            <Icon name="download" size={14} />
-            Download PDF
-          </a>
-        )}
+        {
+          site.cvPdf && (
+            <a class="btn btn--sm btn--primary" href={site.cvPdf} download>
+              <Icon name="download" size={14} />
+              Download PDF
+            </a>
+          )
+        }
         <button class="btn btn--sm" type="button" data-print>
           <Icon name="print" size={14} />
           Save as PDF
@@ -51,10 +65,15 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
       </div>
     </div>
 
+    <nav class="cv-jumps no-print" aria-label="CV sections">
+      <a href="#profile">Profile</a><a href="#selected-work">Selected work</a><a
+        href="#technologies">Technologies</a
+      ><span>Save as PDF opens your browser’s print dialog.</span>
+    </nav>
     <article class="cv">
-      <header class="cv__head">
+      <header class="cv__head" data-hero>
         <div>
-          <h1 class="cv__name">{site.name}</h1>
+          <h1 class="cv__name" data-title-line>{site.name}</h1>
           <p class="cv__role">{site.headline}</p>
         </div>
         {
@@ -62,7 +81,13 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
             <ul class="cv__contact">
               {contactLinks.map((link) => (
                 <li>
-                  <a href={link.href} target={link.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">
+                  <a
+                    href={link.href}
+                    target={
+                      link.href.startsWith("mailto:") ? undefined : "_blank"
+                    }
+                    rel="noopener noreferrer"
+                  >
                     <Icon name={link.icon} size={13} />
                     {link.label}
                   </a>
@@ -75,12 +100,22 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
 
       {
         showSummary && (
-          <section class="cv__section" aria-labelledby="summary-title">
-            <h2 id="summary-title" class="cv__section-title">Profile</h2>
-            <p class:list={['cv__summary', cv.summaryIsPlaceholder && 'is-placeholder']}>
+          <section
+            class="cv__section"
+            id="profile"
+            aria-labelledby="summary-title"
+          >
+            <h2 id="summary-title" class="cv__section-title">
+              Profile
+            </h2>
+            <p
+              class:list={[
+                "cv__summary",
+                cv.summaryIsPlaceholder && "is-placeholder",
+              ]}
+            >
               {cv.summary}
             </p>
-
           </section>
         )
       }
@@ -88,21 +123,35 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
       {
         cv.experience.length > 0 && (
           <section class="cv__section" aria-labelledby="experience-title">
-            <h2 id="experience-title" class="cv__section-title">Experience</h2>
+            <h2 id="experience-title" class="cv__section-title">
+              Experience
+            </h2>
             <ol class="cv__entries">
               {cv.experience.map((entry) => (
                 <li class="cv-entry">
                   <div class="cv-entry__head">
                     <h3 class="cv-entry__title">
-                      {entry.href ? <a href={entry.href}>{entry.title}</a> : entry.title}
+                      {entry.href ? (
+                        <a href={entry.href}>{entry.title}</a>
+                      ) : (
+                        entry.title
+                      )}
                     </h3>
-                    {entry.period && <p class="cv-entry__period mono">{entry.period}</p>}
+                    {entry.period && (
+                      <p class="cv-entry__period mono">{entry.period}</p>
+                    )}
                   </div>
-                  {entry.organisation && <p class="cv-entry__org">{entry.organisation}</p>}
-                  {entry.description && <p class="cv-entry__desc">{entry.description}</p>}
+                  {entry.organisation && (
+                    <p class="cv-entry__org">{entry.organisation}</p>
+                  )}
+                  {entry.description && (
+                    <p class="cv-entry__desc">{entry.description}</p>
+                  )}
                   {entry.highlights && (
                     <ul class="cv-entry__list">
-                      {entry.highlights.map((highlight) => <li>{highlight}</li>)}
+                      {entry.highlights.map((highlight) => (
+                        <li>{highlight}</li>
+                      ))}
                     </ul>
                   )}
                 </li>
@@ -115,16 +164,24 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
       {
         cv.education.length > 0 && (
           <section class="cv__section" aria-labelledby="education-title">
-            <h2 id="education-title" class="cv__section-title">Education</h2>
+            <h2 id="education-title" class="cv__section-title">
+              Education
+            </h2>
             <ol class="cv__entries">
               {cv.education.map((entry) => (
                 <li class="cv-entry">
                   <div class="cv-entry__head">
                     <h3 class="cv-entry__title">{entry.title}</h3>
-                    {entry.period && <p class="cv-entry__period mono">{entry.period}</p>}
+                    {entry.period && (
+                      <p class="cv-entry__period mono">{entry.period}</p>
+                    )}
                   </div>
-                  {entry.organisation && <p class="cv-entry__org">{entry.organisation}</p>}
-                  {entry.description && <p class="cv-entry__desc">{entry.description}</p>}
+                  {entry.organisation && (
+                    <p class="cv-entry__org">{entry.organisation}</p>
+                  )}
+                  {entry.description && (
+                    <p class="cv-entry__desc">{entry.description}</p>
+                  )}
                 </li>
               ))}
             </ol>
@@ -134,22 +191,40 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
 
       {
         cv.selectedWork.length > 0 && (
-          <section class="cv__section" aria-labelledby="work-title">
-            <h2 id="work-title" class="cv__section-title">Selected work</h2>
+          <section
+            class="cv__section"
+            id="selected-work"
+            aria-labelledby="work-title"
+          >
+            <h2 id="work-title" class="cv__section-title">
+              Selected work
+            </h2>
             <ol class="cv__entries">
               {cv.selectedWork.map((entry) => (
                 <li class="cv-entry">
                   <div class="cv-entry__head">
                     <h3 class="cv-entry__title">
-                      {entry.href ? <a href={entry.href}>{entry.title}</a> : entry.title}
+                      {entry.href ? (
+                        <a href={entry.href}>{entry.title}</a>
+                      ) : (
+                        entry.title
+                      )}
                     </h3>
-                    {entry.period && <p class="cv-entry__period mono">{entry.period}</p>}
+                    {entry.period && (
+                      <p class="cv-entry__period mono">{entry.period}</p>
+                    )}
                   </div>
-                  {entry.organisation && <p class="cv-entry__org">{entry.organisation}</p>}
-                  {entry.description && <p class="cv-entry__desc">{entry.description}</p>}
+                  {entry.organisation && (
+                    <p class="cv-entry__org">{entry.organisation}</p>
+                  )}
+                  {entry.description && (
+                    <p class="cv-entry__desc">{entry.description}</p>
+                  )}
                   {entry.highlights && (
                     <ul class="cv-entry__list">
-                      {entry.highlights.map((highlight) => <li>{highlight}</li>)}
+                      {entry.highlights.map((highlight) => (
+                        <li>{highlight}</li>
+                      ))}
                     </ul>
                   )}
                 </li>
@@ -161,13 +236,19 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
 
       {
         cv.skills.length > 0 && (
-          <section class="cv__section" aria-labelledby="skills-title">
-            <h2 id="skills-title" class="cv__section-title">Skills</h2>
+          <section
+            class="cv__section"
+            id="technologies"
+            aria-labelledby="skills-title"
+          >
+            <h2 id="skills-title" class="cv__section-title">
+              Technologies used in my projects
+            </h2>
             <dl class="cv__skills">
               {cv.skills.map((group) => (
                 <div>
                   <dt>{group.group}</dt>
-                  <dd>{group.items.join(' · ')}</dd>
+                  <dd>{group.items.join(" · ")}</dd>
                 </div>
               ))}
             </dl>
@@ -178,7 +259,9 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
       {
         cv.languages.length > 0 && (
           <section class="cv__section" aria-labelledby="languages-title">
-            <h2 id="languages-title" class="cv__section-title">Languages</h2>
+            <h2 id="languages-title" class="cv__section-title">
+              Languages
+            </h2>
             <dl class="cv__skills">
               {cv.languages.map((language) => (
                 <div>
@@ -194,9 +277,11 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
       {
         !hasContent && (
           <AuthorNote>
-            Education and experience are intentionally empty rather than invented. Add real entries
-            to <code>education</code> and <code>experience</code> in <code>src/data/cv.ts</code> and
-            the sections will appear here (and in the printed version) automatically.
+            Education and experience are intentionally empty rather than
+            invented. Add real entries to <code>education</code> and{" "}
+            <code>experience</code> in <code>src/data/cv.ts</code> and the
+            sections will appear here (and in the printed version)
+            automatically.
           </AuthorNote>
         )
       }
@@ -205,16 +290,17 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
 
       <footer class="cv__footer">
         <p class="mono">Last updated {site.cvUpdated}</p>
-
       </footer>
     </article>
   </div>
 </BaseLayout>
 
 <script>
-  document.querySelector<HTMLButtonElement>('[data-print]')?.addEventListener('click', () => {
-    window.print();
-  });
+  document
+    .querySelector<HTMLButtonElement>("[data-print]")
+    ?.addEventListener("click", () => {
+      window.print();
+    });
 </script>
 
 <style>

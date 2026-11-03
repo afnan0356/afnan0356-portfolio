@@ -10,16 +10,25 @@ interface Props {
   lede?: string;
   /** Optional small counter, e.g. "7 projects". */
   meta?: string;
-  align?: 'start' | 'center';
+  align?: "start" | "center";
 }
 
-const { eyebrow, title, lede, meta, align = 'start' } = Astro.props;
+const { eyebrow, title, lede, meta, align = "start" } = Astro.props;
 ---
 
-<header class:list={['page-header', align === 'center' && 'page-header--center']}>
+<header
+  class:list={["page-header", align === "center" && "page-header--center"]}
+  data-hero
+>
   {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-  <h1 class="page-header__title">{title}</h1>
-  {lede && <p class="page-header__lede">{lede}</p>}
+  <h1 class="page-header__title" data-title-line>{title}</h1>
+  {
+    lede && (
+      <p class="page-header__lede" data-enter>
+        {lede}
+      </p>
+    )
+  }
   {meta && <p class="page-header__meta mono">{meta}</p>}
   <slot />
 </header>

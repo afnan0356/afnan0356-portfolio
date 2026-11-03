@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-03",
+  "counts": {
+    "info": 0,
+    "low": 1,
+    "moderate": 1,
+    "high": 1,
+    "critical": 1,
+    "total": 4
+  },
+  "packages": {
+    "@astrojs/mdx": {
+      "severity": "moderate",
+      "isDirect": true
+    },
+    "astro": {
+      "severity": "critical",
+      "isDirect": true
+    },
+    "esbuild": {
+      "severity": "low",
+      "isDirect": false
+    },
+    "sharp": {
+      "severity": "high",
+      "isDirect": false
+    }
+  },
+  "action": "No security upgrades or forced fixes; inherited findings retained for separately authorized migration."
+}

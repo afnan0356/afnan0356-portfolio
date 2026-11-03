@@ -1,473 +1,134 @@
 ---
-import AuthorNote from "../components/AuthorNote.astro";
-/**
- * About — pinned, not invented.
- *
- * Structure and headings are ready; every paragraph that would require
- * personal facts is a clearly-labelled placeholder that disappears when
- * production build is generated.
- */
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
-import Icon from '../components/Icon.astro';
-import { site, socials, isLive } from '../config/site';
-import { getProjects, getPosts } from '../lib/content';
-
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../config/site";
+import { getProjects, getPosts } from "../lib/content";
+import { timeline, timelineStateLabels } from "../data/timeline";
 const projects = await getProjects();
 const posts = await getPosts();
-const hints = import.meta.env.DEV;
+const current = timeline.filter(
+  (entry) =>
+    entry.state === "learning" ||
+    entry.state === "in-progress" ||
+    entry.state === "planned",
+);
 ---
 
 <BaseLayout
   title="About"
-  description="About Md. Afnan — background, interests and what I am learning."
+  description="Md. Afnan — web projects, structured information, and a developing practice in accessible interfaces."
   path="/about/"
 >
   <div class="container">
     <PageHeader
-      eyebrow="About"
-      title="A short introduction"
-      lede="Who I am, what I work on, and what I am trying to get better at."
+      eyebrow="About / Md. Afnan"
+      title="Making information easier to use."
+      lede="I build for the web. My main project brings Bangladeshi legal information into a searchable, readable form."
     />
   </div>
-
-  <div class="container about">
-    <!-- ── Main column ─────────────────────────────────────── -->
-    <div class="about__main">
-      <section class="about__section" aria-labelledby="who-title">
-        <h2 id="who-title">In a paragraph</h2>
-        <p class="about__lede">
-          I am Md. Afnan, a developer who builds for the web. I am most useful when a problem
-          involves taking information that is hard to reach and making it clear, searchable and
-          quick to load.
+  <div class="container personal-layout">
+    <aside class="personal-margin" aria-label="Public work">
+      <p class="folio-label">A working introduction</p>
+      <p>{site.status}</p>
+      <dl class="plain-facts">
+        <div><dt>Projects</dt><dd>{projects.length} published</dd></div><div>
+          <dt>Writing</dt><dd>
+            {posts.length} blog {posts.length === 1 ? "post" : "posts"}
+          </dd>
+        </div>
+      </dl>
+      <a class="text-link" href="/cv/"
+        >View my CV <Icon name="arrow-up-right" size={15} /></a
+      >
+      <a class="text-link" href="/contact/"
+        >Contact <Icon name="arrow-up-right" size={15} /></a
+      >
+    </aside>
+    <div class="personal-reading">
+      <section aria-labelledby="work-heading">
+        <h2 id="work-heading">Starting with the information.</h2><p
+          class="reading-lead"
+        >
+          A page can contain the right information and still be difficult to
+          use. That gap is what interests me: how structure, language and an
+          interface work together.
+        </p><p>
+          In <a href="/projects/nyayota/">Nyayota</a>, the subject is
+          Bangladeshi law. Acts, chapters, sections and cross-references need to
+          remain connected, whether someone is searching for a provision,
+          comparing two texts or checking a citation. The project is educational
+          and informational, not legal advice.
+        </p><p>
+          I use AI-assisted development. I maintain Nyayota as a personal
+          project; the case study explains its structure, implementation and
+          limits without claiming that I independently wrote every line of code.
         </p>
-        <p>
-          My main project, <a href="/projects/nyayota/">Nyayota</a>, is a legal research platform
-          covering Bangladeshi statutes. Building it taught me that the hard part of software is
-          rarely the framework — it is deciding how the information should be structured, and then
-          being disciplined about it.
-        </p>
-        {
-          hints && (
-            <AuthorNote>
-              This is where your real introduction goes — where you are from, what you are studying
-              or working on, and the one thing you want a stranger to remember. It lives in
-              <code>src/pages/about.astro</code>. I have not invented any biography for you.
-            </AuthorNote>
-          )
-        }
       </section>
-
-      <section class="about__section" aria-labelledby="interests-title">
-        <h2 id="interests-title">What I am interested in</h2>
-        <ul class="interest-list">
-          <li>
-            <h3>Interface design</h3>
-            <p>
-              Typography, spacing and hierarchy — the parts of a page that decide whether it feels
-              trustworthy before a single word is read.
-            </p>
-          </li>
-          <li>
-            <h3>Making things fast</h3>
-            <p>
-              Static generation, small payloads and pages that work on a cheap phone with a weak
-              connection. Performance is an accessibility issue.
-            </p>
-          </li>
-          <li>
-            <h3>Structured information</h3>
-            <p>
-              Turning messy documents into data you can search, compare and cite, rather than pages
-              you can only scroll.
-            </p>
-          </li>
-          <li>
-            <h3>Writing</h3>
-            <p>
-              Explanatory writing and fiction. Both are the same problem: making a reader want the
-              next sentence.
-            </p>
-          </li>
-        </ul>
-      </section>
-
-      <section class="about__section" aria-labelledby="learning-title">
-        <h2 id="learning-title">What I am learning now</h2>
-        <ul class="goal-list">
-          <li>
-            <span class="goal-list__mark" aria-hidden="true"></span>
-            <div>
-              <h3>Accessibility as a practice, not a checklist</h3>
-              <p>
-                Keyboard navigation, focus order, colour contrast and reduced motion — tested, not
-                assumed.
-            </p>
-          </div>
-        </li>
-        <li>
-          <span class="goal-list__mark" aria-hidden="true"></span>
+      <section aria-labelledby="interests-heading">
+        <h2 id="interests-heading">What holds my attention.</h2><dl
+          class="interest-notes"
+        >
           <div>
-            <h3>Astro and file-based publishing</h3>
-            <p>Content collections, static output, and how far a site can go without client-side JavaScript.</p>
-          </div>
-        </li>
-        <li>
-          <span class="goal-list__mark" aria-hidden="true"></span>
-          <div>
-            <h3>Writing longer work</h3>
-            <p>Essays that hold together over several thousand words instead of a few paragraphs.</p>
-          </div>
-        </li>
-        </ul>
-        <a class="about__link" href="/vault/#progress">
-          See the full learning timeline
-          <Icon name="arrow-right" size={14} />
-        </a>
-      </section>
-
-    </div>
-
-    <!-- ── Sidebar ─────────────────────────────────────────── -->
-    <aside class="about__side" aria-label="Details">
-      <div class="side-card">
-        <h2 class="side-card__title mono">At a glance</h2>
-        <dl class="side-facts">
-          <div>
-            <dt>Name</dt>
-            <dd>{site.name}</dd>
-          </div>
-          <div>
-            <dt>Focus</dt>
-            <dd>Web development, interface design</dd>
-          </div>
-          <div>
-            <dt>Main project</dt>
-            <dd><a href="/projects/nyayota/">Nyayota</a></dd>
-          </div>
-          <div>
-            <dt>Projects</dt>
-            <dd>{projects.length} published</dd>
-          </div>
-          <div>
-            <dt>Writing</dt>
-            <dd>{posts.length} blog {posts.length === 1 ? 'post' : 'posts'}</dd>
+            <dt>Structured information</dt><dd>
+              Documents become more useful when their parts can be searched,
+              compared and cited. Nyayota is where this interest becomes a
+              concrete project.
+            </dd>
+          </div><div>
+            <dt>Interfaces for reading</dt><dd>
+              Typography, spacing and hierarchy are practical decisions: they
+              affect whether a long passage is comfortable to follow, especially
+              on a phone.
+            </dd>
+          </div><div>
+            <dt>Performance &amp; access</dt><dd>
+              Static output, small payloads, keyboard navigation and reduced
+              motion. A useful site should not depend on a powerful device.
+            </dd>
+          </div><div>
+            <dt>Writing</dt><dd>
+              Explanatory writing and longer work are part of the direction I
+              want to explore. There are no published articles or writing
+              entries on this site yet.
+            </dd>
           </div>
         </dl>
-      </div>
-
-      <div class="side-card">
-        <h2 class="side-card__title mono">Find me</h2>
-        <ul class="side-links">
+      </section>
+      <section aria-labelledby="current-heading">
+        <h2 id="current-heading">Still in progress.</h2><p>
+          This is a record of ongoing work and intentions, not a list of
+          completed qualifications.
+        </p><ol class="learning-ledger">
           {
-            socials.filter((social) => isLive(social.href)).slice(0, 2).map((social) => (
+            current.map((entry) => (
               <li>
-                <a href={social.href!} target="_blank" rel="me noopener noreferrer">
-                  <Icon name={social.icon} size={15} />
-                  {social.label}
-                  <Icon name="arrow-up-right" size={12} />
-                </a>
+                <>
+                  <div class="ledger-meta">
+                    <>
+                      <span>{timelineStateLabels[entry.state]}</span>
+                      <time datetime={entry.date}>{entry.date}</time>
+                    </>
+                  </div>
+                  <h3>{entry.title}</h3>
+                  <p>{entry.summary}</p>
+                </>
               </li>
             ))
           }
-          <li>
-            <a href="/contact/">
-              <Icon name="mail" size={15} />
-              Contact
-              <Icon name="arrow-right" size={12} />
-            </a>
-          </li>
-        </ul>
-      </div>
-
-    </aside>
+        </ol><a class="text-link" href="/vault/#progress"
+          >See the learning timeline <Icon name="arrow-right" size={16} /></a>
+      </section>
+    </div>
   </div>
-
-  <!-- ── Closing band ──────────────────────────────────────── -->
-  <section class="about-cta">
-    <div class="container about-cta__inner">
-      <div>
-        <p class="eyebrow">Next</p>
-        <h2>Look at the work, or say hello.</h2>
-      </div>
-      <div class="about-cta__actions">
-        <a class="btn btn--primary" href="/projects/">
-          Projects
-          <Icon name="arrow-right" size={15} />
-        </a>
-        <a class="btn" href="/contact/">Contact</a>
-      </div>
+  <section class="container editorial-next">
+    <p class="folio-label">Follow the work</p><h2>
+      Start with the project.<br /><em>Then look at the evidence.</em>
+    </h2><div>
+      <a class="text-link" href="/projects/nyayota/"
+        >Read Nyayota’s case study <Icon name="arrow-right" size={16} /></a
+      ><a class="text-link" href="/vault/"
+        >Public sources <Icon name="arrow-up-right" size={16} /></a>
     </div>
   </section>
 </BaseLayout>
-
-<style>
-  .about {
-    display: grid;
-    gap: var(--space-2xl);
-    padding-block: var(--space-md) var(--space-xl);
-  }
-
-  .about__main {
-    display: grid;
-    gap: var(--space-xl);
-    max-width: 62ch;
-  }
-
-  .about__section {
-    display: grid;
-    gap: var(--space-sm);
-  }
-
-  .about__section h2 {
-    font-size: var(--text-xl);
-    padding-block-end: 0.6rem;
-    border-block-end: 1px solid var(--line);
-  }
-
-  .about__lede {
-    font-family: var(--font-display);
-    font-size: var(--text-lg);
-    line-height: 1.5;
-    color: var(--ink);
-  }
-
-  .about__section p {
-    color: var(--ink-muted);
-    line-height: 1.72;
-    max-width: 60ch;
-  }
-
-  .about__section p a {
-    color: var(--ink);
-    text-decoration-color: var(--accent);
-  }
-
-  .about__section p a:hover {
-    color: var(--accent);
-  }
-
-  /* ── Interests ──────────────────────────────────────────── */
-  .interest-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--space-md);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  }
-
-  .interest-list li {
-    border-block-start: 1px solid var(--line-strong);
-    padding-block-start: 0.75rem;
-  }
-
-  .interest-list h3 {
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    letter-spacing: 0;
-    margin-block-end: 0.35rem;
-  }
-
-  .interest-list p {
-    font-size: var(--text-sm);
-    line-height: 1.6;
-  }
-
-  /* ── Goals ──────────────────────────────────────────────── */
-  .goal-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--space-md);
-  }
-
-  .goal-list li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.85rem;
-  }
-
-  .goal-list__mark {
-    inline-size: 7px;
-    block-size: 7px;
-    margin-block-start: 0.55rem;
-    border-radius: 50%;
-    border: 1.5px solid var(--accent);
-  }
-
-  .goal-list h3 {
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    font-weight: 600;
-    letter-spacing: 0;
-    margin-block-end: 0.2rem;
-  }
-
-  .goal-list p {
-    font-size: var(--text-sm);
-    line-height: 1.6;
-  }
-
-  .about__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--ink-soft);
-    text-decoration: none;
-    margin-block-start: 0.25rem;
-  }
-
-  .about__link:hover {
-    color: var(--accent);
-  }
-
-  /* ── Sidebar ────────────────────────────────────────────── */
-  .about__side {
-    display: grid;
-    gap: var(--space-md);
-    align-content: start;
-  }
-
-  .side-card {
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    background: var(--surface);
-  }
-
-  .side-card__title {
-    font-size: 0.5625rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-block-end: var(--space-sm);
-  }
-
-  .side-facts {
-    display: grid;
-    gap: 0.65rem;
-  }
-
-  .side-facts > div {
-    display: grid;
-    gap: 0.1rem;
-  }
-
-  .side-facts dt {
-    font-family: var(--font-mono);
-    font-size: 0.5625rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-  }
-
-  .side-facts dd {
-    font-size: var(--text-sm);
-    color: var(--ink-soft);
-  }
-
-  .side-facts a {
-    text-decoration-color: var(--line-strong);
-  }
-
-  .side-facts a:hover {
-    color: var(--accent);
-  }
-
-  .side-links {
-    list-style: none;
-    padding: 0;
-    display: grid;
-  }
-
-  .side-links li + li {
-    border-block-start: 1px solid var(--line);
-  }
-
-  .side-links a {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.55rem 0;
-    font-size: var(--text-sm);
-    color: var(--ink-soft);
-    text-decoration: none;
-  }
-
-  .side-links a svg:last-child {
-    margin-inline-start: auto;
-    color: var(--ink-faint);
-  }
-
-  .side-links a:hover {
-    color: var(--accent);
-  }
-
-  .side-card--quote {
-    background:
-      radial-gradient(ellipse 120% 100% at 0% 0%, var(--accent-soft), transparent 70%),
-      var(--surface);
-  }
-
-  .side-quote {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--text-md);
-    line-height: 1.5;
-    color: var(--ink-soft);
-  }
-
-  .side-quote__source {
-    margin-block-start: 0.6rem;
-    font-size: 0.5625rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .side-quote__source a {
-    color: var(--ink-faint);
-    text-decoration: none;
-  }
-
-  .side-quote__source a:hover {
-    color: var(--accent);
-  }
-
-  /* ── CTA ────────────────────────────────────────────────── */
-  .about-cta {
-    border-block-start: 1px solid var(--line);
-    background: var(--bg-sunken);
-  }
-
-  .about-cta__inner {
-    display: grid;
-    gap: var(--space-md);
-    padding-block: var(--space-xl);
-  }
-
-  .about-cta h2 {
-    font-size: var(--text-xl);
-    margin-block-start: 0.5rem;
-  }
-
-  .about-cta__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  @media (min-width: 56rem) {
-    .about {
-      grid-template-columns: minmax(0, 1fr) 18rem;
-      gap: var(--space-2xl);
-    }
-
-    .about-cta__inner {
-      grid-template-columns: 1fr auto;
-      align-items: center;
-    }
-  }
-</style>

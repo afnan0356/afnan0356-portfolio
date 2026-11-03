@@ -1,0 +1,7 @@
+PASS Mobile contents exposes real sections and jumps to role
+PASS Reading location tracks scroll, cleans up, and reinitializes
+PASS Original screenshot link returns an actual local image
+PASS CV jumps, print action and theme-safe print layout
+PASS Contact copy gives accessible success feedback
+PASS No-JS project contents still navigates, CV hides inert print control
+PASS 120 interior-page/theme/viewport combinations

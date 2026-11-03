@@ -388,25 +388,8 @@ a.chip:hover {
 }
 
 /* ── Entrance animation ─────────────────────────────────────── */
-/* Elements rise slightly as they enter the viewport. Handled by a
-   ~1 KB script that toggles .is-in; content is fully visible without
-   JavaScript, so nothing is hidden when JS fails. */
-@media (prefers-reduced-motion: no-preference) {
-  /* `html.js` is added by the inline theme script. Without JavaScript the
-     class never appears, so content is always visible. */
-  html.js .reveal {
-    opacity: 0;
-    translate: 0 14px;
-  }
-
-  html.js .reveal.is-in {
-    opacity: 1;
-    translate: 0 0;
-    transition:
-      opacity 620ms var(--ease-out),
-      translate 620ms var(--ease-out);
-  }
-}
+/* Visibility is never CSS-gated. src/lib/motion.ts owns optional reveals.
+   Legacy .reveal markers are inert and remain readable without JavaScript. */
 
 /* ── Utility ────────────────────────────────────────────────── */
 .flow > * + * {

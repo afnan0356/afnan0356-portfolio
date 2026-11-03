@@ -6,13 +6,14 @@
  * lie that wastes the visitor's time. Add `site.email` when you have a
  * real address and the email option appears automatically.
  */
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
-import Icon from '../components/Icon.astro';
-import { site, socials, featuredLinks, isLive } from '../config/site';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Icon from "../components/Icon.astro";
+import { site, socials, featuredLinks, isLive } from "../config/site";
 
-const allSocials = socials.filter((social) => social.inContact && isLive(social.href));
-
+const allSocials = socials.filter(
+  (social) => social.inContact && isLive(social.href),
+);
 ---
 
 <BaseLayout
@@ -24,7 +25,7 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
     <PageHeader
       eyebrow="Contact"
       title="Say hello"
-      lede="Open to conversations about projects, collaboration, study opportunities and writing. Short emails are welcome; I read everything."
+      lede="Open to conversations about projects, collaboration, study opportunities and writing. Email is a good place to start."
     />
   </div>
 
@@ -43,7 +44,10 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
                 <Icon name="arrow-up-right" size={18} />
               </a>
               <div class="contact__actions">
-                <a class="btn btn--primary btn--sm" href={`mailto:${site.email}`}>
+                <a
+                  class="btn btn--primary btn--sm"
+                  href={`mailto:${site.email}`}
+                >
                   <Icon name="mail" size={14} />
                   Write an email
                 </a>
@@ -55,7 +59,13 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
                 >
                   Copy address
                 </button>
-                <span class="contact__copy-status" data-copy-status role="status" aria-live="polite" aria-atomic="true"></span>
+                <span
+                  class="contact__copy-status"
+                  data-copy-status
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                />
               </div>
             </>
           ) : (
@@ -63,7 +73,9 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
               <h2 id="email-title" class="contact__label mono">
                 Email
               </h2>
-              <p class="contact__pending">Use one of the public channels below to get in touch.</p>
+              <p class="contact__pending">
+                Use one of the public channels below to get in touch.
+              </p>
             </>
           )
         }
@@ -76,13 +88,19 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
           {
             allSocials.map((social) => (
               <li>
-                <a href={social.href!} target="_blank" rel="me noopener noreferrer">
+                <a
+                  href={social.href!}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                >
                   <span class="route-list__icon">
                     <Icon name={social.icon} size={16} />
                   </span>
                   <span class="route-list__body">
                     <span class="route-list__label">{social.label}</span>
-                    <span class="route-list__value mono">{social.href!.replace(/^https?:\/\//, '')}</span>
+                    <span class="route-list__value mono">
+                      {social.href!.replace(/^https?:\/\//, "")}
+                    </span>
                   </span>
                   <Icon name="arrow-up-right" size={14} />
                 </a>
@@ -98,7 +116,9 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
                   </span>
                   <span class="route-list__body">
                     <span class="route-list__label">{link.label}</span>
-                    <span class="route-list__value mono">{link.description}</span>
+                    <span class="route-list__value mono">
+                      {link.description}
+                    </span>
                   </span>
                   <Icon name="arrow-up-right" size={14} />
                 </a>
@@ -106,7 +126,6 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
             ))
           }
         </ul>
-
       </section>
     </div>
 
@@ -116,7 +135,10 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
       <ul>
         <li>
           <h3>A specific subject line</h3>
-          <p>“Question about Nyayota’s search” gets a faster reply than “Hello”.</p>
+          <p>
+            For example, “Question about Nyayota’s search” explains the context
+            straight away.
+          </p>
         </li>
         <li>
           <h3>What you have already tried</h3>
@@ -124,7 +146,10 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
         </li>
         <li>
           <h3>What you need back</h3>
-          <p>An answer, a review, a fix, or an introduction — the clearer the better.</p>
+          <p>
+            An answer, a review, a fix, or an introduction — the clearer the
+            better.
+          </p>
         </li>
       </ul>
     </section>
@@ -149,12 +174,9 @@ const allSocials = socials.filter((social) => social.inContact && isLive(social.
 
   /* ── Primary panel ──────────────────────────────────────── */
   .contact__primary {
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: var(--space-lg);
-    background:
-      radial-gradient(ellipse 100% 120% at 100% 0%, var(--accent-soft), transparent 65%),
-      var(--surface);
+    border-block: 1px solid var(--line-strong);
+    padding: var(--space-lg) 0;
+    background: none;
     align-self: start;
   }
 

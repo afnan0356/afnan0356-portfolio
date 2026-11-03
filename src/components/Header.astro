@@ -1,9 +1,8 @@
 ---
 /**
- * Header — sticky, translucent, and deliberately minimal.
+ * Header — sticky, solid, and deliberately minimal.
  * Desktop: inline nav. Mobile: a full-height panel opened by one button.
- * Both share the same markup, so there is no duplicated navigation to
- * keep in sync (important for accessibility and SEO).
+ * Both navigations are derived from the same centralized route list.
  */
 import { nav, site } from '../config/site';
 import ThemeToggle from './ThemeToggle.astro';
@@ -116,6 +115,19 @@ const isActive = (href: string) => {
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       menu.hidden = !open;
+      // The open panel is modal: prevent focus escaping behind it.
+      document.querySelectorAll<HTMLElement>('main, .site-footer').forEach((region) => {
+        region.inert = open;
+      });
+      if (open) {
+        menu.setAttribute('role', 'dialog');
+        menu.setAttribute('aria-modal', 'true');
+        menu.setAttribute('aria-label', 'Navigation');
+      } else {
+        menu.removeAttribute('role');
+        menu.removeAttribute('aria-modal');
+        menu.removeAttribute('aria-label');
+      }
       document.documentElement.classList.toggle('menu-open', open);
       if (open) {
         // Focus the first link so keyboard users land inside the panel.
@@ -125,6 +137,20 @@ const isActive = (href: string) => {
 
     toggle.addEventListener('click', () => {
       setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    menu.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab') return;
+      const controls = Array.from(menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
     });
 
     // Close after following a link (covers same-page anchors too).
@@ -151,12 +177,8 @@ const isActive = (href: string) => {
     position: sticky;
     top: 0;
     z-index: var(--z-header);
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    background: var(--bg);
     border-block-end: 1px solid var(--line);
-    /* Progressive enhancement: real blur where supported, otherwise the
-       translucent background still reads well. */
-    backdrop-filter: saturate(150%) blur(14px);
-    -webkit-backdrop-filter: saturate(150%) blur(14px);
   }
 
   .site-header__inner {
@@ -384,6 +406,12 @@ const isActive = (href: string) => {
     .mobile-menu {
       display: none !important;
     }
+  }
+
+  @media (max-width: 59.99rem) {
+    :global(html:not(.js)) .mobile-menu[hidden] { display: block; }
+    :global(html:not(.js)) .menu-toggle,
+    :global(html:not(.js)) .theme-toggle { display: none; }
   }
 
   /* Prevent background scroll while the mobile panel is open. */

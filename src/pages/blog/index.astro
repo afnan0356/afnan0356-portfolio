@@ -1,10 +1,10 @@
 ---
 import AuthorNote from "../../components/AuthorNote.astro";
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHeader from '../../components/PageHeader.astro';
-import Icon from '../../components/Icon.astro';
-import { getPosts, getPostTags, isDemo } from '../../lib/content';
-import { formatMonth, isoDate, readingTime } from '../../lib/text';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Icon from "../../components/Icon.astro";
+import { getPosts, getPostTags, isDemo } from "../../lib/content";
+import { formatMonth, isoDate, readingTime } from "../../lib/text";
 
 const posts = await getPosts();
 const tags = await getPostTags();
@@ -22,7 +22,7 @@ const rest = posts.filter((post) => post !== featured);
       eyebrow="Blog"
       title="Notes from the workbench"
       lede="Short, practical writing about building things for the web — what I chose, what it cost, and what I would do differently."
-      meta={`${posts.length} ${posts.length === 1 ? 'post' : 'posts'}${tags.length ? ` · ${tags.length} tags` : ''}`}
+      meta={`${posts.length} ${posts.length === 1 ? "post" : "posts"}${tags.length ? ` · ${tags.length} tags` : ""}`}
     />
 
     {
@@ -47,10 +47,30 @@ const rest = posts.filter((post) => post !== featured);
   <div class="container">
     {
       posts.length === 0 ? (
-        <p class="empty-state">
-          <strong>No posts yet</strong>
-          New articles will appear here when published.
-        </p>
+        <section class="unpublished" aria-labelledby="unpublished-title">
+          <>
+            <p class="folio-label">No posts published yet</p>
+            <h2 id="unpublished-title">
+              The work comes first.
+              <>
+                <br />
+                <em>The notes will follow.</em>
+              </>
+            </h2>
+            <p>
+              This space is for practical notes on building for the web. In the
+              meantime, the Nyayota case study already records the project’s
+              purpose, technical choices and limits.
+            </p>
+            <a class="text-link" href="/projects/nyayota/">
+              Read the case study <Icon name="arrow-right" size={16} />
+            </a>
+            <a class="text-link" href="/vault/#progress">
+              Follow the learning timeline{" "}
+              <Icon name="arrow-up-right" size={16} />
+            </a>
+          </>
+        </section>
       ) : (
         <div class="post-list">
           {featured && (
@@ -74,7 +94,10 @@ const rest = posts.filter((post) => post !== featured);
           {rest.map((post) => (
             <article class="post-row">
               <a href={`/blog/${post.id}/`}>
-                <time class="post-row__date mono" datetime={isoDate(post.data.published)}>
+                <time
+                  class="post-row__date mono"
+                  datetime={isoDate(post.data.published)}
+                >
                   {formatMonth(post.data.published)}
                 </time>
                 <span class="post-row__body">
@@ -91,7 +114,9 @@ const rest = posts.filter((post) => post !== featured);
                     </span>
                   )}
                 </span>
-                <span class="post-row__read mono">{readingTime(post.body)} min</span>
+                <span class="post-row__read mono">
+                  {readingTime(post.body)} min
+                </span>
                 <Icon name="arrow-up-right" size={15} />
               </a>
             </article>
@@ -102,8 +127,10 @@ const rest = posts.filter((post) => post !== featured);
 
     <AuthorNote>
       Blog posts live in <code>src/content/blog/</code>. Required frontmatter:
-      <code>title</code>, <code>description</code>, <code>published</code>. Reading time is calculated
-      from the body automatically. Add <code>draft: true</code> to keep a post out of the public build.
+      <code>title</code>, <code>description</code>, <code>published</code>.
+      Reading time is calculated from the body automatically. Add <code
+        >draft: true</code
+      > to keep a post out of the public build.
     </AuthorNote>
   </div>
 </BaseLayout>
@@ -145,7 +172,11 @@ const rest = posts.filter((post) => post !== featured);
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     background:
-      radial-gradient(ellipse 70% 120% at 100% 0%, var(--accent-soft), transparent 65%),
+      radial-gradient(
+        ellipse 70% 120% at 100% 0%,
+        var(--accent-soft),
+        transparent 65%
+      ),
       var(--surface);
     margin-block-end: var(--space-md);
     transition: border-color var(--dur-mid) var(--ease-out);
@@ -210,8 +241,8 @@ const rest = posts.filter((post) => post !== featured);
     display: grid;
     grid-template-columns: 1fr auto;
     grid-template-areas:
-      'body read'
-      'body arrow';
+      "body read"
+      "body arrow";
     align-items: center;
     gap: 0.15rem 0.85rem;
     padding: 1.15rem 0.25rem;
@@ -296,7 +327,7 @@ const rest = posts.filter((post) => post !== featured);
   @media (min-width: 48rem) {
     .post-row > a {
       grid-template-columns: 6.5rem 1fr auto auto;
-      grid-template-areas: 'date body read arrow';
+      grid-template-areas: "date body read arrow";
       gap: var(--space-sm);
     }
 
