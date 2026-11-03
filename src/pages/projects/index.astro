@@ -1,0 +1,304 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import Icon from '../../components/Icon.astro';
+import { getProjects, statusLabels } from '../../lib/content';
+
+const projects = await getProjects();
+const featured = projects.filter((project) => project.data.featured);
+const rest = projects.filter((project) => !project.data.featured);
+const withCaseStudy = projects.filter((project) => project.data.caseStudy);
+
+const counts = {
+  total: projects.length,
+  live: projects.filter((p) => p.data.status === 'live' || p.data.status === 'completed').length,
+};
+---
+
+<BaseLayout
+  title="Projects"
+  description="Selected software projects with case studies, source code and live links."
+  path="/projects/"
+>
+  <div class="container">
+    <PageHeader
+      eyebrow="Work"
+      title="Projects"
+      lede="Long-form case studies for the builds that involved real decisions, and short entries for everything else. Source and live links are included wherever they exist."
+      meta={`${counts.total} entries · ${counts.live} public`}
+    />
+
+    <div class="legend" aria-label="Project status legend">
+      {
+        Object.entries(statusLabels).map(([key, label]) => (
+          <span class:list={['status', key === 'in-progress' ? 'status--in-progress' : 'status--live']}>
+            {label}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    featured.length > 0 && (
+      <section class="section section--tight" aria-labelledby="featured-title">
+        <div class="container">
+          <h2 id="featured-title" class="rule-label">
+            Featured
+          </h2>
+          <div class="featured-list">
+            {featured.map((project, i) => (
+              <div class="reveal">
+                <ProjectCard project={project} featured index={i + 1} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    rest.length > 0 && (
+      <section class="section section--tight" id="case-studies" aria-labelledby="archive-title">
+        <div class="container">
+          <h2 id="archive-title" class="rule-label">
+            Archive
+          </h2>
+          <div class="archive">
+            <div class="archive__head" aria-hidden="true">
+              <span>Project</span>
+              <span>Status</span>
+              <span>Year</span>
+            </div>
+            {rest.map((project) => (
+              <a class="archive__row" href={`/projects/${project.id}/`}>
+                <span class="archive__title">
+                  <span class="archive__name">{project.data.title}</span>
+                  <span class="archive__summary">{project.data.summary}</span>
+                </span>
+                <span
+                  class:list={[
+                    'status',
+                    project.data.status === 'live' || project.data.status === 'completed'
+                      ? 'status--live'
+                      : project.data.status === 'in-progress'
+                        ? 'status--in-progress'
+                        : '',
+                  ]}
+                >
+                  {statusLabels[project.data.status]}
+                </span>
+                <span class="archive__year mono">{project.data.year}</span>
+                <Icon name="arrow-right" size={14} />
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    projects.length === 0 && (
+      <div class="container">
+        <p class="empty-state">
+          <strong>No projects published yet</strong>
+          Add a Markdown file to <code>src/content/projects/</code>. The filename becomes the URL:
+          <code>nyayota.md</code> → <code>/projects/nyayota/</code>.
+        </p>
+      </div>
+    )
+  }
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="notes-grid">
+        <div class="note-card">
+          <p class="eyebrow eyebrow--plain">Case studies</p>
+          <h2 class="note-card__title">{withCaseStudy.length} long-form write-ups</h2>
+          <p>
+            These follow a fixed structure — problem, goal, role, approach, decisions, challenges,
+            results, lessons — so they can be compared honestly rather than read as marketing.
+          </p>
+        </div>
+        <div class="note-card">
+          <p class="eyebrow eyebrow--plain">Elsewhere</p>
+          <h2 class="note-card__title">Code &amp; profile</h2>
+          <p>
+            Most projects live on GitHub. The repository for this site is public too, including
+            every file that produced the page you are reading.
+          </p>
+          <div class="note-card__actions">
+            <a class="btn btn--sm" href="https://github.com/afnan0356" target="_blank" rel="noopener noreferrer">
+              <Icon name="github" size={14} />
+              github.com/afnan0356
+            </a>
+          </div>
+        </div>
+      </div>
+      <p class="editor-hint">
+        Projects are Markdown files in <code>src/content/projects/</code>. Add <code>featured: true</code>
+        to pin one to the homepage. A <code>caseStudy</code> block switches the page to the long
+        format; omit it for a short entry. Set <code>status: 'in-progress'</code> rather than claiming
+        unfinished work is live.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    padding-block: var(--space-sm);
+    border-block-start: 1px solid var(--line);
+    margin-block-start: var(--space-sm);
+  }
+
+  .featured-list {
+    display: grid;
+    gap: var(--space-md);
+    margin-block-start: var(--space-md);
+  }
+
+  /* ── Archive table ──────────────────────────────────────── */
+  .archive {
+    margin-block-start: var(--space-md);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .archive__head {
+    display: none;
+  }
+
+  .archive__row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'title status'
+      'title year';
+    align-items: center;
+    gap: 0.15rem 0.75rem;
+    padding: 1rem 0.25rem;
+    border-block-end: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .archive__row:hover {
+    background: var(--bg-hover);
+  }
+
+  .archive__title {
+    grid-area: title;
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .archive__name {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  .archive__row:hover .archive__name {
+    color: var(--accent);
+  }
+
+  .archive__summary {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.5;
+    max-width: 60ch;
+  }
+
+  .archive__year {
+    grid-area: year;
+    font-size: 0.6875rem;
+    color: var(--ink-faint);
+    text-align: end;
+  }
+
+  .archive__row > svg {
+    display: none;
+    color: var(--ink-faint);
+  }
+
+  /* ── Notes ──────────────────────────────────────────────── */
+  .notes-grid {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  }
+
+  .note-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+
+  .note-card__title {
+    font-size: var(--text-lg);
+  }
+
+  .note-card p:not(.eyebrow) {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  .note-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-start: 0.25rem;
+  }
+
+  @media (min-width: 48rem) {
+    .archive__row {
+      grid-template-columns: 1fr 8rem 4rem auto;
+      grid-template-areas: 'title status year arrow';
+      gap: var(--space-sm);
+    }
+
+    .archive__row > svg {
+      display: block;
+      transition: translate var(--dur-fast) var(--ease-out);
+    }
+
+    .archive__row:hover > svg {
+      color: var(--accent);
+      translate: 3px 0;
+    }
+
+    .archive__year {
+      text-align: start;
+    }
+
+    .archive__head {
+      display: grid;
+      grid-template-columns: 1fr 8rem 4rem auto;
+      gap: var(--space-sm);
+      padding: 0.5rem 0.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.5625rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      border-block-end: 1px solid var(--line);
+    }
+
+    .archive__head > span:last-child {
+      inline-size: 14px;
+    }
+  }
+</style>

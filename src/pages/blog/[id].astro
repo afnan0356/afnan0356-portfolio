@@ -1,0 +1,306 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Prose from '../../components/Prose.astro';
+import Byline from '../../components/Byline.astro';
+import DemoBanner from '../../components/DemoBanner.astro';
+import Icon from '../../components/Icon.astro';
+import { getPosts, isDemo } from '../../lib/content';
+import { readingTime } from '../../lib/text';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const minutes = readingTime(post.body);
+const all = await getPosts();
+const index = all.findIndex((entry) => entry.id === post.id);
+const next = index > 0 ? all[index - 1] : null;
+const prev = index < all.length - 1 ? all[index + 1] : null;
+
+// Only H2s get a contents list — enough to be useful, short enough to scan.
+const toc = headings.filter((heading) => heading.depth === 2);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  path={`/blog/${post.id}/`}
+  image={post.data.cover?.src}
+  type="article"
+  published={post.data.published}
+  updated={post.data.updated}
+  tags={post.data.tags}
+  noindex={isDemo(post)}
+>
+  <div class="container container--text">
+    <a class="back-link" href="/blog/">
+      <Icon name="arrow-left" size={14} />
+      All posts
+    </a>
+
+    <article class="post">
+      {isDemo(post) && <DemoBanner kind="article" />}
+
+      <header class="post__head">
+        <Byline published={post.data.published} updated={post.data.updated} readingTime={minutes} />
+        <h1 class="post__title">{post.data.title}</h1>
+        <p class="post__desc">{post.data.description}</p>
+      </header>
+
+      {
+        post.data.cover && (
+          <figure class="post__cover">
+            <Image
+              src={post.data.cover}
+              alt={post.data.coverAlt ?? ''}
+              widths={[480, 800, 1200]}
+              sizes="(min-width: 56rem) 50rem, 92vw"
+              loading="eager"
+              decoding="async"
+            />
+            {post.data.coverAlt && <figcaption>{post.data.coverAlt}</figcaption>}
+          </figure>
+        )
+      }
+
+      {
+        toc.length > 2 && (
+          <nav class="post__toc no-print" aria-labelledby="toc-title">
+            <p id="toc-title" class="post__toc-title mono">
+              In this post
+            </p>
+            <ol>
+              {toc.map((heading) => (
+                <li>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+
+      <Prose>
+        <Content />
+      </Prose>
+
+      <footer class="post__foot">
+        {
+          post.data.tags.length > 0 && (
+            <ul class="post__tags" aria-label="Tags">
+              {post.data.tags.map((tag) => (
+                <li>
+                  <a class="chip" href={`/blog/tag/${tag}/`}>
+                    {tag}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        <p class="post__signoff">
+          Written by <a href="/about/">Md. Afnan</a>. Spotted a mistake?
+          <a href="https://github.com/afnan0356/afnan0356-portfolio">Open an issue</a>.
+        </p>
+      </footer>
+
+      {
+        (prev || next) && (
+          <nav class="post__pager" aria-label="More posts">
+            {prev ? (
+              <a href={`/blog/${prev.id}/`} class="post__pager-link">
+                <span class="mono">Previous</span>
+                <span class="post__pager-title">{prev.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <a href={`/blog/${next.id}/`} class="post__pager-link post__pager-link--next">
+                <span class="mono">Next</span>
+                <span class="post__pager-title">{next.data.title}</span>
+              </a>
+            )}
+          </nav>
+        )
+      }
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding-block: var(--space-md) var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .post__head {
+    display: grid;
+    gap: var(--space-sm);
+    padding-block: var(--space-sm) var(--space-md);
+  }
+
+  .post__title {
+    font-size: var(--text-3xl);
+    line-height: 1.02;
+    letter-spacing: -0.028em;
+    max-width: 22ch;
+  }
+
+  .post__desc {
+    color: var(--ink-muted);
+    font-size: var(--text-md);
+    line-height: 1.6;
+    max-width: 54ch;
+  }
+
+  .post__cover {
+    margin-block: var(--space-sm) var(--space-lg);
+  }
+
+  .post__cover img {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+  }
+
+  .post__cover figcaption {
+    margin-block-start: 0.6rem;
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+  }
+
+  /* ── Contents ───────────────────────────────────────────── */
+  .post__toc {
+    border-block: 1px solid var(--line);
+    padding-block: var(--space-sm);
+    margin-block-end: var(--space-lg);
+  }
+
+  .post__toc-title {
+    font-size: 0.5625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-block-end: 0.5rem;
+  }
+
+  .post__toc ol {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.3rem;
+    counter-reset: toc;
+  }
+
+  .post__toc li {
+    counter-increment: toc;
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: 0.1rem;
+    font-size: var(--text-sm);
+  }
+
+  .post__toc li::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--ink-faint);
+    line-height: 1.9;
+  }
+
+  .post__toc a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    line-height: 1.5;
+  }
+
+  .post__toc a:hover {
+    color: var(--accent);
+  }
+
+  /* ── Footer ─────────────────────────────────────────────── */
+  .post__foot {
+    display: grid;
+    gap: var(--space-md);
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .post__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .post__signoff {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.7;
+  }
+
+  .post__signoff a {
+    color: var(--ink-soft);
+  }
+
+  /* ── Pager ──────────────────────────────────────────────── */
+  .post__pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin-block: var(--space-lg) var(--space-2xl);
+    border-block-start: 1px solid var(--line);
+    padding-block-start: var(--space-md);
+  }
+
+  .post__pager-link {
+    display: grid;
+    gap: 0.3rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .post__pager-link .mono {
+    font-size: 0.5625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .post__pager-title {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    line-height: 1.3;
+  }
+
+  .post__pager-link:hover .post__pager-title {
+    color: var(--accent);
+  }
+
+  .post__pager-link--next {
+    text-align: end;
+  }
+</style>

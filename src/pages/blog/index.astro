@@ -1,0 +1,307 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
+import { getPosts, getPostTags, isDemo } from '../../lib/content';
+import { formatMonth, isoDate, readingTime } from '../../lib/text';
+
+const posts = await getPosts();
+const tags = await getPostTags();
+const featured = posts.find((post) => post.data.featured);
+const rest = posts.filter((post) => post !== featured);
+---
+
+<BaseLayout
+  title="Blog"
+  description="Notes on building software: decisions, trade-offs, and things that did not work."
+  path="/blog/"
+>
+  <div class="container">
+    <PageHeader
+      eyebrow="Blog"
+      title="Notes from the workbench"
+      lede="Short, practical writing about building things for the web — what I chose, what it cost, and what I would do differently."
+      meta={`${posts.length} ${posts.length === 1 ? 'post' : 'posts'}${tags.length ? ` · ${tags.length} tags` : ''}`}
+    />
+
+    {
+      tags.length > 0 && (
+        <nav class="tag-bar" aria-label="Filter by tag">
+          <span class="tag-bar__label mono">Tags</span>
+          <ul>
+            {tags.map((tag) => (
+              <li>
+                <a class="chip" href={`/blog/tag/${tag.tag}/`}>
+                  {tag.tag}
+                  <span class="tag-bar__count">{tag.count}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
+
+  <div class="container">
+    {
+      posts.length === 0 ? (
+        <p class="empty-state">
+          <strong>No posts yet</strong>
+          Drop a Markdown file into <code>src/content/blog/</code>. The filename becomes the URL.
+        </p>
+      ) : (
+        <div class="post-list">
+          {featured && (
+            <article class="post-featured">
+              <a href={`/blog/${featured.id}/`} class="post-featured__link">
+                <span class="post-featured__label mono">Latest</span>
+                <h2 class="post-featured__title">{featured.data.title}</h2>
+                <p class="post-featured__desc">{featured.data.description}</p>
+                <span class="post-featured__meta mono">
+                  <time datetime={isoDate(featured.data.published)}>
+                    {formatMonth(featured.data.published)}
+                  </time>
+                  <span aria-hidden="true">·</span>
+                  {readingTime(featured.body)} min read
+                  {isDemo(featured) && <span class="chip">Sample</span>}
+                </span>
+              </a>
+            </article>
+          )}
+
+          {rest.map((post) => (
+            <article class="post-row">
+              <a href={`/blog/${post.id}/`}>
+                <time class="post-row__date mono" datetime={isoDate(post.data.published)}>
+                  {formatMonth(post.data.published)}
+                </time>
+                <span class="post-row__body">
+                  <span class="post-row__title">
+                    {post.data.title}
+                    {isDemo(post) && <span class="chip">Sample</span>}
+                  </span>
+                  <span class="post-row__desc">{post.data.description}</span>
+                  {post.data.tags.length > 0 && (
+                    <span class="post-row__tags">
+                      {post.data.tags.map((tag) => (
+                        <span class="chip">{tag}</span>
+                      ))}
+                    </span>
+                  )}
+                </span>
+                <span class="post-row__read mono">{readingTime(post.body)} min</span>
+                <Icon name="arrow-up-right" size={15} />
+              </a>
+            </article>
+          ))}
+        </div>
+      )
+    }
+
+    <p class="editor-hint">
+      Blog posts live in <code>src/content/blog/</code>. Required frontmatter:
+      <code>title</code>, <code>description</code>, <code>published</code>. Reading time is calculated
+      from the body automatically. Add <code>draft: true</code> to keep a post out of the public build.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ── Tag bar ────────────────────────────────────────────── */
+  .tag-bar {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    padding-block: var(--space-sm);
+    border-block: 1px solid var(--line);
+    margin-block-end: var(--space-lg);
+  }
+
+  .tag-bar__label {
+    font-size: 0.5625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .tag-bar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .tag-bar__count {
+    color: var(--ink-faint);
+    font-size: 0.5625rem;
+  }
+
+  /* ── Featured post ──────────────────────────────────────── */
+  .post-featured {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(ellipse 70% 120% at 100% 0%, var(--accent-soft), transparent 65%),
+      var(--surface);
+    margin-block-end: var(--space-md);
+    transition: border-color var(--dur-mid) var(--ease-out);
+  }
+
+  .post-featured:hover {
+    border-color: var(--line-strong);
+  }
+
+  .post-featured__link {
+    display: grid;
+    gap: 0.65rem;
+    padding: var(--space-lg);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .post-featured__label {
+    font-size: 0.5625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .post-featured__title {
+    font-size: var(--text-2xl);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+  }
+
+  .post-featured:hover .post-featured__title {
+    color: var(--accent);
+  }
+
+  .post-featured__desc {
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    max-width: 54ch;
+  }
+
+  .post-featured__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    color: var(--ink-faint);
+  }
+
+  /* ── Post rows ──────────────────────────────────────────── */
+  .post-list {
+    border-block-start: 1px solid var(--line);
+  }
+
+  .post-row {
+    border-block-end: 1px solid var(--line);
+  }
+
+  .post-row > a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'body read'
+      'body arrow';
+    align-items: center;
+    gap: 0.15rem 0.85rem;
+    padding: 1.15rem 0.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .post-row > a:hover {
+    background: var(--bg-hover);
+  }
+
+  .post-row__date {
+    display: none;
+    font-size: 0.6875rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+    padding-block-start: 0.3rem;
+  }
+
+  .post-row__body {
+    grid-area: body;
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .post-row__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    line-height: 1.22;
+    color: var(--ink);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .post-row > a:hover .post-row__title {
+    color: var(--accent);
+  }
+
+  .post-row__desc {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.55;
+    max-width: 62ch;
+  }
+
+  .post-row__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-block-start: 0.2rem;
+  }
+
+  .post-row__read {
+    grid-area: read;
+    font-size: 0.625rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .post-row > a > svg {
+    grid-area: arrow;
+    color: var(--ink-faint);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      translate var(--dur-fast) var(--ease-out);
+  }
+
+  .post-row > a:hover > svg {
+    color: var(--accent);
+    translate: 2px -2px;
+  }
+
+  .empty-state {
+    margin-block: var(--space-lg);
+  }
+
+  @media (min-width: 48rem) {
+    .post-row > a {
+      grid-template-columns: 6.5rem 1fr auto auto;
+      grid-template-areas: 'date body read arrow';
+      gap: var(--space-sm);
+    }
+
+    .post-row__date {
+      display: block;
+      grid-area: date;
+    }
+  }
+</style>

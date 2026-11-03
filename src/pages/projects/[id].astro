@@ -1,0 +1,671 @@
+---
+/**
+ * Project detail — one template, two layouts.
+ *
+ *   • With a `caseStudy` block → long-form case study with a section rail.
+ *   • Without one              → compact entry: text, stack, links.
+ *
+ * Nesting a project in a folder (src/content/projects/nyayota/index.md)
+ * produces a nested URL (/projects/nyayota/) and keeps its assets together.
+ */
+import { render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import DemoBanner from '../../components/DemoBanner.astro';
+import Prose from '../../components/Prose.astro';
+import { getProjects, isDemo, statusLabels } from '../../lib/content';
+import { formatDate, isoDate } from '../../lib/text';
+
+export async function getStaticPaths() {
+  // Use the same helper as the index so drafts never leak into production.
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const data = project.data;
+const cs = data.caseStudy;
+
+const all = await getProjects();
+const index = all.findIndex((entry) => entry.id === project.id);
+const next = all[(index + 1) % all.length];
+const prev = all[(index - 1 + all.length) % all.length];
+
+/** Sections present in the case study, in reading order. */
+const sections = cs
+  ? [
+      cs.problem && { id: 'problem', label: 'The problem', body: cs.problem },
+      cs.goal && { id: 'goal', label: 'The goal', body: cs.goal },
+      cs.role && { id: 'role', label: 'My role', body: cs.role },
+      cs.approach && { id: 'approach', label: 'Approach', body: cs.approach },
+      cs.decisions?.length && { id: 'decisions', label: 'Technical decisions' },
+      cs.features?.length && { id: 'features', label: 'Features' },
+      cs.challenges?.length && { id: 'challenges', label: 'Challenges' },
+      cs.results?.length && { id: 'results', label: 'Results' },
+      cs.lessons?.length && { id: 'lessons', label: 'Lessons' },
+    ].filter(Boolean)
+  : [];
+
+const isLong = sections.length > 0;
+const cover = data.cover;
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.summary}
+  path={`/projects/${project.id}/`}
+  image={cover ? cover.src : undefined}
+  type="article"
+  noindex={isDemo(project) || data.status === 'archived'}
+  tags={data.tags}
+>
+  <article class:list={['project', isLong && 'project--long']}>
+    <div class="container">
+      <a class="back-link" href="/projects/">
+        <Icon name="arrow-left" size={14} />
+        All projects
+      </a>
+
+      <header class="project__head">
+        {isDemo(project) && <DemoBanner kind="project" />}
+
+        <div class="project__eyebrow">
+          <span class:list={['status', data.status === 'in-progress' ? 'status--in-progress' : 'status--live']}>
+            {statusLabels[data.status]}
+          </span>
+          <span class="mono">{data.year}</span>
+          {data.tags.map((tag) => <span class="chip">{tag}</span>)}
+        </div>
+
+        <h1 class="project__title">{data.title}</h1>
+        <p class="project__lede">{data.lede ?? data.summary}</p>
+
+        {
+          (data.links.live || data.links.repo || data.links.docs) && (
+            <div class="project__links">
+              {data.links.live && (
+                <a class="btn btn--primary btn--sm" href={data.links.live} target="_blank" rel="noopener noreferrer">
+                  Live site
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              )}
+              {data.links.repo && (
+                <a class="btn btn--sm" href={data.links.repo} target="_blank" rel="noopener noreferrer">
+                  <Icon name="github" size={14} />
+                  Source code
+                </a>
+              )}
+              {data.links.docs && (
+                <a class="btn btn--sm" href={data.links.docs} target="_blank" rel="noopener noreferrer">
+                  <Icon name="file" size={14} />
+                  Documentation
+                </a>
+              )}
+            </div>
+          )
+        }
+      </header>
+    </div>
+
+    {
+      cover && (
+        <figure class="project__cover container">
+          <Image
+            src={cover}
+            alt={data.coverAlt ?? `Screenshot of ${data.title}`}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 75rem) 72rem, 92vw"
+            loading="eager"
+            decoding="async"
+          />
+          {data.coverAlt && <figcaption>{data.coverAlt}</figcaption>}
+        </figure>
+      )
+    }
+
+    <div class="container">
+      {
+        cs?.metrics && cs.metrics.length > 0 && (
+          <dl class="project__metrics">
+            {cs.metrics.map((metric) => (
+              <div>
+                <dt>{metric.label}</dt>
+                <dd>{metric.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+
+      <div class:list={['project__body', isLong && 'project__body--split']}>
+        {
+          isLong && (
+            <nav class="project__toc no-print" aria-labelledby="toc-title">
+              <p class="project__toc-title mono" id="toc-title">
+                Contents
+              </p>
+              <ol>
+                {sections.map((section) => (
+                  <li>
+                    <a href={`#${(section as { id: string }).id}`}>{(section as { label: string }).label}</a>
+                  </li>
+                ))}
+                <li>
+                  <a href="#notes">Notes &amp; further reading</a>
+                </li>
+              </ol>
+            </nav>
+          )
+        }
+
+        <div class="project__content">
+          {
+            sections.map((section) => {
+              const entry = section as { id: string; label: string; body?: string };
+              return (
+                <section class="case-section" id={entry.id} aria-labelledby={`${entry.id}-title`}>
+                  <h2 id={`${entry.id}-title`} class="case-section__title">
+                    {entry.label}
+                  </h2>
+                  {entry.body && <p class="case-section__body">{entry.body}</p>}
+
+                  {entry.id === 'decisions' && (
+                    <ol class="decision-list">
+                      {cs?.decisions?.map((decision) => (
+                        <li>
+                          <h3>{decision.title}</h3>
+                          <p>{decision.detail}</p>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+
+                  {entry.id === 'features' && (
+                    <ul class="feature-list">
+                      {cs?.features?.map((feature) => (
+                        <li>
+                          <Icon name="check" size={14} />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {entry.id === 'challenges' && (
+                    <div class="challenge-list">
+                      {cs?.challenges?.map((item) => (
+                        <div class="challenge">
+                          <h3>{item.challenge}</h3>
+                          <p>{item.response}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {entry.id === 'results' && (
+                    <ul class="result-list">
+                      {cs?.results?.map((result) => <li>{result}</li>)}
+                    </ul>
+                  )}
+
+                  {entry.id === 'lessons' && (
+                    <ul class="lesson-list">
+                      {cs?.lessons?.map((lesson) => <li>{lesson}</li>)}
+                    </ul>
+                  )}
+                </section>
+              );
+            })
+          }
+
+          <section class="case-section" id="notes" aria-labelledby="notes-title">
+            <h2 id="notes-title" class="case-section__title">
+              {isLong ? 'Notes & further reading' : 'About this project'}
+            </h2>
+            <Prose>
+              <Content />
+            </Prose>
+          </section>
+        </div>
+      </div>
+
+      {
+        data.stack.length > 0 && (
+          <aside class="project__stack" aria-labelledby="stack-title">
+            <h2 id="stack-title" class="mono">
+              Built with
+            </h2>
+            <ul>
+              {data.stack.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+
+      {
+        all.length > 1 && (
+          <nav class="project__pager" aria-label="More projects">
+            <a class="project__pager-link" href={`/projects/${prev.id}/`}>
+              <span class="mono">Previous</span>
+              <span class="project__pager-title">{prev.data.title}</span>
+            </a>
+            <a class="project__pager-link project__pager-link--next" href={`/projects/${next.id}/`}>
+              <span class="mono">Next</span>
+              <span class="project__pager-title">{next.data.title}</span>
+            </a>
+          </nav>
+        )
+      }
+
+      {
+        data.updated && (
+          <p class="project__updated mono">
+            Last updated
+            <time datetime={isoDate(data.updated)}>{formatDate(data.updated)}</time>
+          </p>
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project {
+    padding-block-end: var(--space-2xl);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding-block: var(--space-md) var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .project__head {
+    display: grid;
+    gap: var(--space-sm);
+    max-width: 56rem;
+    padding-block-end: var(--space-lg);
+  }
+
+  .project__eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    color: var(--ink-faint);
+  }
+
+  .project__title {
+    font-size: var(--text-3xl);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+
+  .project__lede {
+    max-width: 54ch;
+    color: var(--ink-muted);
+    font-size: var(--text-md);
+    line-height: 1.65;
+  }
+
+  .project__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-start: 0.25rem;
+  }
+
+  /* ── Cover ──────────────────────────────────────────────── */
+  .project__cover {
+    margin: 0 auto;
+    padding-block: var(--space-sm) var(--space-lg);
+  }
+
+  .project__cover img {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-sunken);
+    box-shadow: var(--shadow-md);
+    /* Screenshots are tall; cap them so the page keeps its rhythm. */
+    max-height: 38rem;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .project__cover figcaption {
+    margin-block-start: 0.65rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-faint);
+    max-width: 70ch;
+  }
+
+  /* ── Metrics ────────────────────────────────────────────── */
+  .project__metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: var(--space-sm);
+    padding-block: var(--space-md);
+    border-block: 1px solid var(--line);
+  }
+
+  .project__metrics dt {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-block-end: 0.2rem;
+  }
+
+  .project__metrics dd {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  /* ── Body layout ────────────────────────────────────────── */
+  .project__body {
+    padding-block: var(--space-lg);
+  }
+
+  .project__toc {
+    display: none;
+  }
+
+  .project__content {
+    display: grid;
+    gap: var(--space-xl);
+    max-width: 72ch;
+  }
+
+  /* ── Case study sections ────────────────────────────────── */
+  .case-section {
+    scroll-margin-top: calc(var(--header-h) + 1.5rem);
+  }
+
+  .case-section__title {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-block-end: 0.6rem;
+    margin-block-end: var(--space-sm);
+    border-block-end: 1px solid var(--line);
+  }
+
+  .case-section__body {
+    font-size: var(--text-md);
+    line-height: 1.72;
+    color: var(--ink-soft);
+    max-width: var(--measure);
+  }
+
+  .decision-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: decision;
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .decision-list li {
+    counter-increment: decision;
+    display: grid;
+    gap: 0.35rem;
+    padding-inline-start: 2.5rem;
+    position: relative;
+  }
+
+  .decision-list li::before {
+    content: counter(decision, decimal-leading-zero);
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ink-faint);
+  }
+
+  .decision-list h3 {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  .decision-list p {
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    max-width: var(--measure);
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .feature-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.65rem;
+    align-items: start;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .feature-list svg {
+    color: var(--accent);
+    margin-block-start: 0.3em;
+  }
+
+  .challenge-list {
+    display: grid;
+    gap: var(--space-md);
+    border-inline-start: 1px solid var(--line);
+    padding-inline-start: var(--space-md);
+  }
+
+  .challenge h3 {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink);
+    margin-block-end: 0.3rem;
+  }
+
+  .challenge p {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  .result-list,
+  .lesson-list {
+    padding-inline-start: 1.1rem;
+    display: grid;
+    gap: 0.6rem;
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    max-width: var(--measure);
+  }
+
+  .result-list li::marker {
+    color: var(--accent);
+  }
+
+  .lesson-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .lesson-list li {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    padding-block-end: 0.75rem;
+    border-block-end: 1px dashed var(--line);
+  }
+
+  /* ── Stack ──────────────────────────────────────────────── */
+  .project__stack {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem var(--space-md);
+    padding-block: var(--space-md);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .project__stack h2 {
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .project__stack ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .project__stack li {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* ── Pager ──────────────────────────────────────────────── */
+  .project__pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin-block-start: var(--space-lg);
+    border-block-start: 1px solid var(--line);
+    padding-block-start: var(--space-md);
+  }
+
+  .project__pager-link {
+    display: grid;
+    gap: 0.3rem;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.5rem 0;
+  }
+
+  .project__pager-link .mono {
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .project__pager-title {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    line-height: 1.3;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .project__pager-link:hover .project__pager-title {
+    color: var(--accent);
+  }
+
+  .project__pager-link--next {
+    text-align: end;
+  }
+
+  .project__updated {
+    margin-block-start: var(--space-lg);
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ── Wide screens: add the contents rail ────────────────── */
+  @media (min-width: 64rem) {
+    .project__body--split {
+      display: grid;
+      grid-template-columns: 13rem minmax(0, 1fr);
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+
+    .project__body--split .project__toc {
+      display: block;
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+
+    .project__toc-title {
+      font-size: 0.625rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-block-end: 0.75rem;
+    }
+
+    .project__toc ol {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 0.1rem;
+      border-inline-start: 1px solid var(--line);
+    }
+
+    .project__toc a {
+      display: block;
+      padding: 0.3rem 0 0.3rem 0.85rem;
+      margin-inline-start: -1px;
+      border-inline-start: 1px solid transparent;
+      font-size: var(--text-xs);
+      color: var(--ink-muted);
+      text-decoration: none;
+      line-height: 1.4;
+    }
+
+    .project__toc a:hover {
+      color: var(--ink);
+      border-inline-start-color: var(--accent);
+    }
+  }
+</style>

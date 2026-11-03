@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import Icon from '../../../components/Icon.astro';
+import { getVaultItems, vaultCategories, verificationLabels, isDemo } from '../../../lib/content';
+import { formatDate, isoDate } from '../../../lib/text';
+
+export async function getStaticPaths() {
+  const items = await getVaultItems();
+  const used = [...new Set(items.map((item) => item.data.category))];
+
+  return used.map((category) => ({
+    params: { category },
+    props: {
+      category,
+      label: vaultCategories.find((entry) => entry.id === category)?.label ?? category,
+      items: items.filter((item) => item.data.category === category),
+    },
+  }));
+}
+
+interface Props {
+  category: string;
+  label: string;
+  items: Awaited<ReturnType<typeof getVaultItems>>;
+}
+
+const { category, label, items } = Astro.props;
+---
+
+<BaseLayout
+  title={`Vault — ${label}`}
+  description={`${label} documents in the vault.`}
+  path={`/vault/category/${category}/`}
+>
+  <div class="container">
+    <PageHeader eyebrow="Vault" title={label} lede={`${items.length} ${items.length === 1 ? 'document' : 'documents'} in this category.`}>
+      <div class="page-header__actions">
+        <a class="btn btn--sm" href="/vault/">
+          <Icon name="arrow-left" size={14} />
+          All documents
+        </a>
+      </div>
+    </PageHeader>
+
+    <ul class="docs">
+      {
+        items.map((item) => (
+          <li class="doc">
+            <div class="doc__top">
+              <span class:list={['chip', item.data.verification === 'verified' ? 'chip--accent' : '']}>
+                {verificationLabels[item.data.verification].label}
+              </span>
+              {isDemo(item) && <span class="chip">Sample</span>}
+              <time class="mono" datetime={isoDate(item.data.date)}>
+                {formatDate(item.data.date)}
+              </time>
+            </div>
+            <h2 class="doc__title">
+              {item.data.file ? (
+                <a href={item.data.file} target="_blank" rel="noopener noreferrer">
+                  {item.data.title}
+                  <Icon name="file" size={13} />
+                </a>
+              ) : item.data.link ? (
+                <a href={item.data.link} target="_blank" rel="noopener noreferrer">
+                  {item.data.title}
+                  <Icon name="external" size={13} />
+                </a>
+              ) : (
+                item.data.title
+              )}
+            </h2>
+            <p class="doc__desc">{item.data.description}</p>
+            {item.data.issuer && <p class="doc__issuer mono">Issued by {item.data.issuer}</p>}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .docs {
+    list-style: none;
+    padding: 0;
+    border-block-start: 1px solid var(--line);
+    max-width: 70ch;
+  }
+
+  .doc {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: var(--space-md);
+    border-block-end: 1px solid var(--line);
+  }
+
+  .doc__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.625rem;
+    color: var(--ink-faint);
+  }
+
+  .doc__top time {
+    margin-inline-start: auto;
+  }
+
+  .doc__title {
+    font-size: var(--text-md);
+    line-height: 1.35;
+  }
+
+  .doc__title a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+  }
+
+  .doc__title a:hover {
+    color: var(--accent);
+  }
+
+  .doc__title svg {
+    color: var(--ink-faint);
+    flex: none;
+  }
+
+  .doc__desc {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  .doc__issuer {
+    font-size: 0.625rem;
+    color: var(--ink-faint);
+  }
+</style>

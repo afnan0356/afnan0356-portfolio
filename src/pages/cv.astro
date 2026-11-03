@@ -1,0 +1,481 @@
+---
+/**
+ * CV — one source of truth (`src/data/cv.ts`), two outputs:
+ *   • this web page
+ *   • the same page printed/saved as a PDF (print styles in base.css)
+ *
+ * Set `site.cvPdf` once you have a real PDF and the download button
+ * appears. Nothing here is invented: empty sections are omitted.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { site, socials, isLive } from '../config/site';
+import { cv } from '../data/cv';
+
+const contactLinks = [
+  ...(site.email ? [{ label: site.email, href: `mailto:${site.email}`, icon: 'mail' as const }] : []),
+  ...socials.filter((social) => isLive(social.href)).map((social) => ({
+    label: social.label,
+    href: social.href!,
+    icon: social.icon,
+  })),
+];
+
+const showSummary = !cv.summaryIsPlaceholder || site.showEditorHints;
+const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.length > 0;
+---
+
+<BaseLayout
+  title="CV"
+  description="Curriculum vitae for Md. Afnan — education, experience, selected work and technical skills."
+  path="/cv/"
+>
+  <div class="container container--narrow">
+    <div class="cv-toolbar no-print">
+      <a class="back-link" href="/about/">
+        <Icon name="arrow-left" size={14} />
+        About
+      </a>
+      <div class="cv-toolbar__actions">
+        {site.cvPdf && (
+          <a class="btn btn--sm btn--primary" href={site.cvPdf} download>
+            <Icon name="download" size={14} />
+            Download PDF
+          </a>
+        )}
+        <button class="btn btn--sm" type="button" data-print>
+          <Icon name="print" size={14} />
+          Save as PDF
+        </button>
+      </div>
+    </div>
+
+    <article class="cv">
+      <header class="cv__head">
+        <div>
+          <h1 class="cv__name">{site.name}</h1>
+          <p class="cv__role">{site.headline}</p>
+        </div>
+        {
+          contactLinks.length > 0 && (
+            <ul class="cv__contact">
+              {contactLinks.map((link) => (
+                <li>
+                  <a href={link.href} target={link.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">
+                    <Icon name={link.icon} size={13} />
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+
+      {
+        showSummary && (
+          <section class="cv__section" aria-labelledby="summary-title">
+            <h2 id="summary-title" class="cv__section-title">Profile</h2>
+            <p class:list={['cv__summary', cv.summaryIsPlaceholder && 'is-placeholder']}>
+              {cv.summary}
+            </p>
+            {cv.summaryIsPlaceholder && site.showEditorHints && (
+              <p class="editor-hint">
+                Replace this paragraph in <code>src/data/cv.ts</code>, then set
+                <code>summaryIsPlaceholder: false</code>.
+              </p>
+            )}
+          </section>
+        )
+      }
+
+      {
+        cv.experience.length > 0 && (
+          <section class="cv__section" aria-labelledby="experience-title">
+            <h2 id="experience-title" class="cv__section-title">Experience</h2>
+            <ol class="cv__entries">
+              {cv.experience.map((entry) => (
+                <li class="cv-entry">
+                  <div class="cv-entry__head">
+                    <h3 class="cv-entry__title">
+                      {entry.href ? <a href={entry.href}>{entry.title}</a> : entry.title}
+                    </h3>
+                    {entry.period && <p class="cv-entry__period mono">{entry.period}</p>}
+                  </div>
+                  {entry.organisation && <p class="cv-entry__org">{entry.organisation}</p>}
+                  {entry.description && <p class="cv-entry__desc">{entry.description}</p>}
+                  {entry.highlights && (
+                    <ul class="cv-entry__list">
+                      {entry.highlights.map((highlight) => <li>{highlight}</li>)}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+
+      {
+        cv.education.length > 0 && (
+          <section class="cv__section" aria-labelledby="education-title">
+            <h2 id="education-title" class="cv__section-title">Education</h2>
+            <ol class="cv__entries">
+              {cv.education.map((entry) => (
+                <li class="cv-entry">
+                  <div class="cv-entry__head">
+                    <h3 class="cv-entry__title">{entry.title}</h3>
+                    {entry.period && <p class="cv-entry__period mono">{entry.period}</p>}
+                  </div>
+                  {entry.organisation && <p class="cv-entry__org">{entry.organisation}</p>}
+                  {entry.description && <p class="cv-entry__desc">{entry.description}</p>}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+
+      {
+        cv.selectedWork.length > 0 && (
+          <section class="cv__section" aria-labelledby="work-title">
+            <h2 id="work-title" class="cv__section-title">Selected work</h2>
+            <ol class="cv__entries">
+              {cv.selectedWork.map((entry) => (
+                <li class="cv-entry">
+                  <div class="cv-entry__head">
+                    <h3 class="cv-entry__title">
+                      {entry.href ? <a href={entry.href}>{entry.title}</a> : entry.title}
+                    </h3>
+                    {entry.period && <p class="cv-entry__period mono">{entry.period}</p>}
+                  </div>
+                  {entry.organisation && <p class="cv-entry__org">{entry.organisation}</p>}
+                  {entry.description && <p class="cv-entry__desc">{entry.description}</p>}
+                  {entry.highlights && (
+                    <ul class="cv-entry__list">
+                      {entry.highlights.map((highlight) => <li>{highlight}</li>)}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+
+      {
+        cv.skills.length > 0 && (
+          <section class="cv__section" aria-labelledby="skills-title">
+            <h2 id="skills-title" class="cv__section-title">Skills</h2>
+            <dl class="cv__skills">
+              {cv.skills.map((group) => (
+                <div>
+                  <dt>{group.group}</dt>
+                  <dd>{group.items.join(' · ')}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )
+      }
+
+      {
+        cv.languages.length > 0 && (
+          <section class="cv__section" aria-labelledby="languages-title">
+            <h2 id="languages-title" class="cv__section-title">Languages</h2>
+            <dl class="cv__skills">
+              {cv.languages.map((language) => (
+                <div>
+                  <dt>{language.name}</dt>
+                  <dd>{language.level}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )
+      }
+
+      {
+        !hasContent && (
+          <p class="editor-hint no-print">
+            Education and experience are intentionally empty rather than invented. Add real entries
+            to <code>education</code> and <code>experience</code> in <code>src/data/cv.ts</code> and
+            the sections will appear here (and in the printed version) automatically.
+          </p>
+        )
+      }
+
+      {cv.footnote && <p class="cv__footnote">{cv.footnote}</p>}
+
+      <footer class="cv__footer">
+        <p class="mono">Last updated {site.cvUpdated}</p>
+        {!site.cvPdf && (
+          <p class="mono no-print">
+            No PDF yet — use “Save as PDF” above, or add one to <code>public/</code> and set
+            <code>site.cvPdf</code>.
+          </p>
+        )}
+      </footer>
+    </article>
+  </div>
+</BaseLayout>
+
+<script>
+  document.querySelector<HTMLButtonElement>('[data-print]')?.addEventListener('click', () => {
+    window.print();
+  });
+</script>
+
+<style>
+  .cv-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding-block: var(--space-md) var(--space-sm);
+    border-block-end: 1px solid var(--line);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .cv-toolbar__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  /* ── Document ───────────────────────────────────────────── */
+  .cv {
+    padding-block: var(--space-lg) var(--space-2xl);
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .cv__head {
+    display: grid;
+    gap: var(--space-md);
+    padding-block-end: var(--space-lg);
+    border-block-end: 1px solid var(--line-strong);
+  }
+
+  .cv__name {
+    font-size: var(--text-2xl);
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+
+  .cv__role {
+    margin-block-start: 0.5rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-md);
+    color: var(--ink-muted);
+    max-width: 40ch;
+  }
+
+  .cv__contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .cv__contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .cv__contact a:hover {
+    color: var(--accent);
+  }
+
+  /* ── Sections ───────────────────────────────────────────── */
+  .cv__section {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .cv__section-title {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-block-end: 0.55rem;
+    border-block-end: 1px solid var(--line);
+  }
+
+  .cv__summary {
+    font-size: var(--text-md);
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: var(--measure);
+  }
+
+  .cv__summary.is-placeholder {
+    color: var(--ink-muted);
+    font-style: italic;
+    font-family: var(--font-display);
+  }
+
+  .cv__entries {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  /* A CV entry is laid out on a fixed label column on wide screens so
+     the dates form a clean column — the way a printed CV reads. */
+  .cv-entry {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .cv-entry__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem var(--space-sm);
+  }
+
+  .cv-entry__title {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  .cv-entry__title a {
+    text-decoration: none;
+  }
+
+  .cv-entry__title a:hover {
+    color: var(--accent);
+  }
+
+  .cv-entry__period {
+    font-size: 0.625rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .cv-entry__org {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+  }
+
+  .cv-entry__desc {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.65;
+    max-width: var(--measure);
+  }
+
+  .cv-entry__list {
+    padding-inline-start: 1rem;
+    display: grid;
+    gap: 0.3rem;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    line-height: 1.6;
+    max-width: var(--measure);
+  }
+
+  .cv-entry__list li::marker {
+    color: var(--accent);
+  }
+
+  .cv__skills {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .cv__skills > div {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: var(--space-sm);
+    align-items: baseline;
+  }
+
+  .cv__skills dt {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .cv__skills dd {
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+
+  .cv__footnote {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    font-style: italic;
+    font-family: var(--font-display);
+  }
+
+  .cv__footer {
+    display: grid;
+    gap: 0.35rem;
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--line);
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+
+  @media (min-width: 48rem) {
+    .cv__head {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+
+    .cv__contact {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.35rem;
+    }
+  }
+
+  /* Print: drop the toolbar, tighten the spacing. */
+  @media print {
+    .cv {
+      gap: 1.2rem;
+      padding: 0;
+    }
+
+    .cv__section {
+      break-inside: avoid;
+    }
+
+    .cv-entry {
+      break-inside: avoid;
+    }
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+/**
+ * ThemeScript — the critical, render-blocking snippet that applies the
+ * saved theme *before* the first paint, so there is never a white flash
+ * followed by a dark page.
+ *
+ * It is intentionally tiny, has no dependencies, and degrades to
+ * "respect the operating system setting" if storage is unavailable.
+ */
+---
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+
+    // Lets CSS safely use JS-dependent effects (e.g. reveal-on-scroll)
+    // without hiding content from visitors who have no JavaScript.
+    root.classList.add('js');
+
+    var theme;
+    try {
+      theme = localStorage.getItem('theme');
+    } catch (e) {
+      /* Private mode / storage blocked — fall back to the system value. */
+    }
+    if (theme !== 'light' && theme !== 'dark') {
+      theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+
+    // Keep the browser UI (address bar on Android) in step with the theme.
+    var color = theme === 'dark' ? '#0d0c0b' : '#f7f3ec';
+    var meta = document.querySelector('meta[name="theme-color"]:not([media])');
+    if (meta) meta.setAttribute('content', color);
+  })();
+</script>

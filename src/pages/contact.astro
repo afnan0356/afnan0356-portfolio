@@ -1,0 +1,341 @@
+---
+/**
+ * Contact — only real, working routes.
+ *
+ * There is deliberately no contact form: a form without a backend is a
+ * lie that wastes the visitor's time. Add `site.email` when you have a
+ * real address and the email option appears automatically.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+import { site, socials, featuredLinks, isLive } from '../config/site';
+
+const contactSocials = socials.filter((social) => social.inContact && isLive(social.href));
+const allSocials = socials.filter((social) => isLive(social.href));
+const hiddenSocials = socials.filter((social) => !isLive(social.href));
+---
+
+<BaseLayout
+  title="Contact"
+  description="How to get in touch with Md. Afnan."
+  path="/contact/"
+>
+  <div class="container">
+    <PageHeader
+      eyebrow="Contact"
+      title="Say hello"
+      lede="Open to conversations about projects, collaboration, study opportunities and writing. Short emails are welcome; I read everything."
+    />
+  </div>
+
+  <div class="container">
+    <div class="contact">
+      <!-- ── Primary route ───────────────────────────────── -->
+      <section class="contact__primary" aria-labelledby="email-title">
+        {
+          site.email ? (
+            <>
+              <h2 id="email-title" class="contact__label mono">
+                Email
+              </h2>
+              <a class="contact__email" href={`mailto:${site.email}`}>
+                {site.email}
+                <Icon name="arrow-up-right" size={18} />
+              </a>
+              <div class="contact__actions">
+                <a class="btn btn--primary btn--sm" href={`mailto:${site.email}`}>
+                  <Icon name="mail" size={14} />
+                  Write an email
+                </a>
+                <button
+                  class="btn btn--sm"
+                  type="button"
+                  data-copy={site.email}
+                  data-label="Copy address"
+                >
+                  Copy address
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 id="email-title" class="contact__label mono">
+                Email
+              </h2>
+              <p class="contact__pending">
+                No email address is published yet — a placeholder address would be worse than none.
+                Until then, GitHub and X are the reliable routes.
+              </p>
+              <div class="contact__actions">
+                {
+                  contactSocials.map((social) => (
+                    <a
+                      class:list={['btn', 'btn--sm', social.icon === 'github' && 'btn--primary']}
+                      href={social.href!}
+                      target="_blank"
+                      rel="me noopener noreferrer"
+                    >
+                      <Icon name={social.icon} size={14} />
+                      {social.label}
+                    </a>
+                  ))
+                }
+              </div>
+              <p class="editor-hint">
+                To publish an address, set <code>email</code> in <code>src/config/site.ts</code>. This
+                card, the homepage button and the CV will all update.
+              </p>
+            </>
+          )
+        }
+      </section>
+
+      <!-- ── Other routes ────────────────────────────────── -->
+      <section class="contact__routes" aria-labelledby="routes-title">
+        <h2 id="routes-title" class="contact__label mono">Elsewhere</h2>
+        <ul class="route-list">
+          {
+            allSocials.map((social) => (
+              <li>
+                <a href={social.href!} target="_blank" rel="me noopener noreferrer">
+                  <span class="route-list__icon">
+                    <Icon name={social.icon} size={16} />
+                  </span>
+                  <span class="route-list__body">
+                    <span class="route-list__label">{social.label}</span>
+                    <span class="route-list__value mono">{social.href!.replace(/^https?:\/\//, '')}</span>
+                  </span>
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+          {
+            featuredLinks.map((link) => (
+              <li>
+                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                  <span class="route-list__icon">
+                    <Icon name="globe" size={16} />
+                  </span>
+                  <span class="route-list__body">
+                    <span class="route-list__label">{link.label}</span>
+                    <span class="route-list__value mono">{link.description}</span>
+                  </span>
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        {
+          hiddenSocials.length > 0 && (
+            <p class="contact__note">
+              {hiddenSocials.map((social) => social.label).join(' and ')} look
+              {hiddenSocials.length === 1 ? 's' : ''} not linked yet: no verified profile URL was
+              supplied, so the link stays hidden rather than pointing somewhere invented.
+            </p>
+          )
+        }
+      </section>
+    </div>
+
+    <!-- ── When to write ─────────────────────────────────── -->
+    <section class="when" aria-labelledby="when-title">
+      <h2 id="when-title">What is useful to include</h2>
+      <ul>
+        <li>
+          <h3>A specific subject line</h3>
+          <p>“Question about Nyayota’s search” gets a faster reply than “Hello”.</p>
+        </li>
+        <li>
+          <h3>What you have already tried</h3>
+          <p>Links, screenshots or the exact wording that confused you.</p>
+        </li>
+        <li>
+          <h3>What you need back</h3>
+          <p>An answer, a review, a fix, or an introduction — the clearer the better.</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    gap: var(--space-lg);
+    padding-block: var(--space-sm) var(--space-md);
+  }
+
+  .contact__label {
+    font-size: 0.5625rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-block-end: var(--space-sm);
+  }
+
+  /* ── Primary panel ──────────────────────────────────────── */
+  .contact__primary {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    background:
+      radial-gradient(ellipse 100% 120% at 100% 0%, var(--accent-soft), transparent 65%),
+      var(--surface);
+    align-self: start;
+  }
+
+  .contact__email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    word-break: break-word;
+  }
+
+  .contact__email:hover {
+    color: var(--accent);
+  }
+
+  .contact__email svg {
+    flex: none;
+    color: var(--accent);
+  }
+
+  .contact__pending {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.65;
+    max-width: 44ch;
+  }
+
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-start: var(--space-md);
+  }
+
+  /* ── Routes ─────────────────────────────────────────────── */
+  .route-list {
+    list-style: none;
+    padding: 0;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .route-list li {
+    border-block-end: 1px solid var(--line);
+  }
+
+  .route-list a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0.85rem 0.15rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .route-list a:hover .route-list__label {
+    color: var(--accent);
+  }
+
+  .route-list__icon {
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--ink-soft);
+  }
+
+  .route-list__body {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .route-list__label {
+    font-size: var(--text-sm);
+    color: var(--ink);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .route-list__value {
+    font-size: 0.625rem;
+    color: var(--ink-faint);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .route-list a > svg {
+    color: var(--ink-faint);
+    flex: none;
+  }
+
+  .contact__note {
+    margin-block-start: var(--space-sm);
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    line-height: 1.6;
+    max-width: 52ch;
+  }
+
+  /* ── When ───────────────────────────────────────────────── */
+  .when {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-lg);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .when h2 {
+    font-size: var(--text-lg);
+    margin-block-end: var(--space-md);
+  }
+
+  .when ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+
+  .when h3 {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0;
+    margin-block-end: 0.3rem;
+  }
+
+  .when p {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.6;
+    max-width: 34ch;
+  }
+
+  @media (min-width: 56rem) {
+    .contact {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+    }
+
+    .contact__primary {
+      padding: var(--space-xl);
+    }
+  }
+</style>

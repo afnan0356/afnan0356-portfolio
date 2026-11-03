@@ -1,0 +1,141 @@
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   One palette, two themes, one type scale. Change these to re-skin
+   the entire site — components never hardcode colours.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Type ─────────────────────────────────────────────────── */
+  --font-display: 'Newsreader Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-md: 1.1875rem;
+  --text-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 1.2rem + 1.1vw, 2rem);
+  --text-2xl: clamp(1.9rem, 1.35rem + 2.2vw, 2.9rem);
+  --text-3xl: clamp(2.4rem, 1.5rem + 3.6vw, 4rem);
+  --text-display: clamp(2.65rem, 1.2rem + 6.6vw, 5.6rem);
+
+  --leading-tight: 1.06;
+  --leading-snug: 1.22;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.72;
+
+  /* ── Space ────────────────────────────────────────────────── */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: clamp(3rem, 2rem + 4vw, 5rem);
+  --space-3xl: clamp(4.5rem, 3rem + 7vw, 8.5rem);
+
+  --measure: 68ch;
+  --measure-narrow: 54ch;
+  --container: 1200px;
+  --gutter: clamp(1.25rem, 0.5rem + 3vw, 3rem);
+  --header-h: 4.25rem;
+
+  /* ── Shape ────────────────────────────────────────────────── */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+  --border-width: 1px;
+
+  /* ── Motion ───────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-mid: 240ms;
+  --dur-slow: 520ms;
+
+  /* ── Layout helpers ───────────────────────────────────────── */
+  --z-header: 50;
+  --z-overlay: 80;
+  --z-skip: 100;
+}
+
+/* ── DARK (default) ─────────────────────────────────────────
+   A warm, paper-in-the-dark palette: near-black with a brown cast,
+   bone-white ink, and a single vermilion accent. */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0d0c0b;
+  --bg-raised: #141311;
+  --bg-sunken: #080807;
+  --bg-hover: #1b1917;
+  --surface: #131210;
+  --surface-strong: #1c1a17;
+
+  --ink: #f0ebe1;
+  --ink-soft: #c9c2b6;
+  --ink-muted: #9a938a;
+  --ink-faint: #6f6961;
+
+  --line: rgb(240 235 225 / 0.13);
+  --line-strong: rgb(240 235 225 / 0.26);
+
+  --accent: #f0864f;
+  --accent-hover: #ff9a66;
+  --accent-soft: rgb(240 134 79 / 0.14);
+  --accent-ink: #160c06; /* text on accent fills */
+
+  --good: #7fc3a1;
+  --warn: #e3be6a;
+  --focus: #8fc7ff;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 12px 32px -12px rgb(0 0 0 / 0.7);
+  --shadow-lg: 0 30px 80px -30px rgb(0 0 0 / 0.85);
+
+  --grid-line: rgb(240 235 225 / 0.05);
+  --selection: rgb(240 134 79 / 0.26);
+  --code-bg: #171513;
+}
+
+/* ── LIGHT ────────────────────────────────────────────────── */
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f7f3ec;
+  --bg-raised: #fdfaf5;
+  --bg-sunken: #efe9df;
+  --bg-hover: #f0e9dd;
+  --surface: #fffdf9;
+  --surface-strong: #f2ebe0;
+
+  --ink: #17150f;
+  --ink-soft: #3c362d;
+  --ink-muted: #665d50;
+  --ink-faint: #8b8174;
+
+  --line: rgb(23 21 15 / 0.14);
+  --line-strong: rgb(23 21 15 / 0.3);
+
+  --accent: #b4461a;
+  --accent-hover: #93370f;
+  --accent-soft: rgb(180 70 26 / 0.1);
+  --accent-ink: #fffaf4;
+
+  --good: #1f6f4c;
+  --warn: #8a5a00;
+  --focus: #12559a;
+
+  --shadow-sm: 0 1px 2px rgb(60 45 25 / 0.07);
+  --shadow-md: 0 12px 32px -14px rgb(60 45 25 / 0.18);
+  --shadow-lg: 0 30px 80px -30px rgb(60 45 25 / 0.25);
+
+  --grid-line: rgb(23 21 15 / 0.045);
+  --selection: rgb(180 70 26 / 0.16);
+  --code-bg: #f2ebe0;
+}
