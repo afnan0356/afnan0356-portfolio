@@ -63,7 +63,7 @@ const contactLinks = socials.filter((social) => isLive(social.href)).slice(0, 3)
             <dt>Elsewhere</dt>
             <dd class="hero__links">
               {
-                socials.filter((s) => isLive(s.href)).map((social) => (
+                socials.filter((s) => isLive(s.href)).slice(0, 2).map((social) => (
                   <a href={social.href!} rel="me noopener noreferrer" target="_blank">
                     {social.label}
                   </a>
@@ -166,7 +166,7 @@ const contactLinks = socials.filter((social) => isLive(social.href)).slice(0, 3)
         ) : (
           <p class="empty-state">
             <strong>No projects published yet</strong>
-            Add a Markdown file to <code>src/content/projects/</code> and set <code>featured: true</code>.
+            Published projects will appear here.
           </p>
         )
       }
@@ -216,7 +216,7 @@ const contactLinks = socials.filter((social) => isLive(social.href)).slice(0, 3)
             ) : (
               <p class="empty-state">
                 <strong>No posts yet</strong>
-                Add Markdown to <code>src/content/blog/</code>.
+                New articles will appear here when published.
               </p>
             )
           }
@@ -247,7 +247,7 @@ const contactLinks = socials.filter((social) => isLive(social.href)).slice(0, 3)
             ) : (
               <p class="empty-state">
                 <strong>Nothing on the shelf yet</strong>
-                Add Markdown to <code>src/content/writing/</code>.
+                Published writing will appear here.
               </p>
             )
           }

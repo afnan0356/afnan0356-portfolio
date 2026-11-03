@@ -11,9 +11,8 @@ import PageHeader from '../components/PageHeader.astro';
 import Icon from '../components/Icon.astro';
 import { site, socials, featuredLinks, isLive } from '../config/site';
 
-const contactSocials = socials.filter((social) => social.inContact && isLive(social.href));
-const allSocials = socials.filter((social) => isLive(social.href));
-const hiddenSocials = socials.filter((social) => !isLive(social.href));
+const allSocials = socials.filter((social) => social.inContact && isLive(social.href));
+
 ---
 
 <BaseLayout
@@ -56,6 +55,7 @@ const hiddenSocials = socials.filter((social) => !isLive(social.href));
                 >
                   Copy address
                 </button>
+                <span class="contact__copy-status" data-copy-status role="status" aria-live="polite" aria-atomic="true"></span>
               </div>
             </>
           ) : (
@@ -63,29 +63,7 @@ const hiddenSocials = socials.filter((social) => !isLive(social.href));
               <h2 id="email-title" class="contact__label mono">
                 Email
               </h2>
-              <p class="contact__pending">
-                No email address is published yet — a placeholder address would be worse than none.
-                Until then, GitHub and X are the reliable routes.
-              </p>
-              <div class="contact__actions">
-                {
-                  contactSocials.map((social) => (
-                    <a
-                      class:list={['btn', 'btn--sm', social.icon === 'github' && 'btn--primary']}
-                      href={social.href!}
-                      target="_blank"
-                      rel="me noopener noreferrer"
-                    >
-                      <Icon name={social.icon} size={14} />
-                      {social.label}
-                    </a>
-                  ))
-                }
-              </div>
-              <p class="editor-hint">
-                To publish an address, set <code>email</code> in <code>src/config/site.ts</code>. This
-                card, the homepage button and the CV will all update.
-              </p>
+              <p class="contact__pending">Use one of the public channels below to get in touch.</p>
             </>
           )
         }
@@ -129,15 +107,6 @@ const hiddenSocials = socials.filter((social) => !isLive(social.href));
           }
         </ul>
 
-        {
-          hiddenSocials.length > 0 && (
-            <p class="contact__note">
-              {hiddenSocials.map((social) => social.label).join(' and ')} look
-              {hiddenSocials.length === 1 ? 's' : ''} not linked yet: no verified profile URL was
-              supplied, so the link stays hidden rather than pointing somewhere invented.
-            </p>
-          )
-        }
       </section>
     </div>
 
@@ -174,7 +143,7 @@ const hiddenSocials = socials.filter((social) => !isLive(social.href));
     font-weight: 400;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    color: var(--ink-muted);
     margin-block-end: var(--space-sm);
   }
 
@@ -189,7 +158,20 @@ const hiddenSocials = socials.filter((social) => !isLive(social.href));
     align-self: start;
   }
 
+  .contact__actions .btn {
+    min-block-size: 2.75rem;
+  }
+
+  .contact__copy-status {
+    flex-basis: 100%;
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+
   .contact__email {
+    max-inline-size: 100%;
+    min-block-size: 2.75rem;
+    overflow-wrap: anywhere;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -237,8 +219,9 @@ const hiddenSocials = socials.filter((social) => !isLive(social.href));
   }
 
   .route-list a {
+    min-block-size: 2.75rem;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--space-sm);
     padding: 0.85rem 0.15rem;
@@ -274,21 +257,21 @@ const hiddenSocials = socials.filter((social) => !isLive(social.href));
 
   .route-list__value {
     font-size: 0.625rem;
-    color: var(--ink-faint);
+    color: var(--ink-muted);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .route-list a > svg {
-    color: var(--ink-faint);
+    color: var(--ink-muted);
     flex: none;
   }
 
   .contact__note {
     margin-block-start: var(--space-sm);
     font-size: var(--text-xs);
-    color: var(--ink-faint);
+    color: var(--ink-muted);
     line-height: 1.6;
     max-width: 52ch;
   }

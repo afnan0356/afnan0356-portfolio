@@ -53,16 +53,13 @@ caseStudy:
     - Typography does much of the usability work when the content is text-heavy and long.
 ---
 
-import NyayotaShot from '../../assets/projects/nyayota-homepage.png';
-
 Nyayota is a legal information platform for people who need to *find* a provision and then
 understand it. It covers major Bangladeshi statutes across the pre-independence, Pakistani and
 Bangladeshi eras, plus a set of international instruments such as the UDHR and ICCPR.
 
-<figure>
-  <NyayotaShot alt="The Nyayota homepage: a legal search field above a list of featured statutes, with quick access to Bangladesh laws, international treaties and research pathways." />
-  <figcaption>The Nyayota homepage — search-first, with featured statutes and guided pathways for common legal situations.</figcaption>
-</figure>
+![The Nyayota homepage: a legal search field above featured statutes and legal research pathways.](../../assets/projects/nyayota-homepage.png)
+
+*The Nyayota homepage — search-first, with featured statutes and guided pathways for common legal situations.*
 
 ## What is inside
 

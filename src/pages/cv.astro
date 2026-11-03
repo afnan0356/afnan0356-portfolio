@@ -1,4 +1,5 @@
 ---
+import AuthorNote from "../components/AuthorNote.astro";
 /**
  * CV — one source of truth (`src/data/cv.ts`), two outputs:
  *   • this web page
@@ -14,14 +15,14 @@ import { cv } from '../data/cv';
 
 const contactLinks = [
   ...(site.email ? [{ label: site.email, href: `mailto:${site.email}`, icon: 'mail' as const }] : []),
-  ...socials.filter((social) => isLive(social.href)).map((social) => ({
+  ...socials.filter((social) => isLive(social.href)).slice(0, 2).map((social) => ({
     label: social.label,
     href: social.href!,
     icon: social.icon,
   })),
 ];
 
-const showSummary = !cv.summaryIsPlaceholder || site.showEditorHints;
+const showSummary = !cv.summaryIsPlaceholder;
 const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.length > 0;
 ---
 
@@ -79,12 +80,7 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
             <p class:list={['cv__summary', cv.summaryIsPlaceholder && 'is-placeholder']}>
               {cv.summary}
             </p>
-            {cv.summaryIsPlaceholder && site.showEditorHints && (
-              <p class="editor-hint">
-                Replace this paragraph in <code>src/data/cv.ts</code>, then set
-                <code>summaryIsPlaceholder: false</code>.
-              </p>
-            )}
+
           </section>
         )
       }
@@ -197,11 +193,11 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
 
       {
         !hasContent && (
-          <p class="editor-hint no-print">
+          <AuthorNote>
             Education and experience are intentionally empty rather than invented. Add real entries
             to <code>education</code> and <code>experience</code> in <code>src/data/cv.ts</code> and
             the sections will appear here (and in the printed version) automatically.
-          </p>
+          </AuthorNote>
         )
       }
 
@@ -209,12 +205,7 @@ const hasContent = cv.education.length + cv.experience.length + cv.selectedWork.
 
       <footer class="cv__footer">
         <p class="mono">Last updated {site.cvUpdated}</p>
-        {!site.cvPdf && (
-          <p class="mono no-print">
-            No PDF yet — use “Save as PDF” above, or add one to <code>public/</code> and set
-            <code>site.cvPdf</code>.
-          </p>
-        )}
+
       </footer>
     </article>
   </div>

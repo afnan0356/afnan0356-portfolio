@@ -1,4 +1,5 @@
 ---
+import AuthorNote from "../../components/AuthorNote.astro";
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
@@ -48,14 +49,14 @@ const rest = posts.filter((post) => post !== featured);
       posts.length === 0 ? (
         <p class="empty-state">
           <strong>No posts yet</strong>
-          Drop a Markdown file into <code>src/content/blog/</code>. The filename becomes the URL.
+          New articles will appear here when published.
         </p>
       ) : (
         <div class="post-list">
           {featured && (
             <article class="post-featured">
               <a href={`/blog/${featured.id}/`} class="post-featured__link">
-                <span class="post-featured__label mono">Latest</span>
+                <span class="post-featured__label mono">Featured</span>
                 <h2 class="post-featured__title">{featured.data.title}</h2>
                 <p class="post-featured__desc">{featured.data.description}</p>
                 <span class="post-featured__meta mono">
@@ -99,11 +100,11 @@ const rest = posts.filter((post) => post !== featured);
       )
     }
 
-    <p class="editor-hint">
+    <AuthorNote>
       Blog posts live in <code>src/content/blog/</code>. Required frontmatter:
       <code>title</code>, <code>description</code>, <code>published</code>. Reading time is calculated
       from the body automatically. Add <code>draft: true</code> to keep a post out of the public build.
-    </p>
+    </AuthorNote>
   </div>
 </BaseLayout>
 

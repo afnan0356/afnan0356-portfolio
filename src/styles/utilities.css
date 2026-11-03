@@ -314,7 +314,7 @@ a.chip:hover {
 
 /* ── Editor hints ───────────────────────────────────────────── */
 /* Dashed notes that explain where to add real content.
-   Global switch: site.showEditorHints in src/config/site.ts */
+   Rendered only through AuthorNote.astro in development. */
 .editor-hint {
   display: block;
   border: 1px dashed var(--line-strong);

@@ -5,7 +5,7 @@
  * followed by a dark page.
  *
  * It is intentionally tiny, has no dependencies, and degrades to
- * "respect the operating system setting" if storage is unavailable.
+ * "dark mode" if storage is unavailable.
  */
 ---
 
@@ -21,10 +21,10 @@
     try {
       theme = localStorage.getItem('theme');
     } catch (e) {
-      /* Private mode / storage blocked — fall back to the system value. */
+      /* Private mode / storage blocked — keep the dark default. */
     }
     if (theme !== 'light' && theme !== 'dark') {
-      theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      theme = 'dark';
     }
     root.dataset.theme = theme;
     root.style.colorScheme = theme;

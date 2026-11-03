@@ -1,10 +1,11 @@
 ---
+import AuthorNote from "../components/AuthorNote.astro";
 /**
  * About — pinned, not invented.
  *
  * Structure and headings are ready; every paragraph that would require
  * personal facts is a clearly-labelled placeholder that disappears when
- * `site.showEditorHints` is turned off.
+ * production build is generated.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
@@ -14,7 +15,7 @@ import { getProjects, getPosts } from '../lib/content';
 
 const projects = await getProjects();
 const posts = await getPosts();
-const hints = site.showEditorHints;
+const hints = import.meta.env.DEV;
 ---
 
 <BaseLayout
@@ -48,11 +49,11 @@ const hints = site.showEditorHints;
         </p>
         {
           hints && (
-            <p class="editor-hint">
+            <AuthorNote>
               This is where your real introduction goes — where you are from, what you are studying
               or working on, and the one thing you want a stranger to remember. It lives in
               <code>src/pages/about.astro</code>. I have not invented any biography for you.
-            </p>
+            </AuthorNote>
           )
         }
       </section>
@@ -125,22 +126,6 @@ const hints = site.showEditorHints;
         </a>
       </section>
 
-      <section class="about__section" aria-labelledby="education-title">
-        <h2 id="education-title">Education</h2>
-        {
-          hints ? (
-            <p class="empty-state">
-              <strong>Nothing added yet</strong>
-              Education details are in <code>src/data/cv.ts</code>. They are left empty on purpose:
-              I have no verified information to put here, and inventing it would be worse than
-              leaving the section out. Add your real institution, programme and dates and both this
-              site’s <a href="/cv/">CV page</a> and the printed CV will show them.
-            </p>
-          ) : (
-            <p class="text-muted">Details are in the <a href="/cv/">CV</a>.</p>
-          )
-        }
-      </section>
     </div>
 
     <!-- ── Sidebar ─────────────────────────────────────────── -->
@@ -175,7 +160,7 @@ const hints = site.showEditorHints;
         <h2 class="side-card__title mono">Find me</h2>
         <ul class="side-links">
           {
-            socials.filter((social) => isLive(social.href)).map((social) => (
+            socials.filter((social) => isLive(social.href)).slice(0, 2).map((social) => (
               <li>
                 <a href={social.href!} target="_blank" rel="me noopener noreferrer">
                   <Icon name={social.icon} size={15} />
@@ -195,14 +180,6 @@ const hints = site.showEditorHints;
         </ul>
       </div>
 
-      <div class="side-card side-card--quote">
-        <p class="side-quote">
-          “Make the thing small enough that someone can hold all of it in their head.”
-        </p>
-        <p class="side-quote__source mono">
-          <a href="/writing/on-small-tools/">On small tools</a>
-        </p>
-      </div>
     </aside>
   </div>
 
