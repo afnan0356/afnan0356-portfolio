@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../config/site';
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/projects/', label: 'Projects' },
+  { href: '/writing/', label: 'Writing' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/vault/', label: 'Vault' },
+  { href: '/contact/', label: 'Contact' },
+];
+---
+
+<BaseLayout title="Page not found" description="This page does not exist." path="/404/" noindex>
+  <section class="notfound">
+    <div class="container container--narrow">
+      <p class="notfound__code mono" aria-hidden="true">404</p>
+      <h1 class="notfound__title">This page isn’t here.</h1>
+      <p class="notfound__text">
+        The link may be out of date, or the page may have moved. Nothing is broken — it just isn’t
+        at this address.
+      </p>
+      <ul class="notfound__links">
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href}>
+                {link.label}
+                <Icon name="arrow-right" size={13} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="notfound__foot mono">
+        If you followed a link from {site.name} itself, that is a bug worth reporting on
+        <a href="https://github.com/afnan0356/afnan0356-portfolio/issues">GitHub</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    padding-block: var(--space-3xl) var(--space-2xl);
+    min-block-size: 60svh;
+  }
+
+  .notfound__code {
+    font-size: clamp(3.5rem, 2rem + 8vw, 7rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    opacity: 0.35;
+  }
+
+  .notfound__title {
+    font-size: var(--text-2xl);
+    margin-block: var(--space-sm) var(--space-sm);
+  }
+
+  .notfound__text {
+    color: var(--ink-muted);
+    max-width: 44ch;
+    line-height: 1.7;
+  }
+
+  .notfound__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin-block: var(--space-lg);
+  }
+
+  .notfound__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .notfound__links a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .notfound__foot {
+    font-size: 0.625rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+    line-height: 1.8;
+  }
+
+  .notfound__foot a {
+    color: var(--ink-muted);
+  }
+</style>

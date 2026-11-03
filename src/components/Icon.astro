@@ -1,0 +1,112 @@
+---
+/**
+ * Icon — an inline SVG set. Inline paths mean zero network requests,
+ * perfect control over currentColor, and no icon-font dependency.
+ *
+ * Sizes: 16 (inline with text), 20 (buttons), 24 (social row).
+ */
+export interface Props {
+  name:
+    | 'github'
+    | 'x'
+    | 'linkedin'
+    | 'mail'
+    | 'globe'
+    | 'book'
+    | 'arrow-right'
+    | 'arrow-up-right'
+    | 'arrow-left'
+    | 'arrow-down'
+    | 'sun'
+    | 'moon'
+    | 'menu'
+    | 'close'
+    | 'download'
+    | 'external'
+    | 'file'
+    | 'check'
+    | 'clock'
+    | 'tag'
+    | 'copy'
+    | 'chevron-right'
+    | 'list'
+    | 'print';
+  size?: number;
+  /** Decorative icons are hidden from assistive tech by default. */
+  label?: string;
+  strokeWidth?: number;
+}
+
+const { name, size = 18, label, strokeWidth = 1.5 } = Astro.props;
+
+// Stroke icons share a 24×24 grid.
+const strokePaths: Record<string, string> = {
+  'arrow-right': 'M5 12h14M13 6l6 6-6 6',
+  'arrow-left': 'M19 12H5M11 18l-6-6 6-6',
+  'arrow-down': 'M12 5v14M6 13l6 6 6-6',
+  'arrow-up-right': 'M7 17 17 7M8 7h9v9',
+  external: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5',
+  download: 'M12 4v11M7 10l5 5 5-5M5 20h14',
+  menu: 'M4 7h16M4 12h16M4 17h16',
+  close: 'M6 6l12 12M18 6 6 18',
+  sun: 'M12 4v2M12 18v2M4 12h2M18 12h2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M17.7 6.3l-1.4 1.4M7.7 16.3l-1.4 1.4',
+  moon: 'M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z',
+  check: 'M4 12.5 9 17.5 20 6.5',
+  clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM12 7v5l3.5 2',
+  tag: 'M4 11.5V5a1 1 0 0 1 1-1h6.5a1 1 0 0 1 .7.3l7 7a1 1 0 0 1 0 1.4l-6.5 6.5a1 1 0 0 1-1.4 0l-7-7a1 1 0 0 1-.3-.7Z',
+  'chevron-right': 'M9 5l7 7-7 7',
+  list: 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01',
+  book: 'M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 15.5ZM20 5.5A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h4.5a1.5 1.5 0 0 0 1.5-1.5Z',
+  globe: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z',
+  file: 'M13 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8l-5-5ZM13 3v5h5',
+  copy: 'M9 9h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10a1 1 0 0 1 1-1ZM5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1',
+  print: 'M7 8V4h10v4M7 18H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2M7 14h10v6H7Z',
+};
+
+const fillPaths: Record<string, string> = {
+  github:
+    'M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.08 2.91.82.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.8c.85.004 1.71.115 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.001 10.001 0 0 0 22 12c0-5.52-4.48-10-10-10Z',
+  x: 'M17.53 3H20.5l-6.48 7.41L21.5 21h-5.9l-4.62-6.04L5.7 21H2.72l6.93-7.93L2.5 3h6.05l4.18 5.52L17.53 3Zm-1.04 16.2h1.64L7.6 4.7H5.84l10.65 14.5Z',
+  linkedin:
+    'M20.45 3H3.55A.55.55 0 0 0 3 3.55v16.9c0 .3.25.55.55.55h16.9a.55.55 0 0 0 .55-.55V3.55A.55.55 0 0 0 20.45 3ZM8.34 18.34H5.67V9.75h2.67v8.59ZM7 8.58a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1Zm11.34 9.76h-2.67v-4.18c0-1-.36-1.68-1.25-1.68-.68 0-1.09.46-1.27.9-.06.16-.08.38-.08.6v4.36h-2.68s.04-7.08 0-7.81h2.68v1.11c.35-.55.99-1.33 2.4-1.33 1.75 0 3.07 1.14 3.07 3.6v4.43Z',
+  mail: 'M3 5.5A1.5 1.5 0 0 1 4.5 4h15A1.5 1.5 0 0 1 21 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5v-13Zm1.8.5 7.2 5.4L19.2 6H4.8Z',
+};
+
+const isFill = name in fillPaths;
+const path = isFill ? fillPaths[name] : strokePaths[name];
+
+// Typed as SVG attributes so `astro check` accepts them when spread.
+const a11y: Record<string, string> = label
+  ? { role: 'img', 'aria-label': label }
+  : { 'aria-hidden': 'true', focusable: 'false' };
+---
+
+{
+  isFill ? (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      {...a11y}
+    >
+      <path d={path} />
+    </svg>
+  ) : (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width={strokeWidth}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      {...a11y}
+    >
+      <path d={path} />
+    </svg>
+  )
+}

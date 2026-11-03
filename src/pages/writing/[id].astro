@@ -1,0 +1,196 @@
+---
+/**
+ * Standalone writing piece — a story, essay, poem or note.
+ * Book overviews and chapters have their own routes under /writing/book/.
+ */
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Prose from '../../components/Prose.astro';
+import Byline from '../../components/Byline.astro';
+import DemoBanner from '../../components/DemoBanner.astro';
+import Icon from '../../components/Icon.astro';
+import { getPieces, isDemo, formLabels } from '../../lib/content';
+import { readingTime } from '../../lib/text';
+
+export async function getStaticPaths() {
+  const pieces = await getPieces();
+  return pieces.map((piece) => ({ params: { id: piece.id }, props: { piece } }));
+}
+
+interface Props {
+  piece: CollectionEntry<'writing'>;
+}
+
+const { piece } = Astro.props;
+const { Content } = await render(piece);
+const minutes = readingTime(piece.body);
+const all = await getPieces();
+const index = all.findIndex((entry) => entry.id === piece.id);
+const next = index > 0 ? all[index - 1] : null;
+const prev = index < all.length - 1 ? all[index + 1] : null;
+---
+
+<BaseLayout
+  title={piece.data.title}
+  description={piece.data.description}
+  path={`/writing/${piece.id}/`}
+  type="article"
+  published={piece.data.published}
+  updated={piece.data.updated}
+  tags={piece.data.tags}
+  noindex={isDemo(piece)}
+>
+  <div class="container container--text">
+    <a class="back-link" href="/writing/">
+      <Icon name="arrow-left" size={14} />
+      The shelf
+    </a>
+
+    <article class="piece">
+      {isDemo(piece) && <DemoBanner kind="piece of writing" />}
+
+      <header class="piece__head">
+        <p class="piece__form mono">{formLabels[piece.data.form] ?? 'Writing'}</p>
+        <h1 class="piece__title">{piece.data.title}</h1>
+        <p class="piece__desc">{piece.data.description}</p>
+        <Byline published={piece.data.published} updated={piece.data.updated} readingTime={minutes} />
+      </header>
+
+      <hr class="piece__rule" />
+
+      <Prose tone="reading">
+        <Content />
+      </Prose>
+
+      {
+        piece.data.tags.length > 0 && (
+          <ul class="piece__tags" aria-label="Tags">
+            {piece.data.tags.map((tag) => (
+              <li class="chip">{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+
+      {
+        (prev || next) && (
+          <nav class="piece__pager" aria-label="More writing">
+            {prev ? (
+              <a href={`/writing/${prev.id}/`} class="piece__pager-link">
+                <span class="mono">Previous</span>
+                <span class="piece__pager-title">{prev.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <a href={`/writing/${next.id}/`} class="piece__pager-link piece__pager-link--next">
+                <span class="mono">Next</span>
+                <span class="piece__pager-title">{next.data.title}</span>
+              </a>
+            )}
+          </nav>
+        )
+      }
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding-block: var(--space-md) var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .piece__head {
+    display: grid;
+    gap: 0.7rem;
+    padding-block: var(--space-sm) var(--space-md);
+  }
+
+  .piece__form {
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .piece__title {
+    font-size: var(--text-3xl);
+    line-height: 1.02;
+    letter-spacing: -0.028em;
+    max-width: 24ch;
+  }
+
+  .piece__desc {
+    font-size: var(--text-md);
+    color: var(--ink-muted);
+    font-style: italic;
+    line-height: 1.6;
+    max-width: 52ch;
+    font-family: var(--font-display);
+  }
+
+  .piece__rule {
+    height: 1px;
+    border: 0;
+    background: var(--line);
+    margin-block: var(--space-sm) var(--space-lg);
+  }
+
+  .piece__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-lg);
+  }
+
+  .piece__pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin-block: var(--space-xl) var(--space-2xl);
+    border-block-start: 1px solid var(--line);
+    padding-block-start: var(--space-md);
+  }
+
+  .piece__pager-link {
+    display: grid;
+    gap: 0.3rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .piece__pager-link .mono {
+    font-size: 0.5625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .piece__pager-title {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    line-height: 1.3;
+  }
+
+  .piece__pager-link:hover .piece__pager-title {
+    color: var(--accent);
+  }
+
+  .piece__pager-link--next {
+    text-align: end;
+  }
+</style>

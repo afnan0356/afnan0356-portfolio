@@ -1,0 +1,543 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
+import { getVaultItems, vaultCategories, verificationLabels, isDemo } from '../../lib/content';
+import { formatDate, isoDate, groupBy } from '../../lib/text';
+import { timelineByYear, timelineStateLabels, type TimelineState } from '../../data/timeline';
+
+const items = await getVaultItems();
+const usedCategories = new Set(items.map((item) => item.data.category));
+const categories = vaultCategories.filter(
+  (category) => category.id === 'all' || usedCategories.has(category.id as never),
+);
+
+const counts = {
+  verified: items.filter((item) => item.data.verification === 'verified').length,
+  inProgress: items.filter((item) => item.data.verification === 'in-progress').length,
+};
+
+const years = timelineByYear();
+const stateOrder: TimelineState[] = ['verified', 'in-progress', 'learning', 'planned'];
+
+// Group by category for the library view.
+const grouped = groupBy(items, (item) => item.data.category);
+---
+
+<BaseLayout
+  title="Vault"
+  description="A document library: CVs, certificates, publications, research and verified project evidence, kept apart from progress notes."
+  path="/vault/"
+>
+  <div class="container">
+    <PageHeader
+      eyebrow="Record"
+      title="Vault"
+      lede="Documents and evidence, with the verification status stated plainly. If something is unfinished or self-reported, it says so."
+      meta={`${items.length} ${items.length === 1 ? 'document' : 'documents'} · ${counts.verified} verified`}
+    />
+
+    <!-- ── Category filter ────────────────────────────────── -->
+    {
+      items.length > 0 && (
+        <nav class="filters" aria-label="Filter documents by category">
+          <ul>
+            {categories.map((category, i) => (
+              <li>
+                <a
+                  class:list={['filter', i === 0 && 'is-active']}
+                  href={i === 0 ? '/vault/' : `/vault/category/${category.id}/`}
+                >
+                  {category.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
+
+  <!-- ── Library ───────────────────────────────────────────── -->
+  <section class="section section--tight" aria-labelledby="library-title">
+    <div class="container">
+      <h2 id="library-title" class="rule-label">Library</h2>
+
+      {
+        items.length === 0 ? (
+          <p class="empty-state">
+            <strong>The vault is empty</strong>
+            Add a Markdown file to <code>src/content/vault/</code> and upload the document to
+            <code>public/vault/</code>. Only publish documents you are happy to make public.
+          </p>
+        ) : (
+          <div class="library">
+            {Object.entries(grouped).map(([category, entries]) => (
+              <div class="library__group">
+                <h3 class="library__group-title mono">
+                  {vaultCategories.find((c) => c.id === category)?.label ?? category}
+                  <span>{entries.length}</span>
+                </h3>
+                <ul class="library__items">
+                  {entries.map((item) => {
+                    const verification = verificationLabels[item.data.verification];
+                    return (
+                      <li class="doc">
+                        <div class="doc__top">
+                          <span class:list={['chip', item.data.verification === 'verified' ? 'chip--accent' : '']}>
+                            {verification.label}
+                          </span>
+                          {isDemo(item) && <span class="chip">Sample</span>}
+                          <time class="mono" datetime={isoDate(item.data.date)}>
+                            {formatDate(item.data.date)}
+                          </time>
+                        </div>
+                        <h4 class="doc__title">
+                          {item.data.file ? (
+                            <a href={item.data.file} target="_blank" rel="noopener noreferrer">
+                              {item.data.title}
+                              <Icon name="file" size={13} />
+                            </a>
+                          ) : item.data.link ? (
+                            <a href={item.data.link} target="_blank" rel="noopener noreferrer">
+                              {item.data.title}
+                              <Icon name="external" size={13} />
+                            </a>
+                          ) : (
+                            item.data.title
+                          )}
+                        </h4>
+                        <p class="doc__desc">{item.data.description}</p>
+                        {item.data.issuer && <p class="doc__issuer mono">Issued by {item.data.issuer}</p>}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="policy">
+        <h3>What the labels mean</h3>
+        <dl>
+          <div>
+            <dt><span class="chip chip--accent">Verified</span></dt>
+            <dd>Backed by a public artefact — a repository, a live site, or an official document.</dd>
+          </div>
+          <div>
+            <dt><span class="chip">Self-reported</span></dt>
+            <dd>Described here, but with nothing independently checkable behind it.</dd>
+          </div>
+          <div>
+            <dt><span class="chip">In progress</span></dt>
+            <dd>Started and unfinished. Never counted as an achievement.</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Timeline ──────────────────────────────────────────── -->
+  <section class="timeline-section" id="progress" aria-labelledby="timeline-title">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__text">
+          <p class="eyebrow">Progress</p>
+          <h2 id="timeline-title">Learning timeline</h2>
+          <p>
+            Development notes kept separate from the documents above: what is finished, what is
+            moving, and what is only a plan.
+          </p>
+        </div>
+      </div>
+
+      <ul class="state-key" aria-label="Timeline key">
+        {
+          stateOrder.map((state) => (
+            <li class:list={['state-key__item', `state-key__item--${state}`]}>
+              <span class="state-key__dot" aria-hidden="true" />
+              {timelineStateLabels[state]}
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="timeline">
+        {
+          years.map((group) => (
+            <div class="timeline__year">
+              <h3 class="timeline__year-label mono">{group.year}</h3>
+              <ol class="timeline__entries">
+                {group.entries.map((entry) => (
+                  <li class:list={['entry', `entry--${entry.state}`]}>
+                    <div class="entry__marker" aria-hidden="true" />
+                    <div class="entry__body">
+                      <div class="entry__meta mono">
+                        <span>{entry.track}</span>
+                        <span class:list={['entry__state', `entry__state--${entry.state}`]}>
+                          {timelineStateLabels[entry.state]}
+                        </span>
+                      </div>
+                      <h4 class="entry__title">
+                        {entry.href ? <a href={entry.href}>{entry.title}</a> : entry.title}
+                      </h4>
+                      <p class="entry__summary">{entry.summary}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── Filters ────────────────────────────────────────────── */
+  .filters {
+    padding-block: var(--space-sm);
+    border-block: 1px solid var(--line);
+    margin-block-end: var(--space-md);
+  }
+
+  .filters ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .filter {
+    display: inline-block;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .filter:hover {
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+
+  .filter.is-active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* ── Library ────────────────────────────────────────────── */
+  .library {
+    display: grid;
+    gap: var(--space-xl);
+    margin-block-start: var(--space-md);
+  }
+
+  .library__group-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-block-end: 0.6rem;
+    border-block-end: 1px solid var(--line);
+  }
+
+  .library__group-title span {
+    color: var(--ink-faint);
+  }
+
+  .library__items {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .doc {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: var(--space-md);
+    border-block-end: 1px solid var(--line);
+  }
+
+  .doc__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.625rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+  }
+
+  .doc__top time {
+    margin-inline-start: auto;
+  }
+
+  .doc__title {
+    font-size: var(--text-md);
+    line-height: 1.35;
+  }
+
+  .doc__title a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+  }
+
+  .doc__title a:hover {
+    color: var(--accent);
+  }
+
+  .doc__title svg {
+    color: var(--ink-faint);
+    flex: none;
+  }
+
+  .doc__desc {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.6;
+    max-width: 66ch;
+  }
+
+  .doc__issuer {
+    font-size: 0.625rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Policy ─────────────────────────────────────────────── */
+  .policy {
+    margin-block-start: var(--space-xl);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    background: var(--surface);
+  }
+
+  .policy h3 {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-block-end: var(--space-sm);
+  }
+
+  .policy dl {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .policy dl > div {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: var(--space-sm);
+    align-items: baseline;
+  }
+
+  .policy dd {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  /* ── Timeline ───────────────────────────────────────────── */
+  .timeline-section {
+    border-block-start: 1px solid var(--line);
+    background: var(--bg-sunken);
+    padding-block: var(--space-2xl);
+    margin-block-start: var(--space-2xl);
+  }
+
+  .state-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    list-style: none;
+    padding: 0;
+    margin-block: var(--space-sm) var(--space-lg);
+  }
+
+  .state-key__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .state-key__dot {
+    inline-size: 6px;
+    block-size: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .state-key__item--verified .state-key__dot {
+    background: var(--good);
+  }
+
+  .state-key__item--in-progress .state-key__dot {
+    background: var(--warn);
+  }
+
+  .state-key__item--learning .state-key__dot {
+    background: var(--focus);
+  }
+
+  .state-key__item--planned .state-key__dot {
+    background: var(--ink-faint);
+  }
+
+  .timeline {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .timeline__year-label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+    padding-block-end: 0.5rem;
+    border-block-end: 1px solid var(--line-strong);
+    margin-block-end: var(--space-md);
+  }
+
+  .timeline__entries {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-md);
+    border-inline-start: 1px solid var(--line);
+    margin-inline-start: 0.3rem;
+  }
+
+  .entry {
+    position: relative;
+    padding-inline-start: var(--space-md);
+  }
+
+  .entry__marker {
+    position: absolute;
+    inset-inline-start: -4.5px;
+    inset-block-start: 0.4rem;
+    inline-size: 8px;
+    block-size: 8px;
+    border-radius: 50%;
+    background: var(--bg-sunken);
+    border: 1.5px solid var(--ink-faint);
+  }
+
+  .entry--verified .entry__marker {
+    border-color: var(--good);
+    background: var(--good);
+  }
+
+  .entry--in-progress .entry__marker {
+    border-color: var(--warn);
+    background: var(--warn);
+  }
+
+  .entry--learning .entry__marker {
+    border-color: var(--focus);
+  }
+
+  .entry__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.5625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-block-end: 0.3rem;
+  }
+
+  .entry__state {
+    padding: 0.1rem 0.35rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+  }
+
+  .entry__state--verified {
+    color: var(--good);
+    border-color: color-mix(in srgb, var(--good) 40%, transparent);
+  }
+
+  .entry__state--in-progress {
+    color: var(--warn);
+    border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+  }
+
+  .entry__state--learning {
+    color: var(--focus);
+    border-color: color-mix(in srgb, var(--focus) 40%, transparent);
+  }
+
+  .entry__title {
+    font-size: var(--text-md);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.4;
+  }
+
+  .entry__title a {
+    text-decoration: none;
+  }
+
+  .entry__title a:hover {
+    color: var(--accent);
+  }
+
+  .entry__summary {
+    margin-block-start: 0.3rem;
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.6;
+    max-width: 64ch;
+  }
+
+  @media (min-width: 48rem) {
+    .timeline__year {
+      display: grid;
+      grid-template-columns: 6rem 1fr;
+      gap: var(--space-lg);
+    }
+
+    .timeline__year-label {
+      border: 0;
+      padding: 0;
+      margin: 0;
+      text-align: end;
+    }
+
+    .policy dl > div {
+      grid-template-columns: 9rem 1fr;
+    }
+  }
+</style>

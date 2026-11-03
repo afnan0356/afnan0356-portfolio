@@ -1,0 +1,287 @@
+/* ═══════════════════════════════════════════════════════════════
+   PROSE — typography for rendered Markdown / MDX
+   Applies to blog posts, writing, chapters and project pages.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prose {
+  max-width: var(--measure);
+  color: var(--ink-soft);
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  hanging-punctuation: first last;
+}
+
+.prose > * + * {
+  margin-block-start: 1.35em;
+}
+
+.prose > :first-child {
+  margin-block-start: 0;
+}
+
+/* Opening paragraph gets a slightly larger, more editorial feel. */
+.prose > p:first-of-type {
+  font-size: 1.075em;
+  color: var(--ink-soft);
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: var(--ink);
+  margin-block-start: 2.2em;
+  margin-block-end: 0.55em;
+  scroll-margin-top: calc(var(--header-h) + 2rem);
+}
+
+.prose h2 {
+  font-size: var(--text-xl);
+  letter-spacing: -0.018em;
+  padding-block-end: 0.4rem;
+  border-block-end: 1px solid var(--line);
+}
+
+.prose h3 {
+  font-size: var(--text-lg);
+}
+
+.prose h4 {
+  font-size: var(--text-base);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.prose a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.prose a:hover {
+  color: var(--accent);
+}
+
+.prose strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.prose em {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.06em;
+  color: var(--ink);
+}
+
+.prose ul,
+.prose ol {
+  padding-inline-start: 1.35em;
+  color: var(--ink-soft);
+}
+
+.prose li + li {
+  margin-block-start: 0.4em;
+}
+
+.prose li::marker {
+  color: var(--accent);
+  font-size: 0.9em;
+}
+
+.prose ol li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--ink-muted);
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding-inline-start: var(--space-md);
+  border-inline-start: 2px solid var(--accent);
+  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-size: 1.18em;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.prose blockquote p + p {
+  margin-block-start: 0.8em;
+}
+
+.prose blockquote cite {
+  display: block;
+  margin-block-start: 0.6em;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-style: normal;
+  color: var(--ink-muted);
+}
+
+.prose hr {
+  height: 1px;
+  border: 0;
+  background: var(--line);
+  margin-block: 2.5em;
+  /* A typographic dingbat instead of a plain rule for longer pieces. */
+  position: relative;
+  overflow: visible;
+}
+
+.prose hr::after {
+  content: '◆';
+  position: absolute;
+  inset-inline-start: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  padding-inline: 0.75rem;
+  background: var(--bg);
+  color: var(--ink-faint);
+  font-size: 0.6rem;
+  line-height: 1;
+}
+
+/* ── Media ──────────────────────────────────────────────────── */
+.prose img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+}
+
+.prose figure {
+  margin-block: 2em;
+}
+
+.prose figcaption {
+  margin-block-start: 0.7em;
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+  font-family: var(--font-sans);
+}
+
+/* ── Code ───────────────────────────────────────────────────── */
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  padding: 0.12em 0.36em;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.prose pre {
+  position: relative;
+  overflow-x: auto;
+  padding: var(--space-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--code-bg) !important;
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  tab-size: 2;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 1em;
+  word-break: normal;
+}
+
+/* Shiki dual-theme output: use the CSS variables Astro emits. */
+.prose .astro-code,
+.prose .astro-code span {
+  color: var(--shiki-light);
+  background-color: transparent;
+}
+
+[data-theme='dark'] .prose .astro-code,
+[data-theme='dark'] .prose .astro-code span {
+  color: var(--shiki-dark);
+}
+
+/* ── Tables ─────────────────────────────────────────────────── */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  font-family: var(--font-sans);
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  padding: 0.6rem 0.85rem;
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+  vertical-align: top;
+}
+
+.prose th {
+  font-weight: 600;
+  color: var(--ink);
+  border-block-end-color: var(--line-strong);
+  white-space: nowrap;
+}
+
+/* ── Footnotes ──────────────────────────────────────────────── */
+.prose .footnotes {
+  margin-block-start: 3em;
+  padding-block-start: 1.5em;
+  border-block-start: 1px solid var(--line);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+/* ── Very small screens ─────────────────────────────────────── */
+@media (max-width: 480px) {
+  .prose {
+    font-size: 1.0625rem;
+  }
+
+  .prose pre {
+    padding: var(--space-sm);
+    border-radius: var(--radius-xs);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BOOK READING MODE
+   A dedicated measure, larger type and drop-cap for chapters.
+   ═══════════════════════════════════════════════════════════════ */
+.chapter-prose {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.02rem + 0.5vw, 1.3rem);
+  line-height: 1.78;
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+.chapter-prose > p:first-of-type::first-letter {
+  float: inline-start;
+  font-size: 3.5em;
+  line-height: 0.82;
+  padding-inline-end: 0.08em;
+  padding-block-start: 0.06em;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.chapter-prose p {
+  text-indent: 0;
+  margin-block-start: 0;
+}
+
+.chapter-prose p + p {
+  margin-block-start: 1.1em;
+}

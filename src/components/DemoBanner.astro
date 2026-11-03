@@ -1,0 +1,26 @@
+---
+/**
+ * DemoBanner — shown on pages generated from `demo: true` content.
+ * It makes it impossible to mistake sample writing for real work.
+ */
+interface Props {
+  /** What kind of sample this is: "article", "story", "project". */
+  kind?: string;
+}
+const { kind = 'content' } = Astro.props;
+---
+
+<aside class="demo-banner" role="note">
+  <strong>Sample</strong>
+  <span>
+    This {kind} is demonstration content shipped with the template. Replace it with your own in
+    <code>src/content/</code>.
+  </span>
+</aside>
+
+<style>
+  code {
+    font-family: var(--font-mono);
+    color: var(--ink-soft);
+  }
+</style>

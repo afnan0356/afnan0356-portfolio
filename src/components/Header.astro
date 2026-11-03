@@ -1,0 +1,412 @@
+---
+/**
+ * Header — sticky, translucent, and deliberately minimal.
+ * Desktop: inline nav. Mobile: a full-height panel opened by one button.
+ * Both share the same markup, so there is no duplicated navigation to
+ * keep in sync (important for accessibility and SEO).
+ */
+import { nav, site } from '../config/site';
+import ThemeToggle from './ThemeToggle.astro';
+import Icon from './Icon.astro';
+
+const pathname = Astro.url.pathname;
+// Treat /projects and /projects/child/ as the same active section.
+const isActive = (href: string) => {
+  const section = href.replace(/\/$/, '');
+  if (section === '') return pathname === '/';
+  return pathname === `${section}/` || pathname === section || pathname.startsWith(`${section}/`);
+};
+---
+
+<header class="site-header">
+  <div class="site-header__inner container">
+    <a class="wordmark" href="/" aria-label={`${site.name} — home`}>
+      <span class="wordmark__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="26" height="26" fill="none" aria-hidden="true">
+          <rect x="1" y="1" width="30" height="30" rx="7" stroke="currentColor" stroke-width="1.2" opacity="0.35"></rect>
+          <path d="M9 22V10.5l7 7.5 7-7.5V22" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </span>
+      <span class="wordmark__text">
+        <span class="wordmark__name">{site.name}</span>
+        <span class="wordmark__role">portfolio</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <ul class="site-nav__list">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                class:list={['site-nav__link', item.cta && 'site-nav__link--cta', isActive(item.href) && 'is-active']}
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <ThemeToggle />
+      <button
+        class="menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+      >
+        <span class="menu-toggle__open"><Icon name="menu" size={19} /></span>
+        <span class="menu-toggle__close"><Icon name="close" size={19} /></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
+    <nav aria-label="Mobile">
+      <ul class="mobile-menu__list">
+        <li>
+          <a
+            class:list={['mobile-menu__link', pathname === '/' && 'is-active']}
+            href="/"
+            aria-current={pathname === '/' ? 'page' : undefined}
+          >
+            <span>Home</span>
+            <Icon name="arrow-up-right" size={16} />
+          </a>
+        </li>
+        {
+          nav.map((item, index) => (
+            <li style={`--i:${index + 1}`}>
+              <a
+                class:list={['mobile-menu__link', isActive(item.href) && 'is-active']}
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                <span>{item.label}</span>
+                <Icon name="arrow-up-right" size={16} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="mobile-menu__foot">
+      <ThemeToggle labelled />
+      <span class="mobile-menu__hint">{site.status}</span>
+    </div>
+  </div>
+</header>
+
+<script>
+  // ── Mobile menu ────────────────────────────────────────────
+  // Small, dependency-free controller. It keeps aria-expanded, body
+  // scroll-locking and Escape-to-close in sync, and closes itself when
+  // the viewport grows past the mobile breakpoint.
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      menu.hidden = !open;
+      document.documentElement.classList.toggle('menu-open', open);
+      if (open) {
+        // Focus the first link so keyboard users land inside the panel.
+        menu.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true });
+      }
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Close after following a link (covers same-page anchors too).
+    menu.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    const desktop = window.matchMedia('(min-width: 60rem)');
+    desktop.addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border-block-end: 1px solid var(--line);
+    /* Progressive enhancement: real blur where supported, otherwise the
+       translucent background still reads well. */
+    backdrop-filter: saturate(150%) blur(14px);
+    -webkit-backdrop-filter: saturate(150%) blur(14px);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    min-block-size: var(--header-h);
+  }
+
+  /* ── Wordmark ───────────────────────────────────────────── */
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--ink);
+    flex: none;
+    padding-block: 0.4rem;
+  }
+
+  .wordmark__mark {
+    display: grid;
+    place-items: center;
+    color: var(--accent);
+    transition: rotate var(--dur-slow) var(--ease-out);
+  }
+
+  .wordmark:hover .wordmark__mark {
+    rotate: -6deg;
+  }
+
+  .wordmark__text {
+    display: grid;
+    gap: 0.1rem;
+    line-height: 1;
+  }
+
+  .wordmark__name {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+  }
+
+  .wordmark__role {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ── Desktop nav ────────────────────────────────────────── */
+  .site-nav {
+    display: none;
+  }
+
+  .site-nav__list {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .site-nav__link {
+    position: relative;
+    display: inline-block;
+    padding: 0.45rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .site-nav__link:hover {
+    color: var(--ink);
+  }
+
+  /* Active state: a small accent rule beneath the label, not a pill. */
+  .site-nav__link.is-active {
+    color: var(--ink);
+  }
+
+  .site-nav__link.is-active::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0.6rem;
+    inset-block-end: 0.05rem;
+    block-size: 1px;
+    background: var(--accent);
+  }
+
+  .site-nav__link--cta {
+    margin-inline-start: 0.4rem;
+    border: 1px solid var(--line-strong);
+    padding-inline: 0.85rem;
+  }
+
+  .site-nav__link--cta:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .site-nav__link--cta.is-active::after {
+    display: none;
+  }
+
+  .site-nav__link--cta.is-active {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+
+  /* ── Actions ────────────────────────────────────────────── */
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: none;
+  }
+
+  .menu-toggle {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 2.375rem;
+    block-size: 2.375rem;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--ink-soft);
+  }
+
+  .menu-toggle:hover {
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+
+  .menu-toggle__close,
+  .menu-toggle[aria-expanded='true'] .menu-toggle__open {
+    display: none;
+  }
+
+  .menu-toggle[aria-expanded='true'] .menu-toggle__close {
+    display: grid;
+  }
+
+  /* ── Mobile menu ────────────────────────────────────────── */
+  .mobile-menu {
+    border-block-start: 1px solid var(--line);
+    background: var(--bg);
+    padding: var(--space-sm) var(--gutter) var(--space-md);
+    max-block-size: calc(100svh - var(--header-h));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+  }
+
+  .mobile-menu__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: 0.85rem 0.15rem;
+    border-block-end: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .mobile-menu__link svg {
+    color: var(--ink-faint);
+    transition: translate var(--dur-fast) var(--ease-out);
+  }
+
+  .mobile-menu__link:hover svg,
+  .mobile-menu__link.is-active svg {
+    color: var(--accent);
+    translate: 3px -3px;
+  }
+
+  .mobile-menu__link.is-active {
+    color: var(--accent);
+  }
+
+  .mobile-menu__foot {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding-block-start: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .mobile-menu__hint {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ── Breakpoints ────────────────────────────────────────── */
+  @media (min-width: 60rem) {
+    .site-nav {
+      display: block;
+    }
+
+    .menu-toggle {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: none !important;
+    }
+  }
+
+  /* Prevent background scroll while the mobile panel is open. */
+  :global(html.menu-open) {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @media (max-width: 59.99rem) {
+      .mobile-menu:not([hidden]) {
+        animation: menu-in var(--dur-mid) var(--ease-out) both;
+      }
+
+      @keyframes menu-in {
+        from {
+          opacity: 0;
+          translate: 0 -8px;
+        }
+        to {
+          opacity: 1;
+          translate: 0 0;
+        }
+      }
+    }
+  }
+</style>

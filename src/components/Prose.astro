@@ -1,0 +1,14 @@
+---
+/**
+ * Prose — wrapper that applies the typographic styles to rendered content.
+ * `tone="reading"` switches to the book reading mode (serif, drop cap).
+ */
+interface Props {
+  tone?: 'default' | 'reading';
+}
+const { tone = 'default' } = Astro.props;
+---
+
+<div class:list={['prose', tone === 'reading' && 'chapter-prose']}>
+  <slot />
+</div>

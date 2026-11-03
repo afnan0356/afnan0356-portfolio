@@ -1,0 +1,68 @@
+---
+/**
+ * PageHeader — the standard opening for every interior page.
+ * An eyebrow label, a large display title, a short lede, and an
+ * optional meta row or action slot underneath.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  /** Optional small counter, e.g. "7 projects". */
+  meta?: string;
+  align?: 'start' | 'center';
+}
+
+const { eyebrow, title, lede, meta, align = 'start' } = Astro.props;
+---
+
+<header class:list={['page-header', align === 'center' && 'page-header--center']}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h1 class="page-header__title">{title}</h1>
+  {lede && <p class="page-header__lede">{lede}</p>}
+  {meta && <p class="page-header__meta mono">{meta}</p>}
+  <slot />
+</header>
+
+<style>
+  .page-header {
+    display: grid;
+    gap: var(--space-sm);
+    padding-block: var(--space-xl) var(--space-lg);
+    max-width: 60ch;
+  }
+
+  .page-header--center {
+    margin-inline: auto;
+    text-align: center;
+    justify-items: center;
+    max-width: 52ch;
+  }
+
+  .page-header__title {
+    font-size: var(--text-3xl);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  .page-header__lede {
+    color: var(--ink-muted);
+    font-size: var(--text-md);
+    line-height: 1.62;
+    max-width: 52ch;
+  }
+
+  .page-header__meta {
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .page-header :global(.page-header__actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-block-start: var(--space-2xs);
+  }
+</style>
