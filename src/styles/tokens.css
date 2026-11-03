@@ -38,7 +38,7 @@
 
   --measure: 68ch;
   --measure-narrow: 54ch;
-  --container: 1200px;
+  --container: 1280px;
   --gutter: clamp(1.25rem, 0.5rem + 3vw, 3rem);
   --header-h: 4.25rem;
 
@@ -51,11 +51,12 @@
   --border-width: 1px;
 
   /* ── Motion ───────────────────────────────────────────────── */
-  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-fast: 140ms;
-  --dur-mid: 240ms;
-  --dur-slow: 520ms;
+  --dur-mid: 280ms;
+  --dur-slow: 800ms;
+  --dur-reveal: 850ms;
 
   /* ── Layout helpers ───────────────────────────────────────── */
   --z-header: 50;
@@ -80,7 +81,7 @@
   --ink: #f0ebe1;
   --ink-soft: #c9c2b6;
   --ink-muted: #9a938a;
-  --ink-faint: #6f6961;
+  --ink-faint: #8f887d;
 
   --line: rgb(240 235 225 / 0.13);
   --line-strong: rgb(240 235 225 / 0.26);
@@ -101,6 +102,8 @@
   --grid-line: rgb(240 235 225 / 0.05);
   --selection: rgb(240 134 79 / 0.26);
   --code-bg: #171513;
+  --project-stage: #b8a69a;
+  --project-stage-ink: #29231e;
 }
 
 /* ── LIGHT ────────────────────────────────────────────────── */
@@ -117,7 +120,7 @@
   --ink: #17150f;
   --ink-soft: #3c362d;
   --ink-muted: #665d50;
-  --ink-faint: #8b8174;
+  --ink-faint: #75695b;
 
   --line: rgb(23 21 15 / 0.14);
   --line-strong: rgb(23 21 15 / 0.3);
@@ -138,4 +141,6 @@
   --grid-line: rgb(23 21 15 / 0.045);
   --selection: rgb(180 70 26 / 0.16);
   --code-bg: #f2ebe0;
+  --project-stage: #d8c6b5;
+  --project-stage-ink: #342a22;
 }

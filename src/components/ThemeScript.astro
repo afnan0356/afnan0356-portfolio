@@ -13,8 +13,7 @@
   (function () {
     var root = document.documentElement;
 
-    // Lets CSS safely use JS-dependent effects (e.g. reveal-on-scroll)
-    // without hiding content from visitors who have no JavaScript.
+    // Enables navigation enhancement styles; never gates content visibility.
     root.classList.add('js');
 
     var theme;

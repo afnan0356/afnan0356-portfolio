@@ -32,9 +32,9 @@ export const cv = {
    * sentences about what you do and what you want to be known for.
    */
   summary:
-    'Write two sentences here: what you work on, and what you want people to know about you. Everything on this page is edited in src/data/cv.ts.',
+    'I work on web projects that make information easier to find, read and use. My selected work includes Nyayota, an open-source legal research platform for Bangladesh, and this static Astro portfolio. My workflow includes AI-assisted development, with a focus on information structure, readable interfaces and static delivery.',
   /** Marks the summary above as placeholder copy (hides it when hints are off). */
-  summaryIsPlaceholder: true,
+  summaryIsPlaceholder: false,
 
   /* ── Education ───────────────────────────────────────────────
      Add entries and the section appears automatically, e.g.
@@ -50,7 +50,7 @@ export const cv = {
   selectedWork: [
     {
       title: 'Nyayota — open legal research platform',
-      organisation: 'Personal project · MIT licensed',
+      organisation: 'Personal project · AI-assisted development · MIT licensed',
       period: 'Repository created Aug 2026',
       description:
         'An open-source, statically deployed legal research platform covering Bangladeshi statutes and selected international instruments.',

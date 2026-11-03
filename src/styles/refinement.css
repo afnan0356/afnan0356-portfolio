@@ -1,0 +1,234 @@
+.folio-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.65;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 44px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: var(--text-sm);
+}
+.text-link svg {
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+.text-link:hover {
+  color: var(--accent);
+}
+.text-link:hover svg {
+  transform: translate(3px, -2px);
+}
+
+/* Shared V2 controls and chrome. Interior composition lives in editorial.css. */
+h1,
+h2,
+h3 {
+  font-weight: 400;
+}
+.page-header {
+  padding-block: clamp(3rem, 6vw, 5.5rem) 2.5rem !important;
+}
+.page-header__title {
+  font-weight: 400;
+  letter-spacing: -0.045em !important;
+}
+.page-header__lede {
+  max-width: 46ch !important;
+}
+.btn {
+  border-radius: 3px;
+  padding-inline: 1.25rem;
+  min-height: 44px;
+  letter-spacing: -0.01em;
+}
+.btn--primary {
+  --btn-bg: var(--accent);
+  --btn-ink: var(--accent-ink);
+}
+.btn--primary:hover {
+  background: var(--accent-hover);
+  color: var(--accent-ink);
+  border-color: var(--accent-hover);
+}
+.btn--ghost {
+  padding-inline: 0.8rem;
+}
+.panel,
+.card {
+  box-shadow: none;
+}
+.card:focus-within {
+  border-color: var(--accent);
+}
+/* Outrank Astro's scoped component selectors without !important overrides. */
+:root body .site-header .wordmark__mark {
+  color: var(--accent);
+}
+:root body .site-header .wordmark__name {
+  font-size: 1.25rem;
+}
+:root body .site-header .wordmark__role {
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+}
+:root body .site-header .site-nav__link {
+  font-size: 0.8125rem;
+  padding-inline: 0.6rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+:root body .site-header .site-nav__link--cta {
+  border-radius: 3px;
+  padding-inline: 1rem;
+}
+:root body .site-header .theme-toggle,
+:root body .site-header .menu-toggle {
+  border-radius: 50%;
+  border-color: var(--line-strong);
+}
+:root body .site-header .mobile-menu__link {
+  padding-block: 1rem;
+  font-size: 1.65rem;
+}
+.site-footer {
+  background: none !important;
+  margin-block-start: clamp(4rem, 8vw, 8rem) !important;
+  padding-bottom: 1.5rem !important;
+}
+:root body .site-footer .site-footer__top {
+  gap: 2.5rem;
+  padding-bottom: 1rem;
+}
+:root body .site-footer .site-footer__name {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+:root body .site-footer .site-footer__line {
+  max-width: 31ch;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1.25;
+  color: var(--ink-soft);
+  margin-top: 0.9rem;
+}
+:root body .site-footer .site-footer__socials {
+  gap: 0.15rem 0.85rem;
+  margin-top: 1.25rem;
+}
+:root body .site-footer .site-footer__socials a {
+  border: 0;
+  padding-inline: 0;
+  gap: 0.35rem;
+  border-radius: 0;
+  background: none;
+  min-height: 44px;
+  font-size: 0.6875rem;
+}
+:root body .site-footer .site-footer__socials a:hover {
+  color: var(--accent);
+  background: none;
+}
+:root body .site-footer .site-footer__socials svg {
+  width: 14px;
+  height: 14px;
+}
+:root body .site-footer .site-footer__col-title {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+:root body .site-footer .site-footer__col a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+:root body .site-footer .site-footer__col ul {
+  gap: 0;
+}
+.footer-signature {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-top: clamp(2.5rem, 7vw, 5rem);
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 16vw, 13rem);
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: -0.065em;
+  text-transform: uppercase;
+  color: var(--ink);
+  user-select: none;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 0.1em;
+}
+.footer-signature > span {
+  font-family: var(--font-sans);
+  font-size: 0.25em;
+  color: var(--accent);
+  font-weight: 300;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+:root body .site-footer .site-footer__bottom {
+  margin-top: 1.5rem;
+  padding-top: 0;
+  border-top: 0;
+  font-size: 0.625rem;
+  line-height: 1.8;
+}
+:root body .site-footer .site-footer__top-link {
+  min-height: 44px;
+}
+/* The only mask is presentational. Unenhanced text is fully visible. */
+.title-mask {
+  overflow: clip;
+}
+@media (max-width: 47.99rem) {
+  :root body .site-footer .site-footer__nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+  :root body .site-footer .site-footer__col a {
+    font-size: 0.75rem;
+  }
+  :root body .site-footer .site-footer__col-title {
+    font-size: 0.5625rem;
+  }
+  :root body .site-footer .site-footer__socials {
+    max-width: 30rem;
+  }
+  .footer-signature {
+    font-size: 20vw;
+  }
+  :root body .site-footer .site-footer__bottom {
+    align-items: start;
+  }
+  .page-header {
+    padding-top: 2.5rem !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-motion],
+  [data-enter],
+  [data-title-line] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .work-image-stage {
+    transform: none !important;
+  }
+}
+@media print {
+  .footer-signature {
+    display: none;
+  }
+}

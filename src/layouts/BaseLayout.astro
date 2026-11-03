@@ -7,6 +7,8 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/prose.css';
 import '../styles/utilities.css';
+import '../styles/refinement.css';
+import '../styles/editorial.css';
 
 // Fonts are self-hosted through Fontsource: no third-party requests, and
 // an automatic preload/fallback for the fonts actually used above the fold.
@@ -136,30 +138,6 @@ const path = props.path ?? Astro.url.pathname;
 
       syncButtons();
 
-      // ── Scroll reveals ────────────────────────────────────────
-      // One IntersectionObserver for the whole page. Elements are visible
-      // by default (CSS only hides them inside the no-reduced-motion
-      // query), so this is a progressive enhancement, not a requirement.
-      const reveals = document.querySelectorAll<HTMLElement>('.reveal');
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      if (reveals.length && !reduce && 'IntersectionObserver' in window) {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-in');
-                observer.unobserve(entry.target);
-              }
-            });
-          },
-          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
-        );
-        reveals.forEach((element) => observer.observe(element));
-      } else {
-        reveals.forEach((element) => element.classList.add('is-in'));
-      }
-
       // ── Copy buttons ──────────────────────────────────────────
       document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
         button.addEventListener('click', async () => {
@@ -180,6 +158,9 @@ const path = props.path ?? Astro.url.pathname;
           }, 1800);
         });
       });
+    </script>
+    <script>
+      import '../lib/motion';
     </script>
   </body>
 </html>

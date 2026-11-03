@@ -69,6 +69,8 @@ test('mobile menu opens, focuses first link, closes on Escape/link/desktop resiz
   };
   const menu = {
     hidden: true,
+    setAttribute() {},
+    removeAttribute() {},
     querySelector: () => ({ focus: () => { focused = true; } }),
     addEventListener: (event, callback) => menuEvents.set(event, callback),
   };
@@ -78,6 +80,7 @@ test('mobile menu opens, focuses first link, closes on Escape/link/desktop resiz
         if (active) classes.add(name); else classes.delete(name);
       } } },
       querySelector: (selector) => selector === '[data-menu-toggle]' ? toggle : menu,
+      querySelectorAll: () => [],
       addEventListener: (event, callback) => documentEvents.set(event, callback),
     },
     window: { matchMedia: () => ({ addEventListener: (_, callback) => { resized = callback; } }) },

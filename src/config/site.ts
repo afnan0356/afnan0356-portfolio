@@ -50,7 +50,7 @@ export const site = {
   headline: 'I build software that makes useful knowledge easier to reach.',
   /** Short introduction used on the homepage (2–3 sentences max). */
   intro:
-    'I build for the web, and I care about making useful knowledge easy to reach. Most of my current work goes into Nyayota, an open-source platform for Bangladeshi law, alongside writing and small experiments.',
+    'I build for the web, with a particular interest in making difficult information easier to use. My main project is Nyayota, an open-source legal research platform for Bangladesh.',
   /** A single line that tells a visitor where you are right now. */
   status: 'Building Nyayota and this site.',
   /** Set to `null` if you would rather not show a location. */

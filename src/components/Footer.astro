@@ -47,7 +47,7 @@ const columns = [
 
 <footer class="site-footer">
   <div class="container">
-    <div class="site-footer__top">
+    <div class="site-footer__top" data-motion="stagger">
       <div class="site-footer__brand">
         <a class="site-footer__name" href="/">{site.name}</a>
         <p class="site-footer__line">{site.headline}</p>
@@ -85,6 +85,7 @@ const columns = [
       </nav>
     </div>
 
+    <div class="footer-signature" aria-hidden="true">{site.shortName}<span>↗</span></div>
     <div class="site-footer__bottom">
       <p>© {year} {site.name}. <span class="site-footer__note">{footerNote}</span></p>
       <a class="site-footer__top-link" href="#top">

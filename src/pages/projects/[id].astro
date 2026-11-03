@@ -8,23 +8,26 @@
  * Nesting a project in a folder (src/content/projects/nyayota/index.md)
  * produces a nested URL (/projects/nyayota/) and keeps its assets together.
  */
-import { render, type CollectionEntry } from 'astro:content';
-import { Image } from 'astro:assets';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Icon from '../../components/Icon.astro';
-import DemoBanner from '../../components/DemoBanner.astro';
-import Prose from '../../components/Prose.astro';
-import { getProjects, isDemo, statusLabels } from '../../lib/content';
-import { formatDate, isoDate } from '../../lib/text';
+import { render, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+import DemoBanner from "../../components/DemoBanner.astro";
+import Prose from "../../components/Prose.astro";
+import { getProjects, isDemo, statusLabels } from "../../lib/content";
+import { formatDate, isoDate } from "../../lib/text";
 
 export async function getStaticPaths() {
   // Use the same helper as the index so drafts never leak into production.
   const projects = await getProjects();
-  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
 }
 
 interface Props {
-  project: CollectionEntry<'projects'>;
+  project: CollectionEntry<"projects">;
 }
 
 const { project } = Astro.props;
@@ -40,15 +43,16 @@ const prev = all[(index - 1 + all.length) % all.length];
 /** Sections present in the case study, in reading order. */
 const sections = cs
   ? [
-      cs.problem && { id: 'problem', label: 'The problem', body: cs.problem },
-      cs.goal && { id: 'goal', label: 'The goal', body: cs.goal },
-      cs.role && { id: 'role', label: 'My role', body: cs.role },
-      cs.approach && { id: 'approach', label: 'Approach', body: cs.approach },
-      cs.decisions?.length && { id: 'decisions', label: 'Technical decisions' },
-      cs.features?.length && { id: 'features', label: 'Features' },
-      cs.challenges?.length && { id: 'challenges', label: 'Challenges' },
-      cs.results?.length && { id: 'results', label: 'Results' },
-      cs.lessons?.length && { id: 'lessons', label: 'Lessons' },
+      cs.problem && { id: "problem", label: "The problem", body: cs.problem },
+      cs.goal && { id: "goal", label: "Product direction", body: cs.goal },
+      cs.role && { id: "role", label: "Role & process", body: cs.role },
+      cs.approach && { id: "approach", label: "Approach", body: cs.approach },
+      cs.decisions?.length && { id: "decisions", label: "Technical decisions" },
+      cs.features?.length && { id: "features", label: "Features" },
+      cs.challenges?.length && { id: "challenges", label: "Challenges" },
+      cs.results?.length && { id: "results", label: "Current implementation" },
+      cs.lessons?.length && { id: "lessons", label: "Lessons" },
+      cs.limitations?.length && { id: "scope", label: "Status & limits" },
     ].filter(Boolean)
   : [];
 
@@ -62,47 +66,69 @@ const cover = data.cover;
   path={`/projects/${project.id}/`}
   image={cover ? cover.src : undefined}
   type="article"
-  noindex={isDemo(project) || data.status === 'archived'}
+  noindex={isDemo(project) || data.status === "archived"}
   tags={data.tags}
 >
-  <article class:list={['project', isLong && 'project--long']}>
+  <article class:list={["project", isLong && "project--long"]}>
     <div class="container">
       <a class="back-link" href="/projects/">
         <Icon name="arrow-left" size={14} />
         All projects
       </a>
 
-      <header class="project__head">
+      <header class="project__head" data-hero>
         {isDemo(project) && <DemoBanner kind="project" />}
 
         <div class="project__eyebrow">
-          <span class:list={['status', data.status === 'in-progress' ? 'status--in-progress' : 'status--live']}>
+          <span
+            class:list={[
+              "status",
+              data.status === "in-progress"
+                ? "status--in-progress"
+                : "status--live",
+            ]}
+          >
             {statusLabels[data.status]}
           </span>
           <span class="mono">{data.year}</span>
           {data.tags.map((tag) => <span class="chip">{tag}</span>)}
         </div>
 
-        <h1 class="project__title">{data.title}</h1>
-        <p class="project__lede">{data.lede ?? data.summary}</p>
+        <h1 class="project__title" data-title-line>{data.title}</h1>
+        <p class="project__lede" data-enter>{data.lede ?? data.summary}</p>
 
         {
           (data.links.live || data.links.repo || data.links.docs) && (
             <div class="project__links">
               {data.links.live && (
-                <a class="btn btn--primary btn--sm" href={data.links.live} target="_blank" rel="noopener noreferrer">
+                <a
+                  class="btn btn--primary btn--sm"
+                  href={data.links.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Live site
                   <Icon name="arrow-up-right" size={14} />
                 </a>
               )}
               {data.links.repo && (
-                <a class="btn btn--sm" href={data.links.repo} target="_blank" rel="noopener noreferrer">
+                <a
+                  class="btn btn--sm"
+                  href={data.links.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Icon name="github" size={14} />
                   Source code
                 </a>
               )}
               {data.links.docs && (
-                <a class="btn btn--sm" href={data.links.docs} target="_blank" rel="noopener noreferrer">
+                <a
+                  class="btn btn--sm"
+                  href={data.links.docs}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Icon name="file" size={14} />
                   Documentation
                 </a>
@@ -115,7 +141,7 @@ const cover = data.cover;
 
     {
       cover && (
-        <figure class="project__cover container">
+        <figure class="project__cover container" data-motion="image">
           <Image
             src={cover}
             alt={data.coverAlt ?? `Screenshot of ${data.title}`}
@@ -124,7 +150,15 @@ const cover = data.cover;
             loading="eager"
             decoding="async"
           />
-          {data.coverAlt && <figcaption>{data.coverAlt}</figcaption>}
+          <figcaption>
+            <>
+              <span>{data.coverAlt ?? `The ${data.title} interface.`}</span>
+              <a href={cover.src} target="_blank" rel="noopener noreferrer">
+                Open original screenshot{" "}
+                <Icon name="arrow-up-right" size={14} />
+              </a>
+            </>
+          </figcaption>
         </figure>
       )
     }
@@ -143,17 +177,23 @@ const cover = data.cover;
         )
       }
 
-      <div class:list={['project__body', isLong && 'project__body--split']}>
+      <div class:list={["project__body", isLong && "project__body--split"]}>
         {
           isLong && (
-            <nav class="project__toc no-print" aria-labelledby="toc-title">
+            <nav
+              class="project__toc no-print"
+              data-reading-nav
+              aria-labelledby="toc-title"
+            >
               <p class="project__toc-title mono" id="toc-title">
                 Contents
               </p>
               <ol>
                 {sections.map((section) => (
                   <li>
-                    <a href={`#${(section as { id: string }).id}`}>{(section as { label: string }).label}</a>
+                    <a href={`#${(section as { id: string }).id}`}>
+                      {(section as { label: string }).label}
+                    </a>
                   </li>
                 ))}
                 <li>
@@ -167,15 +207,23 @@ const cover = data.cover;
         <div class="project__content">
           {
             sections.map((section) => {
-              const entry = section as { id: string; label: string; body?: string };
+              const entry = section as {
+                id: string;
+                label: string;
+                body?: string;
+              };
               return (
-                <section class="case-section" id={entry.id} aria-labelledby={`${entry.id}-title`}>
+                <section
+                  class="case-section"
+                  id={entry.id}
+                  aria-labelledby={`${entry.id}-title`}
+                >
                   <h2 id={`${entry.id}-title`} class="case-section__title">
                     {entry.label}
                   </h2>
                   {entry.body && <p class="case-section__body">{entry.body}</p>}
 
-                  {entry.id === 'decisions' && (
+                  {entry.id === "decisions" && (
                     <ol class="decision-list">
                       {cs?.decisions?.map((decision) => (
                         <li>
@@ -186,7 +234,7 @@ const cover = data.cover;
                     </ol>
                   )}
 
-                  {entry.id === 'features' && (
+                  {entry.id === "features" && (
                     <ul class="feature-list">
                       {cs?.features?.map((feature) => (
                         <li>
@@ -197,7 +245,7 @@ const cover = data.cover;
                     </ul>
                   )}
 
-                  {entry.id === 'challenges' && (
+                  {entry.id === "challenges" && (
                     <div class="challenge-list">
                       {cs?.challenges?.map((item) => (
                         <div class="challenge">
@@ -208,15 +256,27 @@ const cover = data.cover;
                     </div>
                   )}
 
-                  {entry.id === 'results' && (
+                  {entry.id === "results" && (
                     <ul class="result-list">
-                      {cs?.results?.map((result) => <li>{result}</li>)}
+                      {cs?.results?.map((result) => (
+                        <li>{result}</li>
+                      ))}
                     </ul>
                   )}
 
-                  {entry.id === 'lessons' && (
+                  {entry.id === "scope" && (
+                    <ul class="scope-list">
+                      {cs?.limitations?.map((limit) => (
+                        <li>{limit}</li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {entry.id === "lessons" && (
                     <ul class="lesson-list">
-                      {cs?.lessons?.map((lesson) => <li>{lesson}</li>)}
+                      {cs?.lessons?.map((lesson) => (
+                        <li>{lesson}</li>
+                      ))}
                     </ul>
                   )}
                 </section>
@@ -224,9 +284,13 @@ const cover = data.cover;
             })
           }
 
-          <section class="case-section" id="notes" aria-labelledby="notes-title">
+          <section
+            class="case-section"
+            id="notes"
+            aria-labelledby="notes-title"
+          >
             <h2 id="notes-title" class="case-section__title">
-              {isLong ? 'Notes & further reading' : 'About this project'}
+              {isLong ? "Notes & further reading" : "About this project"}
             </h2>
             <Prose>
               <Content />
@@ -250,6 +314,18 @@ const cover = data.cover;
         )
       }
 
+      <div class="project-followup no-print">
+        <p>Follow the context behind this project.</p><a
+          class="text-link"
+          href="/about/"
+          >About my approach <Icon name="arrow-right" size={15} /></a
+        ><a class="text-link" href="/vault/"
+          >Sources &amp; learning record <Icon
+            name="arrow-up-right"
+            size={15}
+          /></a>
+      </div>
+
       {
         all.length > 1 && (
           <nav class="project__pager" aria-label="More projects">
@@ -257,7 +333,10 @@ const cover = data.cover;
               <span class="mono">Previous</span>
               <span class="project__pager-title">{prev.data.title}</span>
             </a>
-            <a class="project__pager-link project__pager-link--next" href={`/projects/${next.id}/`}>
+            <a
+              class="project__pager-link project__pager-link--next"
+              href={`/projects/${next.id}/`}
+            >
               <span class="mono">Next</span>
               <span class="project__pager-title">{next.data.title}</span>
             </a>
@@ -269,13 +348,19 @@ const cover = data.cover;
         data.updated && (
           <p class="project__updated mono">
             Last updated
-            <time datetime={isoDate(data.updated)}>{formatDate(data.updated)}</time>
+            <time datetime={isoDate(data.updated)}>
+              {formatDate(data.updated)}
+            </time>
           </p>
         )
       }
     </div>
   </article>
 </BaseLayout>
+
+<script>
+  import "../../lib/reading";
+</script>
 
 <style>
   .project {
@@ -315,7 +400,7 @@ const cover = data.cover;
   }
 
   .project__title {
-    font-size: var(--text-3xl);
+    font-size: clamp(4rem, 9vw, 8rem);
     line-height: 0.98;
     letter-spacing: -0.03em;
   }
@@ -343,9 +428,9 @@ const cover = data.cover;
   .project__cover img {
     width: 100%;
     border: 1px solid var(--line);
-    border-radius: var(--radius-md);
+    border-radius: 2px;
     background: var(--bg-sunken);
-    box-shadow: var(--shadow-md);
+    box-shadow: none;
     /* Screenshots are tall; cap them so the page keeps its rhythm. */
     max-height: 38rem;
     object-fit: cover;
@@ -392,7 +477,7 @@ const cover = data.cover;
   }
 
   .project__toc {
-    display: none;
+    display: block;
   }
 
   .project__content {
@@ -408,10 +493,11 @@ const cover = data.cover;
 
   .case-section__title {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
     font-weight: 400;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    font-family: var(--font-display);
+    text-transform: none;
     color: var(--accent);
     padding-block-end: 0.6rem;
     margin-block-end: var(--space-sm);
@@ -419,8 +505,8 @@ const cover = data.cover;
   }
 
   .case-section__body {
-    font-size: var(--text-md);
-    line-height: 1.72;
+    font-size: var(--text-base);
+    line-height: 1.8;
     color: var(--ink-soft);
     max-width: var(--measure);
   }

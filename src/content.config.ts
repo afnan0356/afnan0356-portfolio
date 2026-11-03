@@ -72,6 +72,7 @@ const projects = defineCollection({
           approach: z.string().optional(),
           decisions: z.array(z.object({ title: z.string(), detail: z.string() })).optional(),
           features: z.array(z.string()).optional(),
+          limitations: z.array(z.string()).optional(),
           challenges: z.array(z.object({ challenge: z.string(), response: z.string() })).optional(),
           results: z.array(z.string()).optional(),
           lessons: z.array(z.string()).optional(),
