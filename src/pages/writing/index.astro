@@ -1,4 +1,5 @@
 ---
+import AuthorNote from "../../components/AuthorNote.astro";
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Icon from '../../components/Icon.astro';
@@ -124,18 +125,17 @@ const bookDetails = await Promise.all(
         ) : (
           <p class="empty-state">
             <strong>No standalone pieces yet</strong>
-            Add a Markdown file to <code>src/content/writing/</code> with
-            <code>kind: piece</code>.
+            Published writing will appear here.
           </p>
         )
       }
 
-      <p class="editor-hint">
+      <AuthorNote>
         Everything here is Markdown in <code>src/content/writing/</code>. A standalone piece is one
         file with <code>kind: piece</code>. A book is one file with <code>kind: book</code> plus a
         folder of chapter files that reference it with <code>book: slug</code> and
         <code>chapter: 1</code>, <code>chapter: 2</code>…
-      </p>
+      </AuthorNote>
     </div>
   </section>
 

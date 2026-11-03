@@ -90,7 +90,7 @@ const path = props.path ?? Astro.url.pathname;
         button.addEventListener('click', () => {
           const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
           const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          const canReveal = !reduceMotion && 'startViewTransition' in document;
+          const canReveal = !reduceMotion && typeof document.startViewTransition === 'function';
 
           if (!canReveal) {
             applyTheme(next);
@@ -103,44 +103,38 @@ const path = props.path ?? Astro.url.pathname;
           const y = rect.top + rect.height / 2;
           const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
 
-          const transition = (
-            document as Document & { startViewTransition: (cb: () => void) => { ready: Promise<void> } }
-          ).startViewTransition(() => applyTheme(next));
+          try {
+            const transition = (
+              document as Document & { startViewTransition: (cb: () => void) => { ready: Promise<void> } }
+            ).startViewTransition(() => applyTheme(next));
 
-          transition.ready
-            .then(() => {
-              root.animate(
-                {
-                  clipPath: [
-                    `circle(0px at ${x}px ${y}px)`,
-                    `circle(${radius}px at ${x}px ${y}px)`,
-                  ],
-                },
-                {
-                  duration: 420,
-                  easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
-                  pseudoElement: '::view-transition-new(root)',
-                },
-              );
-            })
-            .catch(() => {
-              /* If the browser refuses the animation, the theme already changed. */
-            });
+            transition.ready
+              .then(() => {
+                root.animate(
+                  {
+                    clipPath: [
+                      `circle(0px at ${x}px ${y}px)`,
+                      `circle(${radius}px at ${x}px ${y}px)`,
+                    ],
+                  },
+                  {
+                    duration: 420,
+                    easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+                    pseudoElement: '::view-transition-new(root)',
+                  },
+                );
+              })
+              .catch(() => {
+                /* If the browser refuses the animation, the theme already changed. */
+              });
+          } catch {
+            // API presence does not guarantee availability (e.g. embedded browsers).
+            applyTheme(next);
+          }
         });
       });
 
       syncButtons();
-
-      // Follow the system theme until the visitor makes an explicit choice.
-      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (event) => {
-        let stored: string | null = null;
-        try {
-          stored = localStorage.getItem('theme');
-        } catch {
-          /* ignore */
-        }
-        if (!stored) applyTheme(event.matches ? 'light' : 'dark');
-      });
 
       // ── Scroll reveals ────────────────────────────────────────
       // One IntersectionObserver for the whole page. Elements are visible
@@ -171,13 +165,14 @@ const path = props.path ?? Astro.url.pathname;
         button.addEventListener('click', async () => {
           const value = button.dataset.copy ?? '';
           const original = button.dataset.label ?? button.textContent ?? '';
+          const status = button.parentElement?.querySelector<HTMLElement>('[data-copy-status]');
           try {
             await navigator.clipboard.writeText(value);
             button.dataset.copied = 'true';
             button.textContent = 'Copied';
-            button.setAttribute('aria-live', 'polite');
+            if (status) status.textContent = 'Email address copied.';
           } catch {
-            button.textContent = 'Select to copy';
+            if (status) status.textContent = 'Copy unavailable. Select the email address above to copy it.';
           }
           setTimeout(() => {
             button.textContent = original;

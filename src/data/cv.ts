@@ -5,7 +5,7 @@
  * Only verifiable information is filled in. Personal details I could not
  * confirm (education, employment, languages, location) are deliberately
  * empty: the page omits those sections instead of inventing them, and
- * shows a small "add this" note while `site.showEditorHints` is on.
+ * keeps author guidance in development previews only.
  *
  * When you add a PDF, put it in `public/` and set `site.cvPdf` in
  * `src/config/site.ts` — the download button then appears automatically.

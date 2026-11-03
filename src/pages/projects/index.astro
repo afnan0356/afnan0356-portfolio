@@ -1,4 +1,5 @@
 ---
+import AuthorNote from "../../components/AuthorNote.astro";
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
@@ -105,8 +106,7 @@ const counts = {
       <div class="container">
         <p class="empty-state">
           <strong>No projects published yet</strong>
-          Add a Markdown file to <code>src/content/projects/</code>. The filename becomes the URL:
-          <code>nyayota.md</code> → <code>/projects/nyayota/</code>.
+          Published projects will appear here.
         </p>
       </div>
     )
@@ -117,7 +117,7 @@ const counts = {
       <div class="notes-grid">
         <div class="note-card">
           <p class="eyebrow eyebrow--plain">Case studies</p>
-          <h2 class="note-card__title">{withCaseStudy.length} long-form write-ups</h2>
+          <h2 class="note-card__title">{withCaseStudy.length} long-form {withCaseStudy.length === 1 ? 'write-up' : 'write-ups'}</h2>
           <p>
             These follow a fixed structure — problem, goal, role, approach, decisions, challenges,
             results, lessons — so they can be compared honestly rather than read as marketing.
@@ -138,12 +138,12 @@ const counts = {
           </div>
         </div>
       </div>
-      <p class="editor-hint">
+      <AuthorNote>
         Projects are Markdown files in <code>src/content/projects/</code>. Add <code>featured: true</code>
         to pin one to the homepage. A <code>caseStudy</code> block switches the page to the long
         format; omit it for a short entry. Set <code>status: 'in-progress'</code> rather than claiming
         unfinished work is live.
-      </p>
+      </AuthorNote>
     </div>
   </section>
 </BaseLayout>

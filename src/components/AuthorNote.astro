@@ -1,0 +1,5 @@
+---
+/** Author-only guidance. Astro omits the slot entirely from production HTML. */
+const isAuthorPreview = import.meta.env.DEV;
+---
+{isAuthorPreview && <aside class="editor-hint" role="note"><slot /></aside>}

@@ -8,7 +8,10 @@ import { site, socials, isLive, footerNote } from '../config/site';
 import Icon from './Icon.astro';
 
 const year = new Date().getFullYear();
-const footerSocials = socials.filter((social) => social.inFooter && isLive(social.href));
+const footerSocials = [
+  ...socials.filter((social) => social.inFooter && isLive(social.href)),
+  ...(site.email ? [{ label: 'Email', href: `mailto:${site.email}`, icon: 'mail' as const }] : []),
+];
 
 // The RSS feed is only generated when a site URL is configured, so the link
 // only appears then — never a dead link.
@@ -53,8 +56,8 @@ const columns = [
             <ul class="site-footer__socials" aria-label="Social profiles">
               {footerSocials.map((social) => (
                 <li>
-                  <a href={social.href!} rel="me noopener noreferrer" target="_blank">
-                    <Icon name={social.icon} size={17} label={social.label} />
+                  <a href={social.href!} rel="noopener noreferrer" target={social.href!.startsWith('mailto:') ? undefined : '_blank'}>
+                    <Icon name={social.icon} size={17} />
                     <span>{social.label}</span>
                   </a>
                 </li>
@@ -132,6 +135,7 @@ const columns = [
   }
 
   .site-footer__socials a {
+    min-block-size: 2.75rem;
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
@@ -165,7 +169,7 @@ const columns = [
     font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    color: var(--ink-muted);
     margin-block-end: 0.75rem;
   }
 
@@ -197,14 +201,14 @@ const columns = [
     border-block-start: 1px solid var(--line);
     font-family: var(--font-mono);
     font-size: 0.6875rem;
-    color: var(--ink-faint);
+    color: var(--ink-muted);
     letter-spacing: 0.02em;
   }
 
   .site-footer__note {
     display: block;
     margin-block-start: 0.3rem;
-    color: var(--ink-faint);
+    color: var(--ink-muted);
   }
 
   .site-footer__top-link {
