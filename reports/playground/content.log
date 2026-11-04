@@ -1,0 +1,14 @@
+
+> afnan0356-portfolio@0.1.0 verify:content
+> node scripts/verify-content.mjs
+
+
+verifying 21 pages (63 files in dist/)
+
+  pages .................. 21
+  internal links checked .. 415
+  content files ........... 6
+  drafts found (skipped) .. 3
+
+✓ all checks passed
+

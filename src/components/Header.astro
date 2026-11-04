@@ -380,6 +380,9 @@ const isActive = (href: string) => {
   }
 
   @media (max-width: 59.99rem) {
+    :global(html:not(.js)) .site-header {
+      position: static;
+    }
     :global(html:not(.js)) .mobile-menu[hidden] {
       display: block;
     }

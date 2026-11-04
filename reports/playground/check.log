@@ -1,0 +1,13 @@
+
+> afnan0356-portfolio@0.1.0 check
+> astro check
+
+18:54:05 [content] Syncing content
+18:54:05 [content] Synced content
+18:54:05 [types] Generated 518ms
+18:54:05 [check] Getting diagnostics for Astro files in /home/user/afnan0356-portfolio...
+Result (93 files): 
+- 0 errors
+- 0 warnings
+- 0 hints
+

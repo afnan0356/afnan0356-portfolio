@@ -1,5 +1,6 @@
 ---
 import AuthorNote from "../../components/AuthorNote.astro";
+import DemoInvitation from "../../components/DemoInvitation.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import Icon from "../../components/Icon.astro";
@@ -179,6 +180,8 @@ const bookDetails = await Promise.all(
           </div>
         )
       }
+
+      <DemoInvitation />
 
       <AuthorNote>
         Everything here is Markdown in <code>src/content/writing/</code>. A
