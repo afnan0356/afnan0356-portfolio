@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { overviewLanguages } from "../data/languages";
+interface Props {
+  language: string;
+  slug: string;
+}
+const { language, slug } = Astro.props;
+const copy = overviewLanguages[language];
+const page = copy.pages[slug];
+---
+
+<BaseLayout
+  title={page.title}
+  description={page.text}
+  lang={copy.language}
+  locale={copy.ogLocale}
+>
+  <section class="container localized-overview">
+    <p>{copy.eyebrow}</p><h1>{page.title}</h1><p>{page.text}</p><p>
+      {copy.notice}
+    </p>
+    <a class="text-link" href={page.english} lang="en"
+      >Read {page.label} in English →</a
+    >
+    <nav aria-label={copy.navigationLabel}>
+      {
+        Object.entries(copy.pages).map(([slug, p]) => (
+          <a
+            href={slug ? `/${language}/${slug}/` : `/${language}/`}
+            aria-current={p.english === page.english ? "page" : undefined}
+          >
+            {p.title}
+          </a>
+        ))
+      }
+    </nav>
+    <p>
+      <a href="mailto:mdafnan0356@gmail.com" lang="en">mdafnan0356@gmail.com</a>
+    </p>
+  </section>
+</BaseLayout>

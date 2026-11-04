@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { searchIndex } from "../lib/search-index";
+const entries = await searchIndex();
+---
+
+<BaseLayout
+  title="Search projects, notes and sources"
+  description="Find projects, published notes and public sources on Afnan’s personal site."
+  noindex
+>
+  <section class="container search-page" data-search-root>
+    <h1>Looking for something?</h1><p>
+      Search this site, not the wider web. No query leaves your browser.
+    </p>
+    <form role="search">
+      <label for="page-query">Search projects, blog, writing and vault</label
+      ><input
+        id="page-query"
+        type="search"
+        disabled
+        name="q"
+        data-search-input
+        autocomplete="off"
+        maxlength="160"
+      />
+    </form>
+    <p role="status" aria-live="polite" data-search-status>
+      Type a few words to begin.
+    </p><ul data-search-results></ul>
+    <div data-search-fallback>
+      <h2>Or browse the public entries</h2><ul>
+        {
+          entries.map((e) => (
+            <li>
+              <a href={e.href}>{e.title}</a> <small>{e.kind}</small>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <noscript
+      ><p>
+        Interactive search needs JavaScript. All public entries are linked
+        above; your browser’s Find command also works here.
+      </p></noscript
+    >
+  </section>
+</BaseLayout>

@@ -4,13 +4,17 @@
  * Links with `href: null` in the config are skipped entirely, so there
  * are never decorative icons that lead nowhere.
  */
-import { site, socials, isLive, footerNote } from '../config/site';
-import Icon from './Icon.astro';
+import { site, socials, isLive, footerNote } from "../config/site";
+import Icon from "./Icon.astro";
+import LanguageLink from "./LanguageLink.astro";
 
+const isHome = Astro.url.pathname === "/";
 const year = new Date().getFullYear();
 const footerSocials = [
   ...socials.filter((social) => social.inFooter && isLive(social.href)),
-  ...(site.email ? [{ label: 'Email', href: `mailto:${site.email}`, icon: 'mail' as const }] : []),
+  ...(site.email
+    ? [{ label: "Email", href: `mailto:${site.email}`, icon: "mail" as const }]
+    : []),
 ];
 
 // The RSS feed is only generated when a site URL is configured, so the link
@@ -19,33 +23,33 @@ const hasFeed = Boolean(Astro.site);
 
 const columns = [
   {
-    title: 'Work',
+    title: "Work",
     links: [
-      { label: 'Projects', href: '/projects/' },
-      { label: 'Case studies', href: '/projects/#case-studies' },
-      { label: 'CV', href: '/cv/' },
+      { label: "Projects", href: "/projects/" },
+      { label: "Case studies", href: "/projects/#case-studies" },
+      { label: "CV", href: "/cv/" },
     ],
   },
   {
-    title: 'Reading',
+    title: "Reading",
     links: [
-      { label: 'Writing', href: '/writing/' },
-      { label: 'Blog', href: '/blog/' },
-      { label: 'Vault', href: '/vault/' },
+      { label: "Writing", href: "/writing/" },
+      { label: "Blog", href: "/blog/" },
+      { label: "Vault", href: "/vault/" },
     ],
   },
   {
-    title: 'Elsewhere',
+    title: "Elsewhere",
     links: [
-      { label: 'About', href: '/about/' },
-      { label: 'Contact', href: '/contact/' },
-      ...(hasFeed ? [{ label: 'RSS feed', href: '/rss.xml' }] : []),
+      { label: "About", href: "/about/" },
+      { label: "Contact", href: "/contact/" },
+      ...(hasFeed ? [{ label: "RSS feed", href: "/rss.xml" }] : []),
     ],
   },
 ];
 ---
 
-<footer class="site-footer">
+<footer class="site-footer" lang="en">
   <div class="container">
     <div class="site-footer__top" data-motion="stagger">
       <div class="site-footer__brand">
@@ -56,7 +60,13 @@ const columns = [
             <ul class="site-footer__socials" aria-label="Social profiles">
               {footerSocials.map((social) => (
                 <li>
-                  <a href={social.href!} rel="noopener noreferrer" target={social.href!.startsWith('mailto:') ? undefined : '_blank'}>
+                  <a
+                    href={social.href!}
+                    rel="noopener noreferrer"
+                    target={
+                      social.href!.startsWith("mailto:") ? undefined : "_blank"
+                    }
+                  >
                     <Icon name={social.icon} size={17} />
                     <span>{social.label}</span>
                   </a>
@@ -85,9 +95,20 @@ const columns = [
       </nav>
     </div>
 
-    <div class="footer-signature" aria-hidden="true">{site.shortName}<span>↗</span></div>
+    {
+      isHome && (
+        <div class="footer-signature" aria-hidden="true">
+          {site.shortName}
+          <span>↗</span>
+        </div>
+      )
+    }
+    <LanguageLink />
     <div class="site-footer__bottom">
-      <p>© {year} {site.name}. <span class="site-footer__note">{footerNote}</span></p>
+      <p>
+        © {year}
+        {site.name}. <span class="site-footer__note">{footerNote}</span>
+      </p>
       <a class="site-footer__top-link" href="#top">
         Back to top
         <Icon name="arrow-right" size={13} />
@@ -98,150 +119,130 @@ const columns = [
 
 <style>
   .site-footer {
-    margin-block-start: var(--space-3xl);
-    border-block-start: 1px solid var(--line);
-    padding-block: var(--space-2xl) var(--space-lg);
-    background: linear-gradient(180deg, transparent, var(--bg-sunken));
+    margin-block-start: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid var(--line-strong);
+    padding-block: clamp(2rem, 4vw, 3.5rem) 1rem;
+    background: var(--bg-raised);
   }
-
   .site-footer__top {
     display: grid;
-    gap: var(--space-xl);
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
-
   .site-footer__name {
-    font-family: var(--font-display);
-    font-size: var(--text-lg);
+    font: 400 0.75rem/1.5 var(--font-mono);
     color: var(--ink);
     text-decoration: none;
-    letter-spacing: -0.01em;
   }
-
   .site-footer__line {
-    margin-block-start: 0.4rem;
-    max-width: 34ch;
-    color: var(--ink-muted);
-    font-size: var(--text-sm);
-    line-height: 1.6;
+    font: 400 1.45rem/1.35 var(--font-display);
+    color: var(--ink-soft);
+    max-width: 30ch;
+    margin-top: 0.75rem;
   }
-
   .site-footer__socials {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35rem;
     list-style: none;
     padding: 0;
-    margin-block-start: var(--space-sm);
+    gap: 0 1rem;
+    margin-top: 1rem;
   }
-
   .site-footer__socials a {
-    min-block-size: 2.75rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.4rem 0.65rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    font-size: var(--text-xs);
-    color: var(--ink-soft);
-    text-decoration: none;
-    transition:
-      border-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out),
-      background-color var(--dur-fast) var(--ease-out);
-  }
-
-  .site-footer__socials a:hover {
-    color: var(--ink);
-    border-color: var(--line-strong);
-    background: var(--bg-hover);
-  }
-
-  .site-footer__nav {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-    gap: var(--space-md);
-  }
-
-  .site-footer__col-title {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    font-weight: 400;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    margin-block-end: 0.75rem;
-  }
-
-  .site-footer__col ul {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: 0.55rem;
-  }
-
-  .site-footer__col a {
-    font-size: var(--text-sm);
-    color: var(--ink-soft);
-    text-decoration: none;
-  }
-
-  .site-footer__col a:hover {
-    color: var(--accent);
-  }
-
-  .site-footer__bottom {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-sm);
-    margin-block-start: var(--space-xl);
-    padding-block-start: var(--space-md);
-    border-block-start: 1px solid var(--line);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    color: var(--ink-muted);
-    letter-spacing: 0.02em;
-  }
-
-  .site-footer__note {
-    display: block;
-    margin-block-start: 0.3rem;
-    color: var(--ink-muted);
-  }
-
-  .site-footer__top-link {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: var(--ink-muted);
+    min-height: 44px;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
     text-decoration: none;
   }
-
+  .site-footer__socials svg {
+    width: 14px;
+    height: 14px;
+  }
+  .site-footer__socials a:hover,
+  .site-footer__col a:hover {
+    color: var(--accent);
+  }
+  .site-footer__nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .site-footer__col-title {
+    font: 400 0.6875rem/1.5 var(--font-mono);
+    color: var(--ink-muted);
+    margin-bottom: 0.5rem;
+  }
+  .site-footer__col ul {
+    list-style: none;
+    padding: 0;
+  }
+  .site-footer__col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.8125rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .footer-signature {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 2rem;
+    font: 400 clamp(4rem, 9vw, 8rem) / 1 var(--font-display);
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+  }
+  .footer-signature span {
+    font: 400 0.3em/1 var(--font-sans);
+    color: var(--accent);
+  }
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem 2rem;
+    border-top: 1px solid var(--line);
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    font: 400 0.6875rem/1.8 var(--font-mono);
+    color: var(--ink-muted);
+  }
+  .site-footer__note {
+    display: block;
+  }
+  .site-footer__top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
   .site-footer__top-link svg {
     rotate: -90deg;
     transition: translate var(--dur-fast) var(--ease-out);
   }
-
   .site-footer__top-link:hover {
     color: var(--accent);
   }
-
   .site-footer__top-link:hover svg {
     translate: 0 -3px;
   }
-
   @media (min-width: 48rem) {
     .site-footer__top {
-      grid-template-columns: minmax(16rem, 1fr) minmax(20rem, 1.2fr);
-      gap: var(--space-2xl);
+      grid-template-columns: 1.1fr 1fr;
+      gap: 4rem;
     }
-
+    .site-footer__socials {
+      max-width: 31rem;
+    }
     .site-footer__note {
       display: inline;
-      margin: 0;
     }
   }
 </style>

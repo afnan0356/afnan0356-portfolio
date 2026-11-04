@@ -4,13 +4,19 @@
  * follow the published order. Draft chapters disappear from this chain
  * automatically because getChapters() filters them.
  */
-import { render } from 'astro:content';
-import BaseLayout from '../../../../../layouts/BaseLayout.astro';
-import Prose from '../../../../../components/Prose.astro';
-import DemoBanner from '../../../../../components/DemoBanner.astro';
-import Icon from '../../../../../components/Icon.astro';
-import { getBooks, getChapters, isDemo, chapterSlug } from '../../../../../lib/content';
-import { readingTime } from '../../../../../lib/text';
+import { render } from "astro:content";
+import PostTools from "../../../../../components/PostTools.astro";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import Prose from "../../../../../components/Prose.astro";
+import DemoBanner from "../../../../../components/DemoBanner.astro";
+import Icon from "../../../../../components/Icon.astro";
+import {
+  getBooks,
+  getChapters,
+  isDemo,
+  chapterSlug,
+} from "../../../../../lib/content";
+import { readingTime } from "../../../../../lib/text";
 
 export async function getStaticPaths() {
   const books = await getBooks();
@@ -61,7 +67,9 @@ const { book, chapter, position, prev, next, chapters } = Astro.props;
 const { Content } = await render(chapter);
 const slug = book.data.book ?? book.id;
 const minutes = readingTime(chapter.body);
-const progress = Math.round(((position + 1) / Math.max(chapters.length, 1)) * 100);
+const progress = Math.round(
+  ((position + 1) / Math.max(chapters.length, 1)) * 100,
+);
 ---
 
 <BaseLayout
@@ -72,12 +80,8 @@ const progress = Math.round(((position + 1) / Math.max(chapters.length, 1)) * 10
   published={chapter.data.published}
   noindex={isDemo(chapter)}
 >
-  <!-- Reading progress: a one-pixel rule that fills as you scroll. -->
-  <div class="progress" aria-hidden="true">
-    <span class="progress__bar" data-reading-progress></span>
-  </div>
-
-  <div class="container container--text">
+  <div class="container container--text" data-reading-article>
+    <PostTools />
     <nav class="chapter-nav" aria-label="Book navigation">
       <a class="chapter-nav__book" href={`/writing/book/${slug}/`}>
         <Icon name="arrow-left" size={13} />
@@ -106,7 +110,11 @@ const progress = Math.round(((position + 1) / Math.max(chapters.length, 1)) * 10
     <nav class="chapter-pager" aria-label="Chapter navigation">
       {
         prev ? (
-          <a class="chapter-pager__link" href={`/writing/book/${slug}/chapter/${chapterSlug(prev)}/`} rel="prev">
+          <a
+            class="chapter-pager__link"
+            href={`/writing/book/${slug}/chapter/${chapterSlug(prev)}/`}
+            rel="prev"
+          >
             <span class="mono">Previous chapter</span>
             <span class="chapter-pager__title">
               <Icon name="arrow-left" size={14} />
@@ -125,7 +133,11 @@ const progress = Math.round(((position + 1) / Math.max(chapters.length, 1)) * 10
       }
       {
         next ? (
-          <a class="chapter-pager__link chapter-pager__link--next" href={`/writing/book/${slug}/chapter/${chapterSlug(next)}/`} rel="next">
+          <a
+            class="chapter-pager__link chapter-pager__link--next"
+            href={`/writing/book/${slug}/chapter/${chapterSlug(next)}/`}
+            rel="next"
+          >
             <span class="mono">Next chapter</span>
             <span class="chapter-pager__title">
               {next.data.title}
@@ -133,7 +145,10 @@ const progress = Math.round(((position + 1) / Math.max(chapters.length, 1)) * 10
             </span>
           </a>
         ) : (
-          <a class="chapter-pager__link chapter-pager__link--next" href={`/writing/book/${slug}/`}>
+          <a
+            class="chapter-pager__link chapter-pager__link--next"
+            href={`/writing/book/${slug}/`}
+          >
             <span class="mono">The end</span>
             <span class="chapter-pager__title">
               Back to contents
@@ -150,54 +165,7 @@ const progress = Math.round(((position + 1) / Math.max(chapters.length, 1)) * 10
   </div>
 </BaseLayout>
 
-<script>
-  // A tiny scroll-progress indicator for chapter pages. Uses
-  // requestAnimationFrame-throttled scroll reads, so it stays cheap on
-  // low-end phones; it does nothing if the element is absent.
-  const bar = document.querySelector<HTMLElement>('[data-reading-progress]');
-
-  if (bar) {
-    let ticking = false;
-    const update = () => {
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      const ratio = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
-      bar.style.transform = `scaleX(${ratio})`;
-      ticking = false;
-    };
-
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    update();
-  }
-</script>
-
 <style>
-  .progress {
-    position: fixed;
-    inset-block-start: var(--header-h);
-    inset-inline: 0;
-    block-size: 2px;
-    z-index: calc(var(--z-header) - 1);
-    pointer-events: none;
-  }
-
-  .progress__bar {
-    display: block;
-    block-size: 100%;
-    inline-size: 100%;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    opacity: 0.75;
-  }
-
   .chapter-nav {
     display: flex;
     align-items: center;

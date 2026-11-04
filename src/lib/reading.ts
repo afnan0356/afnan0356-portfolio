@@ -1,9 +1,21 @@
-/** Semantic reading location only; animation remains owned by motion.ts. */
+/** Semantic reading location only; CSS owns optional motion. */
 let dispose: (() => void) | undefined;
 function initReading() {
   dispose?.();
   const nav = document.querySelector<HTMLElement>("[data-reading-nav]");
   if (!nav || !("IntersectionObserver" in window)) return;
+  const controller = new AbortController();
+  const contents = nav.querySelector<HTMLDetailsElement>(
+    "[data-reading-contents]",
+  );
+  const compact = window.matchMedia("(max-width: 1023px)");
+  const syncContents = () => {
+    if (contents) contents.open = !compact.matches;
+  };
+  syncContents();
+  compact.addEventListener("change", syncContents, {
+    signal: controller.signal,
+  });
   const links = Array.from(
     nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'),
   );
@@ -22,18 +34,22 @@ function initReading() {
         .filter((entry) => entry.isIntersecting)
         .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
       if (active) setCurrent(active.target.id);
+      else if (sections[0]?.getBoundingClientRect().top > innerHeight * 0.35)
+        setCurrent("");
     },
     { rootMargin: "-18% 0px -65% 0px", threshold: 0 },
   );
   sections.forEach((section) => observer.observe(section));
-  const controller = new AbortController();
   nav.addEventListener(
     "click",
     (event) => {
       const link = (event.target as Element).closest<HTMLAnchorElement>(
         'a[href^="#"]',
       );
-      if (link) setCurrent(link.hash.slice(1));
+      if (link) {
+        setCurrent(link.hash.slice(1));
+        if (contents && compact.matches) contents.open = false;
+      }
     },
     { signal: controller.signal },
   );

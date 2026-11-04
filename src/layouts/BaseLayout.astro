@@ -3,32 +3,37 @@
  * BaseLayout — the document shell every page uses.
  * Owns <html>, <head>, header, footer, and the small global scripts.
  */
-import '../styles/tokens.css';
-import '../styles/base.css';
-import '../styles/prose.css';
-import '../styles/utilities.css';
-import '../styles/refinement.css';
-import '../styles/editorial.css';
+import "../styles/tokens.css";
+import "../styles/base.css";
+import "../styles/prose.css";
+import "../styles/utilities.css";
+import "../styles/refinement.css";
+import "../styles/editorial.css";
+import "../styles/human.css";
+import { ClientRouter } from "astro:transitions";
+import SearchDialog from "../components/SearchDialog.astro";
 
 // Fonts are self-hosted through Fontsource: no third-party requests, and
 // an automatic preload/fallback for the fonts actually used above the fold.
-import '@fontsource-variable/newsreader/wght.css';
-import '@fontsource-variable/newsreader/wght-italic.css';
-import '@fontsource-variable/instrument-sans/wght.css';
-import '@fontsource-variable/jetbrains-mono/wght.css';
+import "@fontsource-variable/newsreader/wght.css";
+import "@fontsource-variable/newsreader/wght-italic.css";
+import "@fontsource-variable/instrument-sans/wght.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
 
-import Seo from '../components/Seo.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import ThemeScript from '../components/ThemeScript.astro';
-import { site } from '../config/site';
+import Seo from "../components/Seo.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import ThemeScript from "../components/ThemeScript.astro";
+import { site } from "../config/site";
 
 interface Props {
   title: string;
+  lang?: string;
+  locale?: string;
   description?: string;
   path?: string;
   image?: string;
-  type?: 'website' | 'article' | 'profile';
+  type?: "website" | "article" | "profile";
   published?: Date;
   updated?: Date;
   noindex?: boolean;
@@ -44,123 +49,26 @@ const path = props.path ?? Astro.url.pathname;
 ---
 
 <!doctype html>
-<html lang={site.language} data-theme="dark">
+<html lang={props.lang ?? site.language} data-theme="dark">
   <head>
     <Seo {...props} path={path} />
+    <ClientRouter fallback="swap" />
     <ThemeScript />
   </head>
   <body id="top">
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a lang="en" class="skip-link" href="#main">Skip to content</a>
     <Header />
+    <SearchDialog />
     <main id="main" tabindex="-1">
       <slot />
     </main>
     {!props.bare && <Footer />}
 
     <script>
-      // ── Theme switching ────────────────────────────────────────
-      // Remembers the choice, keeps the address-bar colour in sync, and
-      // uses a circular reveal from the button when the browser supports
-      // it and the user has not asked for reduced motion.
-      const root = document.documentElement;
-      const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
-
-      const syncButtons = () => {
-        const isDark = root.dataset.theme === 'dark';
-        buttons.forEach((button) => {
-          button.setAttribute('aria-pressed', String(isDark));
-          button.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
-        });
-      };
-
-      const applyTheme = (theme: 'dark' | 'light') => {
-        root.dataset.theme = theme;
-        root.style.colorScheme = theme;
-        try {
-          localStorage.setItem('theme', theme);
-        } catch {
-          /* Storage may be blocked; the theme still applies for this page. */
-        }
-        document
-          .querySelector('meta[name="theme-color"]')
-          ?.setAttribute('content', theme === 'dark' ? '#0d0c0b' : '#f7f3ec');
-        syncButtons();
-        document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
-      };
-
-      buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-          const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          const canReveal = !reduceMotion && typeof document.startViewTransition === 'function';
-
-          if (!canReveal) {
-            applyTheme(next);
-            return;
-          }
-
-          // Circular reveal: expand/clip from the button itself.
-          const rect = button.getBoundingClientRect();
-          const x = rect.left + rect.width / 2;
-          const y = rect.top + rect.height / 2;
-          const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-
-          try {
-            const transition = (
-              document as Document & { startViewTransition: (cb: () => void) => { ready: Promise<void> } }
-            ).startViewTransition(() => applyTheme(next));
-
-            transition.ready
-              .then(() => {
-                root.animate(
-                  {
-                    clipPath: [
-                      `circle(0px at ${x}px ${y}px)`,
-                      `circle(${radius}px at ${x}px ${y}px)`,
-                    ],
-                  },
-                  {
-                    duration: 420,
-                    easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
-                    pseudoElement: '::view-transition-new(root)',
-                  },
-                );
-              })
-              .catch(() => {
-                /* If the browser refuses the animation, the theme already changed. */
-              });
-          } catch {
-            // API presence does not guarantee availability (e.g. embedded browsers).
-            applyTheme(next);
-          }
-        });
-      });
-
-      syncButtons();
-
-      // ── Copy buttons ──────────────────────────────────────────
-      document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
-        button.addEventListener('click', async () => {
-          const value = button.dataset.copy ?? '';
-          const original = button.dataset.label ?? button.textContent ?? '';
-          const status = button.parentElement?.querySelector<HTMLElement>('[data-copy-status]');
-          try {
-            await navigator.clipboard.writeText(value);
-            button.dataset.copied = 'true';
-            button.textContent = 'Copied';
-            if (status) status.textContent = 'Email address copied.';
-          } catch {
-            if (status) status.textContent = 'Copy unavailable. Select the email address above to copy it.';
-          }
-          setTimeout(() => {
-            button.textContent = original;
-            delete button.dataset.copied;
-          }, 1800);
-        });
-      });
+      import "../lib/site";
     </script>
     <script>
-      import '../lib/motion';
+      import "../lib/motion";
     </script>
   </body>
 </html>

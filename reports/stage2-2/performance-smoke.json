@@ -1,0 +1,130 @@
+{
+  "description": "4x CPU-throttled headless Chromium, touch viewport. Not Snapdragon 680 emulation, not an FPS/Lighthouse benchmark. Long tasks are observational, not a pass/fail performance budget.",
+  "sample": {
+    "viewport": 360,
+    "scrollWidth": 360,
+    "touchPoints": 1,
+    "longTasks": [
+      {
+        "start": 34.699999999953434,
+        "duration": 136
+      },
+      {
+        "start": 180.89999999990687,
+        "duration": 72
+      }
+    ],
+    "resources": [
+      {
+        "url": "/_astro/BaseLayout.BuChCmAD.css",
+        "transferBytes": 0
+      },
+      {
+        "url": "/_astro/index.CdtRVJe_.css",
+        "transferBytes": 0
+      },
+      {
+        "url": "/_astro/page.Ce1l_DlR.js",
+        "transferBytes": 0
+      },
+      {
+        "url": "/_astro/BaseLayout.astro_astro_type_script_index_1_lang.Cv_1zzCB.js",
+        "transferBytes": 0
+      },
+      {
+        "url": "/_astro/jetbrains-mono-latin-wght-normal.B9CIFXIH.woff2",
+        "transferBytes": 0
+      },
+      {
+        "url": "/_astro/instrument-sans-latin-wght-normal.BbzFLZTg.woff2",
+        "transferBytes": 0
+      },
+      {
+        "url": "/_astro/newsreader-latin-wght-normal.CCVVNp6i.woff2",
+        "transferBytes": 0
+      },
+      {
+        "url": "/_astro/newsreader-latin-wght-italic.Bxi8ein9.woff2",
+        "transferBytes": 0
+      },
+      {
+        "url": "/_astro/nyayota-homepage.CpAgrO2Y_29jqsJ.webp",
+        "transferBytes": 0
+      }
+    ],
+    "hidden": 0
+  },
+  "errors": [],
+  "contrast": [
+    {
+      "theme": "dark",
+      "token": "--ink",
+      "foreground": "#f0ebe1",
+      "background": "#0d0c0b",
+      "ratio": 16.45
+    },
+    {
+      "theme": "dark",
+      "token": "--ink-soft",
+      "foreground": "#c9c2b6",
+      "background": "#0d0c0b",
+      "ratio": 11.05
+    },
+    {
+      "theme": "dark",
+      "token": "--ink-muted",
+      "foreground": "#9a938a",
+      "background": "#0d0c0b",
+      "ratio": 6.43
+    },
+    {
+      "theme": "dark",
+      "token": "--ink-faint",
+      "foreground": "#8f887d",
+      "background": "#0d0c0b",
+      "ratio": 5.57
+    },
+    {
+      "theme": "dark",
+      "token": "--accent",
+      "foreground": "#f0864f",
+      "background": "#0d0c0b",
+      "ratio": 7.66
+    },
+    {
+      "theme": "light",
+      "token": "--ink",
+      "foreground": "#17150f",
+      "background": "#f7f3ec",
+      "ratio": 16.5
+    },
+    {
+      "theme": "light",
+      "token": "--ink-soft",
+      "foreground": "#3c362d",
+      "background": "#f7f3ec",
+      "ratio": 10.8
+    },
+    {
+      "theme": "light",
+      "token": "--ink-muted",
+      "foreground": "#665d50",
+      "background": "#f7f3ec",
+      "ratio": 5.85
+    },
+    {
+      "theme": "light",
+      "token": "--ink-faint",
+      "foreground": "#75695b",
+      "background": "#f7f3ec",
+      "ratio": 4.83
+    },
+    {
+      "theme": "light",
+      "token": "--accent",
+      "foreground": "#b4461a",
+      "background": "#f7f3ec",
+      "ratio": 4.96
+    }
+  ]
+}

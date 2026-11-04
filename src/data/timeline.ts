@@ -1,83 +1,75 @@
-/**
- * PROGRESS TIMELINE — learning and personal development.
- *
- * This is deliberately separate from the Vault. The Vault holds documents
- * and evidence; the timeline holds the honest state of the work:
- *
- *   • verified     — completed, with something public to point at
- *   • in-progress  — actively being worked on (never presented as done)
- *   • learning     — studying, no output yet
- *   • planned      — known, not started
- *
- * Everything below is either public and verifiable (Nyayota, this site) or
- * explicitly labelled as a target. Add your own entries as you go.
- */
-
-export type TimelineState = 'verified' | 'in-progress' | 'learning' | 'planned';
-
+/** Learning notes, not inferred credentials. Dates are review dates unless
+ * the entry describes a specific supported publication event. */
+export type TimelineState =
+  | "completed"
+  | "in-progress"
+  | "learning"
+  | "planned";
 export type TimelineEntry = {
+  id: string;
   date: string;
   title: string;
   summary: string;
   state: TimelineState;
   href?: string;
-  /** Optional grouping label, e.g. "Foundations". */
   track?: string;
 };
-
 export const timelineStateLabels: Record<TimelineState, string> = {
-  verified: 'Completed',
-  'in-progress': 'In progress',
-  learning: 'Currently learning',
-  planned: 'Planned',
+  completed: "Published update",
+  "in-progress": "In progress",
+  learning: "Learning",
+  planned: "Planned",
 };
-
 export const timeline: TimelineEntry[] = [
   {
-    date: '2026-11',
-    title: 'Built this portfolio',
+    id: "portfolio-publication",
+    date: "2026-11-03",
+    title: "Editorial portfolio update published",
     summary:
-      'Designed and built a static Astro site with a file-based content system, a persisted theme, and no client-side framework.',
-    state: 'in-progress',
-    href: '/projects/',
-    track: 'Web development',
+      "The editorial design and content update is published. Further work on the introduction and project documentation continues separately.",
+    state: "completed",
+    href: "https://github.com/afnan0356/afnan0356-portfolio/commit/c82e2f3f64d43b1fc97e8a195bacf2befa4e60ff",
+    track: "Website",
   },
   {
-    date: '2026-08',
-    title: 'Released Nyayota',
+    id: "nyayota",
+    date: "2026-11-04",
+    title: "Developing Nyayota",
     summary:
-      'Shipped an open-source legal research platform covering Bangladeshi statutes and selected international instruments.',
-    state: 'verified',
-    href: '/projects/nyayota/',
-    track: 'Web development',
+      "My main ongoing project: a legal information platform for Bangladesh. The source is public, development is AI-assisted, and not every feature is finished.",
+    state: "in-progress",
+    href: "/projects/nyayota/",
+    track: "Web development",
   },
   {
-    date: '2026-08',
-    title: 'Typed data modelling for legal content',
+    id: "legal-data",
+    date: "2026-11-04",
+    title: "Exploring structured legal data",
     summary:
-      'Learned to model statutes as structured records rather than documents, so search, comparison and citation export could all read the same source.',
-    state: 'verified',
-    track: 'Engineering practice',
+      "How can acts, chapters and sections stay connected across search, reading and citation? Nyayota gives me a concrete place to explore that question.",
+    state: "learning",
+    href: "/projects/nyayota/#information-architecture",
+    track: "Information structure",
   },
   {
-    date: '2026-11',
-    title: 'Accessibility as a build step',
+    id: "accessible-interfaces",
+    date: "2026-11-04",
+    title: "Learning to test reading interfaces",
     summary:
-      'Working through keyboard navigation, focus management and reduced-motion support as part of the design system rather than as an afterthought.',
-    state: 'learning',
-    track: 'Accessibility',
+      "Keyboard navigation, focus, readable type and reduced motion are areas I am continuing to learn about while refining this site.",
+    state: "learning",
+    track: "Accessibility",
   },
   {
-    date: '2027',
-    title: 'Longer-form writing',
+    id: "writing",
+    date: "2026-11-04",
+    title: "Documenting what I learn",
     summary:
-      'Planning a collection of essays on building for the web in low-bandwidth contexts. No publication date yet.',
-    state: 'planned',
-    track: 'Writing',
+      "Longer-form writing is a direction to explore, not a published body of work. There is no publication schedule.",
+    state: "planned",
+    track: "Writing",
   },
 ];
-
-/** Grouped and ordered newest-first, ready for rendering. */
 export function timelineByYear(): { year: string; entries: TimelineEntry[] }[] {
   const groups = new Map<string, TimelineEntry[]>();
   for (const entry of timeline) {

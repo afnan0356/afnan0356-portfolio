@@ -3,10 +3,11 @@ title: Nyayota
 summary: An open-source legal research platform that makes Bangladeshi statutes searchable, comparable and readable.
 lede: >-
   Nyayota (from Nyaya — justice, fairness, logical equity) turns scattered statutory text into a
-  browsable, searchable library. It is a statically deployed Next.js application covering
+  browsable, searchable library. It is an ongoing Next.js web application covering
   Bangladeshi legislation and selected international instruments.
 year: '2026'
-status: live
+status: in-progress
+statusNote: A public site is linked. Development continues; the public AI assistant is documented as suspended.
 tags: ['open source', 'legal tech', 'education']
 stack: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Vercel']
 featured: true
@@ -32,16 +33,39 @@ caseStudy:
     the implementation visible in the public repository; it is not a claim that I independently
     wrote every line of code.
   approach: >-
-    I modelled statutes as structured records (act, chapter, section, amendment history) instead of
-    page-level documents, so the same data can power search, comparison, citation export and print
+    The implementation models statutes as structured records (act, chapter, section, amendment history) instead of
+    page-level documents, so the data can support search, comparison, citation export and print
     views. The interface is built around reading: generous measure, a persistent section sidebar,
-    and typography that can carry long legal passages on a phone. Content lives in typed data
-    modules, which keeps the build static and fast.
+    and typography that can carry long legal passages on a phone. Core legal content lives in typed data
+    modules. That does not mean every part of the application is static.
+  informationArchitecture: >-
+    The reading model moves from an act to its chapters and sections. A section can carry a heading,
+    explanatory text and references to related provisions. This makes the section a useful unit for
+    navigation and citation. The important distinction is between the original legal text, an
+    explanation and the source that a reader should consult.
+  technicalArchitecture: >-
+    The repository uses Next.js, React, TypeScript and Tailwind CSS. Legal data is held in versioned
+    modules; components provide reading, search, comparison and citation interfaces. Some reading
+    tools and saved preferences run in the browser. The application also has a server API route for
+    the assistant, so it should not be described as a wholly static site. The inspected assistant route
+    is gated by server configuration and returns a maintenance response when disabled. The README
+    documents the public assistant as suspended; the live environment has not been independently checked.
+  workflow:
+    - title: Product direction & requirements
+      detail: My involvement centres on what the project should help a reader do, which information should be visible, and how the different reading tools fit together.
+    - title: Design choices & AI-assisted implementation
+      detail: I use AI-assisted development while shaping the information structure and interface direction. The code is inspectable in the repository; I do not present all implementation as code independently written by me.
+    - title: Review & testing boundaries
+      detail: Generated changes need checking against the requirements, interface behaviour and sources. The repository contains tests and development notes, but their existence does not prove legal correctness or establish that I independently designed or executed every test.
+  future:
+    - Continue learning how the data model and interface fit together, rather than treating generated code as a finished understanding.
+    - Keep incomplete or suspended functionality clearly distinguished from the reading tools documented in the repository.
+    - Make project notes more specific as there are concrete changes to describe; no launch date or feature-completion promise is implied.
   decisions:
     - title: Model provisions, not just pages
       detail: Acts, chapters and sections are structured records. Search, comparison and citation tools can use the same underlying legal content rather than maintaining disconnected copies.
     - title: Keep the reading tools client-side
-      detail: Search, comparison and local bookmarks work in the browser. Static deployment keeps these reading tools separate from any conversational AI service.
+      detail: Search, comparison and local bookmarks work in the browser. Those browser-side tools are distinct from the server-side assistant route and should not be confused with its availability.
     - title: Put provenance beside the text
       detail: Source-transparency panels expose official references and integrity hashes. Attribution is part of the reading workflow, not a claim that a summary replaces the official source.
   limitations:
@@ -58,52 +82,37 @@ caseStudy:
     - Local, in-browser bookmarks with no accounts and no telemetry.
   results:
     - Statutory content is browsable by act, category and section, with deep links to every provision.
-    - Search, comparison and citation tools run entirely in the browser, so the site stays static.
+    - The repository documents browser-side search, comparison and citation tools; this is not an independent end-to-end verification of the live application.
     - The platform has an MIT-licensed public repository and is open to contributions.
   lessons:
-    - A data model that reflects the structure of the subject (acts contain sections contain amendments) makes every later feature cheaper to build.
-    - Citation and provenance details are not decoration in legal content — readers check them, so they belong in the interface, not in a footer.
+    - A data model that reflects the structure of the subject (acts contain sections contain amendments) can let different reading tools use the same underlying records.
+    - Citation and provenance belong close to the text. A source label or integrity hash alone does not establish that a legal interpretation is correct.
     - Typography does much of the usability work when the content is text-heavy and long.
 ---
 
-Nyayota is a legal information platform for people who need to *find* a provision and then
-understand it. It covers major Bangladeshi statutes across the pre-independence, Pakistani and
-Bangladeshi eras, plus a set of international instruments such as the UDHR and ICCPR.
+## Reading the interface
 
-![The Nyayota homepage: a legal search field above featured statutes and legal research pathways.](../../assets/projects/nyayota-homepage.png)
+Nyayota brings Bangladeshi statutes and selected international instruments into one reading
+interface. Its purpose is to make legal information easier to navigate, not to provide legal advice.
 
-*The Nyayota homepage — search-first, with featured statutes and guided pathways for common legal situations.*
+![Repository screenshot of Nyayota showing search, featured statutes and guided legal pathways.](../../assets/projects/nyayota-homepage.png)
 
-## What is inside
+*The existing repository screenshot, not a generated mockup or a capture of the current live service.*
 
-The catalogue is organised by act, then chapter, then section. Each section carries its own
-heading, marginal notes, cross-references and a short plain-language explanation, so the same
-record can serve a law student checking a citation and a reader trying to understand what a
-provision actually does.
+The search field gives readers a starting point. Featured statutes offer another route into the
+catalogue, while guided pathways introduce common legal situations. These are different entry
+points into the same subject; the screenshot is evidence of the interface, not proof of legal
+accuracy or of every linked feature working today.
 
-Around that core sit a few tools that only make sense once the data is structured:
+## Sources and implementation notes
 
-- **Search** runs client-side over the whole corpus and keeps recent queries locally.
-- **Compare** puts two provisions side by side, aligned by section.
-- **Cite** formats a reference in the style a reader's institution expects.
-- **Verify** shows where the text came from and when it was last checked.
+The [public repository](https://github.com/afnan0356/nyayota) contains the feature matrix, technical
+files and roadmap. The [inspected README](https://github.com/afnan0356/nyayota/blob/ce907d6d46ed9b219c4401eddcfb25fe2587e36c/README.md)
+documents search, comparison, citations, local bookmarks and source-transparency panels. Its
+public-assistant status says suspended. The source uses `ENABLE_PUBLIC_AI_ASSISTANT` to control
+availability and returns HTTP 503 when it is disabled. Some older architecture prose describes an
+active assistant, so this case study distinguishes documented status from server configuration;
+it does not claim to know the live environment value.
 
-## Scope and honesty
-
-Nyayota is deliberately an educational and informational platform. It does not give legal advice,
-does not represent anyone, and does not claim to replace a lawyer or an official gazette. Where a
-feature is incomplete — the public conversational assistant, currently documented as suspended in the repository, for instance — the interface says so rather
-than pretending otherwise.
-
-That discipline is also visible in the content: each provision is tied to a named source, and the
-project publishes its roadmap publicly so readers can see what is finished and what is still
-planned.
-
-## Reading the implementation
-
-The [public repository](https://github.com/afnan0356/nyayota) documents the feature matrix,
-architecture and development roadmap. The status described here follows that documentation,
-not an independent legal-content audit or a claim that every live route has been tested.
-
-AI assistance is part of the development process. The useful evidence is the inspectable
-implementation: typed content, reading interfaces, public source references and clearly stated limits.
+Legal texts and explanations should be checked against official sources. This case study is a
+project account, not a legal-content audit, a measure of adoption, or a claim of published research.

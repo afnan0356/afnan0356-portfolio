@@ -23,7 +23,7 @@ npm run og                # regenerate share image + touch icon
 
 The verifier is structural testing, not browser, accessibility certification or Lighthouse testing.
 
-Stage 1 checks (after building): `node scripts/verify-stage1.mjs`. Theme/contact/menu controller tests: `node --test scripts/test-theme.mjs scripts/test-stage1-interactions.mjs`.
+Stage 1 checks (after building): `node scripts/verify-stage1.mjs`. Theme/contact/menu/search controller tests: `node --experimental-strip-types --test scripts/test-theme.mjs scripts/test-stage1-interactions.mjs scripts/test-home-work.mjs scripts/test-human.mjs`. The current CSS-first enhancements, draft authoring and optional Bengali introductions are documented in [docs/authoring.md](docs/authoring.md).
 
 Theme policy: dark for a new visitor, then restore the last manually selected light/dark choice from local storage. If storage is blocked, the toggle still works for the current page, but cannot persist across page loads.
 

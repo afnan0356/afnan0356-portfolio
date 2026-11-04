@@ -19,7 +19,12 @@ await fs.mkdir(dir, { recursive: true });
 const browser = await pw.launch({
   executablePath: await chromium.executablePath(),
   // Multi-context QA requires Chromium's normal process isolation.
-  args: chromium.args.filter((a) => a !== "--single-process"),
+  args: [
+    ...chromium.args.filter(
+      (a) => !["--single-process", "--in-process-gpu"].includes(a),
+    ),
+    "--disable-gpu",
+  ],
   env: { ...process.env, LD_LIBRARY_PATH: path.join(tools, "libraries/lib") },
 });
 const viewportResults = [];

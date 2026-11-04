@@ -1,0 +1,17 @@
+---
+import LocalizedOverview from "../../components/LocalizedOverview.astro";
+import { overviewLanguages } from "../../data/languages";
+export function getStaticPaths() {
+  return Object.entries(overviewLanguages).flatMap(([language, copy]) =>
+    Object.keys(copy.pages)
+      .filter(Boolean)
+      .map((slug) => ({
+        params: { language, page: slug },
+        props: { language, slug },
+      })),
+  );
+}
+const { language, slug } = Astro.props;
+---
+
+<LocalizedOverview language={language} slug={slug} />

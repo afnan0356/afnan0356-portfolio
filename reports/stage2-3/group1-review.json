@@ -1,0 +1,42 @@
+[
+  {
+    "route": "home",
+    "theme": "dark",
+    "width": 1440,
+    "scrollWidth": 1430,
+    "height": 3323,
+    "h1": " Md. Afnan. Building for readers. ",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "home",
+    "theme": "dark",
+    "width": 390,
+    "scrollWidth": 380,
+    "height": 3709,
+    "h1": " Md. Afnan. Building for readers. ",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "home",
+    "theme": "light",
+    "width": 1440,
+    "scrollWidth": 1430,
+    "height": 3323,
+    "h1": " Md. Afnan. Building for readers. ",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "home",
+    "theme": "light",
+    "width": 390,
+    "scrollWidth": 380,
+    "height": 3709,
+    "h1": " Md. Afnan. Building for readers. ",
+    "missingImages": [],
+    "errors": []
+  }
+]

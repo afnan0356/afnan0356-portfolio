@@ -1,0 +1,122 @@
+[
+  {
+    "route": "about",
+    "theme": "dark",
+    "width": 1440,
+    "scrollWidth": 1430,
+    "height": 2617,
+    "h1": "\nA student.A work in progress. ",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "projects",
+    "theme": "dark",
+    "width": 1440,
+    "scrollWidth": 1430,
+    "height": 1782,
+    "h1": "Projects I am learning through.",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "projects/nyayota",
+    "theme": "dark",
+    "width": 1440,
+    "scrollWidth": 1430,
+    "height": 7998,
+    "h1": "Nyayota",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "about",
+    "theme": "dark",
+    "width": 390,
+    "scrollWidth": 380,
+    "height": 3853,
+    "h1": "\nA student.A work in progress. ",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "projects",
+    "theme": "dark",
+    "width": 390,
+    "scrollWidth": 380,
+    "height": 2382,
+    "h1": "Projects I am learning through.",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "projects/nyayota",
+    "theme": "dark",
+    "width": 390,
+    "scrollWidth": 380,
+    "height": 10166,
+    "h1": "Nyayota",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "about",
+    "theme": "light",
+    "width": 1440,
+    "scrollWidth": 1430,
+    "height": 2617,
+    "h1": "\nA student.A work in progress. ",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "projects",
+    "theme": "light",
+    "width": 1440,
+    "scrollWidth": 1430,
+    "height": 1782,
+    "h1": "Projects I am learning through.",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "projects/nyayota",
+    "theme": "light",
+    "width": 1440,
+    "scrollWidth": 1430,
+    "height": 7998,
+    "h1": "Nyayota",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "about",
+    "theme": "light",
+    "width": 390,
+    "scrollWidth": 380,
+    "height": 3853,
+    "h1": "\nA student.A work in progress. ",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "projects",
+    "theme": "light",
+    "width": 390,
+    "scrollWidth": 380,
+    "height": 2382,
+    "h1": "Projects I am learning through.",
+    "missingImages": [],
+    "errors": []
+  },
+  {
+    "route": "projects/nyayota",
+    "theme": "light",
+    "width": 390,
+    "scrollWidth": 380,
+    "height": 10166,
+    "h1": "Nyayota",
+    "missingImages": [],
+    "errors": []
+  }
+]

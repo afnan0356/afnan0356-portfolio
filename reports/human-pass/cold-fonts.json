@@ -1,0 +1,44 @@
+[
+  {
+    "width": 320,
+    "scrollWidth": 310,
+    "overflow": [],
+    "heroHeight": 94.03125
+  },
+  {
+    "width": 360,
+    "scrollWidth": 350,
+    "overflow": [],
+    "heroHeight": 105.78125
+  },
+  {
+    "width": 390,
+    "scrollWidth": 380,
+    "overflow": [],
+    "heroHeight": 114.609375
+  },
+  {
+    "width": 412,
+    "scrollWidth": 402,
+    "overflow": [],
+    "heroHeight": 121.078125
+  },
+  {
+    "width": 768,
+    "scrollWidth": 758,
+    "overflow": [],
+    "heroHeight": 169.28125
+  },
+  {
+    "width": 1024,
+    "scrollWidth": 1014,
+    "overflow": [],
+    "heroHeight": 216.328125
+  },
+  {
+    "width": 1440,
+    "scrollWidth": 1430,
+    "overflow": [],
+    "heroHeight": 304.203125
+  }
+]

@@ -8,5 +8,4 @@ verification: verified
 tags: ['nyayota', 'open source']
 ---
 
-A link-type entry: the evidence is a public repository rather than a PDF. Vault entries can point
-at an uploaded file in `public/vault/`, at an external URL, or both.
+Public source and documentation for the project. Repository availability does not establish legal accuracy, adoption, independent authorship or a completed qualification.

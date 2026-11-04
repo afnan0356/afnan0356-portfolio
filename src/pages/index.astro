@@ -3,48 +3,51 @@ import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import { site } from "../config/site";
-import {
-  getFeaturedProjects,
-  getPosts,
-  getPieces,
-  getBooks,
-  getVaultItems,
-} from "../lib/content";
-import { formatMonth, isoDate } from "../lib/text";
-import { timeline, timelineStateLabels } from "../data/timeline";
+import { getProjects, statusLabels } from "../lib/content";
+import { selectHomeWork } from "../lib/home-work";
 import "../styles/home.css";
+import Now from "../components/Now.astro";
+import NyayotaDemo from "../components/NyayotaDemo.astro";
+import { now } from "../data/now";
 
-const learning = timeline.filter((entry) =>
-  [
-    "Accessibility as a build step",
-    "Typed data modelling for legal content",
-    "Longer-form writing",
-  ].includes(entry.title),
-);
-const projects = await getFeaturedProjects(3);
-const posts = (await getPosts()).slice(0, 2);
-const pieces = await getPieces();
-const books = await getBooks();
-const writing = [...books, ...pieces].slice(0, 2);
-const evidence = (await getVaultItems())
-  .filter((item) => item.data.verification === "verified")
-  .slice(0, 3);
+const { primary, secondary } = selectHomeWork(await getProjects());
+const projects = primary ? [primary] : [];
+if (now.photo && !now.photoAlt.trim())
+  throw new Error("Add an accurate photoAlt for your real portrait.");
 ---
 
 <BaseLayout title={site.title} description={site.description} path="/">
   <section class="home-hero container" aria-labelledby="hero-title" data-hero>
     <div class="hero-topline" data-enter>
       <p class="folio-label">
-        Personal projects <span>Open source · 2026</span>
+        Student <span>Technology &amp; web projects</span>
       </p>
       <p class="folio-label hero-discipline">
-        Web development &amp; information design
+        A place to learn, build &amp; document
       </p>
     </div>
-    <h1 class="hero-heading" id="hero-title">
-      <span class="title-mask"><span data-title-line>Md. Afnan.</span></span>
-      <span class="title-mask"
-        ><em data-title-line>Building for readers.</em></span
+    <h1
+      class="hero-heading"
+      id="hero-title"
+      aria-label="Md. Afnan. Building for readers."
+    >
+      <span aria-hidden="true" class="title-mask"
+        ><span data-title-line
+          ><span class="hero-word" style="--word-index:0">Md.</span>{" "}<span
+            class="hero-word"
+            style="--word-index:1">Afnan.</span
+          ></span
+        ></span
+      >
+      <span aria-hidden="true" class="title-mask"
+        ><em data-title-line
+          ><span class="hero-word" style="--word-index:2">Building</span>{
+            " "
+          }<span class="hero-word" style="--word-index:3">for</span>{" "}<span
+            class="hero-word"
+            style="--word-index:4">readers.</span
+          ></em
+        ></span
       >
     </h1>
     <div class="hero-bottom">
@@ -60,19 +63,49 @@ const evidence = (await getVaultItems())
         </div>
       </div>
       <aside class="hero-current" data-enter aria-label="Current work">
+        <figure class="portrait">
+          {
+            now.photo ? (
+              <Image
+                src={now.photo}
+                alt={now.photoAlt}
+                width={112}
+                height={112}
+                widths={[112, 224]}
+                sizes="112px"
+                format="webp"
+              />
+            ) : (
+              <div class="portrait-placeholder">
+                Real photo
+                <br />
+                placeholder
+              </div>
+            )
+          }
+          {
+            !now.photo && (
+              <figcaption>
+                A face to go with the name — photo to add.
+              </figcaption>
+            )
+          }
+        </figure>
         <div>
-          <p class="folio-label">On my desk</p><p>
-            Nyayota — legal information, structured for the web.
+          <p class="folio-label">Current focus</p><p>
+            {site.status}
           </p><a class="text-link" href="/projects/nyayota/"
-            >Meet Nyayota <Icon name="arrow-up-right" size={14} /></a>
+            >Meet Nyayota <Icon name="arrow-up-right" size={14} /></a
+          >
         </div>
       </aside>
     </div>
     <div class="hero-baseline" data-enter>
-      <span class="folio-label"
-        >An ongoing practice in code, reading &amp; clarity</span
-      ><a href="#selected-work" class="folio-label"
-        >Selected work <Icon name="arrow-down" size={14} /></a>
+      <span class="folio-label">Still learning. Working in public.</span><a
+        href="#selected-work"
+        class="folio-label"
+        >Selected work <Icon name="arrow-down" size={14} /></a
+      >
     </div>
   </section>
 
@@ -84,10 +117,11 @@ const evidence = (await getVaultItems())
     <div class="folio-section-head" data-motion="reveal">
       <p class="folio-label">
         <span class="section-index">01</span> The main project
-      </p><h2 id="work-title">A closer look at <em>Nyayota.</em></h2><a
+      </p><h2 id="work-title">Selected work.</h2><a
         class="text-link"
         href="/projects/"
-        >All projects <Icon name="arrow-up-right" size={15} /></a>
+        >All projects <Icon name="arrow-up-right" size={15} /></a
+      >
     </div>
     {
       projects.map((project, index) => (
@@ -96,24 +130,15 @@ const evidence = (await getVaultItems())
             <a
               class="work-image-link"
               href={`/projects/${project.id}/`}
-              aria-label={`Explore ${project.data.title}`}
+              aria-label={`Explore the project: ${project.data.title}`}
               data-motion="image"
             >
               <div class="work-image-stage">
-                <div class="work-browser-bar" aria-hidden="true">
-                  <span class="browser-dots">
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                  <span>{project.data.title} / a closer look</span>
-                  <Icon name="arrow-up-right" size={14} />
-                </div>
                 <Image
                   src={project.data.cover}
                   alt={project.data.coverAlt ?? project.data.title}
                   widths={[480, 800, 1200, 1600]}
-                  sizes="(min-width: 80rem) 74rem, 92vw"
+                  sizes="(min-width: 80rem) 44rem, (min-width: 48rem) 48vw, calc(100vw - 4rem)"
                   loading="lazy"
                   class="work-image"
                 />
@@ -135,10 +160,15 @@ const evidence = (await getVaultItems())
                     <Icon name="arrow-up-right" size={32} />
                   </a>
                 </h3>
-                <span class="status status--live">
-                  {project.data.status === "live"
-                    ? "Live project"
-                    : project.data.status}
+                <span
+                  class:list={[
+                    "status",
+                    project.data.status === "in-progress"
+                      ? "status--in-progress"
+                      : "status--live",
+                  ]}
+                >
+                  {statusLabels[project.data.status]}
                 </span>
               </>
             </div>
@@ -153,12 +183,24 @@ const evidence = (await getVaultItems())
                 <a class="text-link" href={`/projects/${project.id}/`}>
                   Read the case study <Icon name="arrow-right" size={16} />
                 </a>
+                {project.data.links.repo && (
+                  <a
+                    class="text-link work-source"
+                    href={project.data.links.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source &amp; documentation{" "}
+                    <Icon name="arrow-up-right" size={15} />
+                  </a>
+                )}
               </>
             </div>
           </div>
         </article>
       ))
     }
+    {primary?.id === "nyayota" && <NyayotaDemo />}
     {
       projects.length === 0 && (
         <p class="empty-state">Published projects will appear here.</p>
@@ -166,162 +208,35 @@ const evidence = (await getVaultItems())
     }
   </section>
 
-  <section class="home-perspective" aria-labelledby="perspective-title">
-    <div class="container learning-desk">
-      <div class="learning-desk__intro">
-        <p class="folio-label">Alongside the build</p><h2
-          id="perspective-title"
-        >
-          A practice,<br /><em>not a finished picture.</em>
-        </h2><p>
-          Legal information needs structure. A reading interface needs care.
-          These are the questions behind the work — and the skills I am still
-          developing.
-        </p><a class="text-link" href="/about/"
-          >More about my approach <Icon name="arrow-up-right" size={16} /></a>
-      </div>
-      <ol class="learning-ledger">
-        {
-          learning.map((entry) => (
-            <li>
-              <>
-                <div class="ledger-meta">
-                  <>
-                    <span>{timelineStateLabels[entry.state]}</span>
-                    <time datetime={entry.date}>{entry.date}</time>
-                  </>
-                </div>
-                <h3>{entry.title}</h3>
-                <p>{entry.summary}</p>
-              </>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
+  {
+    secondary.length > 0 && (
+      <section
+        class="container secondary-work"
+        aria-labelledby="secondary-title"
+      >
+        <h2 id="secondary-title">Other work</h2>
+        {secondary.map((project) => (
+          <a class="secondary-work__row" href={`/projects/${project.id}/`}>
+            <span>
+              <strong>{project.data.title}</strong>
+              <span>{project.data.summary}</span>
+            </span>
+            <Icon name="arrow-up-right" size={20} />
+          </a>
+        ))}
+      </section>
+    )
+  }
 
-  <section class="home-record container" aria-labelledby="record-title">
-    <div class="folio-section-head" data-motion="reveal">
-      <p class="folio-label">
-        <span class="section-index">02</span> Public record
-      </p><h2 id="record-title">The work, <em>with its sources.</em></h2><a
-        class="text-link"
-        href="/vault/"
-        >Open the vault <Icon name="arrow-up-right" size={15} /></a>
-    </div>
-    <div class="record-grid">
-      <div class="record-evidence" data-motion="stagger">
-        <p class="folio-label">Sources, not just statements</p>
-        {
-          evidence.map((item) => (
-            <a
-              class="record-row"
-              href={item.data.link ?? item.data.file ?? "/vault/"}
-              target={item.data.link ? "_blank" : undefined}
-              rel={item.data.link ? "noopener noreferrer" : undefined}
-            >
-              <>
-                <span>
-                  <>
-                    <span class="record-date">
-                      {formatMonth(item.data.date)} · Public source
-                    </span>
-                    <span class="record-title">{item.data.title}</span>
-                  </>
-                </span>
-                <Icon name="arrow-up-right" size={20} />
-              </>
-            </a>
-          ))
-        }
-      </div>
-      <div class="record-reading" data-motion="stagger">
-        <p class="folio-label">The reading room</p>
-        {
-          posts.length > 0 ? (
-            posts.map((post) => (
-              <a class="record-row" href={`/blog/${post.id}/`}>
-                <>
-                  <span>
-                    <>
-                      <time
-                        class="record-date"
-                        datetime={isoDate(post.data.published)}
-                      >
-                        {formatMonth(post.data.published)}
-                      </time>
-                      <span class="record-title">{post.data.title}</span>
-                    </>
-                  </span>
-                  <Icon name="arrow-up-right" size={20} />
-                </>
-              </a>
-            ))
-          ) : (
-            <a class="record-row" href="/blog/">
-              <>
-                <span>
-                  <>
-                    <span class="record-date">No articles published yet</span>
-                    <span class="record-title">
-                      The blog — not published yet
-                    </span>
-                  </>
-                </span>
-                <Icon name="arrow-up-right" size={20} />
-              </>
-            </a>
-          )
-        }
-        {
-          writing.length > 0 ? (
-            writing.map((piece) => (
-              <a
-                class="record-row"
-                href={
-                  piece.data.kind === "book"
-                    ? `/writing/book/${piece.data.book}/`
-                    : `/writing/${piece.id}/`
-                }
-              >
-                <>
-                  <span>
-                    <>
-                      <span class="record-date">Writing</span>
-                      <span class="record-title">{piece.data.title}</span>
-                    </>
-                  </span>
-                  <Icon name="arrow-up-right" size={20} />
-                </>
-              </a>
-            ))
-          ) : (
-            <a class="record-row" href="/writing/">
-              <>
-                <span>
-                  <>
-                    <span class="record-date">No writing published yet</span>
-                    <span class="record-title">
-                      Longer writing — not published yet
-                    </span>
-                  </>
-                </span>
-                <Icon name="arrow-up-right" size={20} />
-              </>
-            </a>
-          )
-        }
-      </div>
-    </div>
-  </section>
+  <Now />
 
   <section class="home-contact container" aria-labelledby="contact-title">
     <div class="contact-overline" data-motion="reveal">
       <p class="folio-label">Get in touch</p><a
         class="text-link"
         href="/contact/"
-        >All contact channels <Icon name="arrow-up-right" size={15} /></a>
+        >All contact channels <Icon name="arrow-up-right" size={15} /></a
+      >
     </div>
     <div data-motion="stagger">
       <h2 id="contact-title">
@@ -336,7 +251,8 @@ const evidence = (await getVaultItems())
           >{site.email ?? "Say hello"}<Icon
             name="arrow-up-right"
             size={22}
-          /></a>
+          /></a
+        >
       </div>
     </div>
   </section>

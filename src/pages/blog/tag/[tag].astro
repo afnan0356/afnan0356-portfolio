@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PageHeader from '../../../components/PageHeader.astro';
-import Icon from '../../../components/Icon.astro';
-import { getPosts, getPostTags } from '../../../lib/content';
-import { formatMonth, isoDate, readingTime } from '../../../lib/text';
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHeader from "../../../components/PageHeader.astro";
+import Icon from "../../../components/Icon.astro";
+import { getPosts, getPostTags } from "../../../lib/content";
+import { formatMonth, isoDate, readingTime } from "../../../lib/text";
 
 export async function getStaticPaths() {
   const tags = await getPostTags();
@@ -36,7 +36,7 @@ const { tag, posts } = Astro.props;
     <PageHeader
       eyebrow="Blog · Tag"
       title={tag}
-      lede={`${posts.length} ${posts.length === 1 ? 'post' : 'posts'} tagged “${tag}”.`}
+      lede={`${posts.length} ${posts.length === 1 ? "post" : "posts"} tagged “${tag}”.`}
     >
       <div class="page-header__actions">
         <a class="btn btn--sm" href="/blog/">
@@ -50,11 +50,20 @@ const { tag, posts } = Astro.props;
       {
         posts.map((post) => (
           <a class="post-row" href={`/blog/${post.id}/`}>
-            <time class="post-row__date mono" datetime={isoDate(post.data.published)}>
-              {formatMonth(post.data.published)}
-            </time>
+            {post.data.published ? (
+              <time
+                class="post-row__date mono"
+                datetime={isoDate(post.data.published)}
+              >
+                {formatMonth(post.data.published)}
+              </time>
+            ) : (
+              <span>Draft · date to add</span>
+            )}
             <span class="post-row__title">{post.data.title}</span>
-            <span class="post-row__read mono">{readingTime(post.body)} min</span>
+            <span class="post-row__read mono">
+              {readingTime(post.body)} min
+            </span>
             <Icon name="arrow-up-right" size={15} />
           </a>
         ))
@@ -71,7 +80,7 @@ const { tag, posts } = Astro.props;
   .post-row {
     display: grid;
     grid-template-columns: 1fr auto auto;
-    grid-template-areas: 'title read arrow';
+    grid-template-areas: "title read arrow";
     align-items: center;
     gap: var(--space-sm);
     padding: 0.95rem 0.2rem;
@@ -116,7 +125,7 @@ const { tag, posts } = Astro.props;
   @media (min-width: 40rem) {
     .post-row {
       grid-template-columns: 6rem 1fr auto auto;
-      grid-template-areas: 'date title read arrow';
+      grid-template-areas: "date title read arrow";
     }
 
     .post-row__date {

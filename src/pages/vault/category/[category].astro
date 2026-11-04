@@ -1,9 +1,14 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PageHeader from '../../../components/PageHeader.astro';
-import Icon from '../../../components/Icon.astro';
-import { getVaultItems, vaultCategories, verificationLabels, isDemo } from '../../../lib/content';
-import { formatDate, isoDate } from '../../../lib/text';
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHeader from "../../../components/PageHeader.astro";
+import Icon from "../../../components/Icon.astro";
+import {
+  getVaultItems,
+  vaultCategories,
+  verificationLabels,
+  isDemo,
+} from "../../../lib/content";
+import { formatDate, isoDate } from "../../../lib/text";
 
 export async function getStaticPaths() {
   const items = await getVaultItems();
@@ -13,7 +18,9 @@ export async function getStaticPaths() {
     params: { category },
     props: {
       category,
-      label: vaultCategories.find((entry) => entry.id === category)?.label ?? category,
+      label:
+        vaultCategories.find((entry) => entry.id === category)?.label ??
+        category,
       items: items.filter((item) => item.data.category === category),
     },
   }));
@@ -34,7 +41,12 @@ const { category, label, items } = Astro.props;
   path={`/vault/category/${category}/`}
 >
   <div class="container">
-    <PageHeader eyebrow="Vault" title={label} lede={`${items.length} ${items.length === 1 ? 'document' : 'documents'} in this category.`}>
+    <PageHeader
+      quiet
+      eyebrow="Vault"
+      title={label}
+      lede={`${items.length} ${items.length === 1 ? "document" : "documents"} in this category.`}
+    >
       <div class="page-header__actions">
         <a class="btn btn--sm" href="/vault/">
           <Icon name="arrow-left" size={14} />
@@ -48,7 +60,12 @@ const { category, label, items } = Astro.props;
         items.map((item) => (
           <li class="doc">
             <div class="doc__top">
-              <span class:list={['chip', item.data.verification === 'verified' ? 'chip--accent' : '']}>
+              <span
+                class:list={[
+                  "chip",
+                  item.data.verification === "verified" ? "chip--accent" : "",
+                ]}
+              >
                 {verificationLabels[item.data.verification].label}
               </span>
               {isDemo(item) && <span class="chip">Sample</span>}
@@ -58,12 +75,20 @@ const { category, label, items } = Astro.props;
             </div>
             <h2 class="doc__title">
               {item.data.file ? (
-                <a href={item.data.file} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={item.data.file}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {item.data.title}
                   <Icon name="file" size={13} />
                 </a>
               ) : item.data.link ? (
-                <a href={item.data.link} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={item.data.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {item.data.title}
                   <Icon name="external" size={13} />
                 </a>
@@ -72,7 +97,9 @@ const { category, label, items } = Astro.props;
               )}
             </h2>
             <p class="doc__desc">{item.data.description}</p>
-            {item.data.issuer && <p class="doc__issuer mono">Issued by {item.data.issuer}</p>}
+            {item.data.issuer && (
+              <p class="doc__issuer mono">Issued by {item.data.issuer}</p>
+            )}
           </li>
         ))
       }

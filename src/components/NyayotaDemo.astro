@@ -1,0 +1,49 @@
+---
+import { now } from "../data/now";
+if (now.demoVideo && !/^\/demos\/[^?#]+\.mp4$/.test(now.demoVideo))
+  throw new Error("Use a real local MP4 recording under /demos/.");
+if (
+  now.demoPoster &&
+  !/^\/demos\/[^?#]+\.(webp|avif|png|jpe?g)$/.test(now.demoPoster)
+)
+  throw new Error("Use a compressed local poster under /demos/.");
+---
+
+<aside class="demo-slot" aria-labelledby="demo-title">
+  <div>
+    <p class="folio-label">A closer look at Nyayota</p><h3 id="demo-title">
+      A little room for a real demo.
+    </h3>
+    <p>
+      A short recording can show the reading flow better than a description.
+    </p>
+  </div>
+  {
+    now.demoVideo ? (
+      <video
+        controls
+        muted
+        playsinline
+        preload="none"
+        poster={now.demoPoster ?? undefined}
+        aria-label="Nyayota screen recording"
+        data-demo-video
+      >
+        <>
+          <source src={now.demoVideo} type="video/mp4" />
+          <a href={now.demoVideo}>Open the recording</a>
+        </>
+      </video>
+    ) : (
+      <div class="demo-placeholder">
+        <>
+          <span aria-hidden="true">▷</span>
+          <p>Video placeholder</p>
+          <small>
+            A real screen recording will go here. No demo video has been added.
+          </small>
+        </>
+      </div>
+    )
+  }
+</aside>

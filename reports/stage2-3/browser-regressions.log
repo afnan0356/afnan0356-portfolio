@@ -1,0 +1,26 @@
+PASS Dark default despite light OS
+PASS Motion starts then completes hero
+PASS Theme toggles and persists across real navigation
+PASS Mobile modal: inert background, keyboard wrap, Escape focus return
+PASS Resize closes mobile modal
+PASS Repeated Astro init/cleanup restores animation-owned inline styles
+PASS Dynamic reduced motion reveals everything immediately
+PASS Reduced motion on load leaves no hidden content or running animation
+PASS Secondary routes retain content with no overflow
+PASS No JavaScript: mobile navigation and all homepage sections remain visible
+PASS Failed motion module: visible content and working menu
+PASS Mobile contents exposes real sections and jumps to role
+PASS Reading location tracks scroll, cleans up, and reinitializes
+PASS Original screenshot link returns an actual local image
+PASS CV jumps, print action and theme-safe print layout
+PASS Contact copy gives accessible success feedback
+PASS No-JS project contents still navigates, CV hides inert print control
+PASS 120 interior-page/theme/viewport combinations
+PASS 4x CPU touch smoke, no-JS desktop screenshot, and 10 text-token contrast checks
+PASS One main project; no empty publishing or evidence dashboard on homepage
+PASS Inspector loads on demand, opens accessibly and returns keyboard focus
+PASS Close button and repeated navigation cleanup do not accumulate images
+PASS Dark desktop inspector, keyboard containment and case-study landmarks
+PASS No-JS original image link remains usable
+PASS Unsupported dialog API falls back to original image navigation
+PASS Image failure produces readable status and an operable close button

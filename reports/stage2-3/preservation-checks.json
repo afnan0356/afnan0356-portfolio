@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "protectedFilesChecked": 89,
+  "protected": [
+    "Stage 2.2 factual content/data",
+    "all previous report artifacts",
+    "existing public assets",
+    "dependency manifests",
+    "site configuration",
+    "GSAP motion module"
+  ],
+  "designChecks": [
+    "no faux browser chrome",
+    "generic selected-work heading",
+    "About essay precedes margin note",
+    "native contents disclosure",
+    "inspector pan guidance"
+  ]
+}

@@ -1,0 +1,42 @@
+---
+import { overviewLanguages } from "../data/languages";
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const path = Astro.url.pathname;
+const [language, ...rest] = path.split("/").filter(Boolean);
+const current = overviewLanguages[language];
+const english = current?.pages[rest.join("/")]?.english ?? "/";
+const target = current ? english : path;
+const choices = Object.entries(overviewLanguages)
+  .filter(([key]) => key !== language)
+  .map(([key, copy]) => {
+    const slug =
+      Object.entries(copy.pages).find(
+        ([, page]) => page.english === target,
+      )?.[0] ?? "";
+    return {
+      lang: copy.language,
+      label: copy.label,
+      href: slug ? `/${key}/${slug}/` : `/${key}/`,
+    };
+  });
+---
+
+<p class:list={["language-note", compact && "language-note--compact"]}>
+  {
+    current && (
+      <a href={english} lang="en" hreflang="en">
+        {compact ? "English" : current.englishLabel}
+      </a>
+    )
+  }
+  {
+    choices.map((copy) => (
+      <a href={copy.href} lang={copy.lang} hreflang={copy.lang}>
+        {copy.label}
+      </a>
+    ))
+  }
+</p>

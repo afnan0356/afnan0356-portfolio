@@ -1,125 +1,66 @@
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-/** One language, one owner. CSS handles feedback; GSAP handles choreography. */
-export const motion = {
-  ease: "power3.out",
-  entrance: 0.95,
-  reveal: 0.85,
-  stagger: 0.085,
-  distance: 22,
-} as const;
-
-gsap.registerPlugin(ScrollTrigger);
+/** CSS owns every animation. JS only signals entry; content starts visible. */
 let dispose: (() => void) | undefined;
-
+let heroPlayed = false;
+let activeMain: Element | null = null;
 export function initMotion() {
-  // Also makes repeated astro:page-load events idempotent.
+  const main = document.querySelector("main");
+  if (dispose && activeMain === main) return;
   dispose?.();
-  const media = gsap.matchMedia();
-  let context: gsap.Context | undefined;
-  dispose = () => {
-    media.revert();
-    context?.revert();
+  activeMain = main;
+  const media = matchMedia("(prefers-reduced-motion: reduce)");
+  let observer: IntersectionObserver | undefined;
+  const controller = new AbortController();
+  const reset = () => {
+    observer?.disconnect();
+    document
+      .querySelectorAll(".reveal-in")
+      .forEach((e) => e.classList.remove("reveal-in"));
+    document.documentElement.classList.remove("hero-once");
   };
-
-  try {
-    context = gsap.context(() => {
-      media.add(
-        {
-          animate: "(prefers-reduced-motion: no-preference)",
-          compact: "(max-width: 767px)",
-        },
-        (conditions) => {
-          if (!conditions.conditions?.animate) return;
-          const focusControllers = new AbortController();
-          const compact = Boolean(conditions.conditions.compact);
-          const distance = compact ? 12 : motion.distance;
-          const hero = document.querySelector("[data-hero]");
-          if (hero) {
-            const timeline = gsap.timeline({ defaults: { ease: motion.ease } });
-            hero.addEventListener("focusin", () => timeline.progress(1), {
-              signal: focusControllers.signal,
-            });
-            const titleLines = hero.querySelectorAll("[data-title-line]");
-            const entranceBlocks = hero.querySelectorAll("[data-enter]");
-            if (titleLines.length)
-              timeline.from(
-                titleLines,
-                {
-                  yPercent: 30,
-                  opacity: 0,
-                  duration: motion.entrance,
-                  stagger: motion.stagger,
-                  clearProps: "transform,opacity",
-                },
-                0.08,
-              );
-            if (entranceBlocks.length)
-              timeline.from(
-                entranceBlocks,
-                {
-                  y: distance,
-                  opacity: 0,
-                  duration: motion.reveal,
-                  stagger: motion.stagger,
-                  clearProps: "transform,opacity",
-                },
-                0.15,
-              );
+  const setup = () => {
+    reset();
+    if (media.matches) return;
+    if (document.querySelector("[data-hero]") && !heroPlayed) {
+      heroPlayed = true;
+      let seen = false;
+      try {
+        seen = sessionStorage.getItem("hero-played") === "true";
+        sessionStorage.setItem("hero-played", "true");
+      } catch {
+        /* session memory is enough */
+      }
+      if (!seen) document.documentElement.classList.add("hero-once");
+    }
+    if (!("IntersectionObserver" in window)) return;
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal-in");
+            observer?.unobserve(entry.target);
           }
-
-          document
-            .querySelectorAll<HTMLElement>("[data-motion]")
-            .forEach((element) => {
-              const kind = element.dataset.motion;
-              const targets =
-                kind === "stagger" ? Array.from(element.children) : [element];
-              if (!targets.length) return;
-              const animation = gsap.from(targets, {
-                y: distance,
-                opacity: 0,
-                duration: kind === "image" ? 1.05 : motion.reveal,
-                ease: motion.ease,
-                stagger: kind === "stagger" ? motion.stagger : 0,
-                clearProps: "transform,opacity",
-                scrollTrigger: {
-                  trigger: element,
-                  start: "top 94%",
-                  once: true,
-                  // No pinning, scrub, parallax loop or scroll replacement.
-                },
-              });
-              // A keyboard user must never have to wait for a reveal to see focus.
-              element.addEventListener("focusin", () => animation.progress(1), {
-                signal: focusControllers.signal,
-              });
-            });
-          return () => focusControllers.abort();
-        },
-      );
-    });
-  } catch (error) {
-    dispose?.();
-    // Defaults are visible. If setup fails, remove every animation-owned style.
-    console.warn(
-      "Motion enhancement unavailable; static content retained.",
-      error,
+      },
+      { threshold: 0.08 },
     );
-  }
+    document
+      .querySelectorAll(
+        "[data-reveal], [data-motion], .post-row, .project-card",
+      )
+      .forEach((e) => observer?.observe(e));
+  };
+  media.addEventListener("change", setup, { signal: controller.signal });
+  setup();
+  dispose = () => {
+    reset();
+    controller.abort();
+    activeMain = null;
+    dispose = undefined;
+  };
 }
-
-export function destroyMotion() {
-  dispose?.();
-  dispose = undefined;
-}
-
-// Native cross-document navigation is retained. These also support a future
-// Astro ClientRouter without adding a router or duplicate init in this stage.
 initMotion();
-document.addEventListener("astro:before-swap", destroyMotion);
+document.addEventListener("astro:before-swap", () => dispose?.());
 document.addEventListener("astro:page-load", initMotion);
-window.addEventListener("pagehide", destroyMotion);
+window.addEventListener("pagehide", () => dispose?.());
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) initMotion();
 });

@@ -9,10 +9,20 @@ const require = createRequire(path.join(tools, "package.json"));
 const cm = require("@sparticuz/chromium");
 const chromium = cm.default ?? cm;
 const { chromium: pw } = require("playwright-core");
-const dir = fileURLToPath(new URL("../reports/stage2-1/", import.meta.url));
+const dir = fileURLToPath(
+  new URL(
+    process.env.BROWSER_REPORT_PATH || "../reports/stage2-1/",
+    import.meta.url,
+  ),
+);
 const browser = await pw.launch({
   executablePath: await chromium.executablePath(),
-  args: chromium.args.filter((a) => a !== "--single-process"),
+  args: [
+    ...chromium.args.filter(
+      (a) => !["--single-process", "--in-process-gpu"].includes(a),
+    ),
+    "--disable-gpu",
+  ],
   env: { ...process.env, LD_LIBRARY_PATH: path.join(tools, "libraries/lib") },
 });
 const matrix = [];
@@ -112,6 +122,8 @@ await test("Mobile contents exposes real sections and jumps to role", async () =
   });
   const nav = p.locator("[data-reading-nav]");
   assert.ok(await nav.isVisible());
+  if (await nav.locator("details:not([open])").count())
+    await nav.locator("summary").click();
   await nav.locator('a[href="#role"]').click();
   assert.equal(new URL(p.url()).hash, "#role");
   assert.equal(

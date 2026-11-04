@@ -3,22 +3,26 @@
  * Standalone writing piece — a story, essay, poem or note.
  * Book overviews and chapters have their own routes under /writing/book/.
  */
-import { render, type CollectionEntry } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Prose from '../../components/Prose.astro';
-import Byline from '../../components/Byline.astro';
-import DemoBanner from '../../components/DemoBanner.astro';
-import Icon from '../../components/Icon.astro';
-import { getPieces, isDemo, formLabels } from '../../lib/content';
-import { readingTime } from '../../lib/text';
+import { render, type CollectionEntry } from "astro:content";
+import PostTools from "../../components/PostTools.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Prose from "../../components/Prose.astro";
+import Byline from "../../components/Byline.astro";
+import DemoBanner from "../../components/DemoBanner.astro";
+import Icon from "../../components/Icon.astro";
+import { getPieces, isDemo, formLabels } from "../../lib/content";
+import { readingTime } from "../../lib/text";
 
 export async function getStaticPaths() {
   const pieces = await getPieces();
-  return pieces.map((piece) => ({ params: { id: piece.id }, props: { piece } }));
+  return pieces.map((piece) => ({
+    params: { id: piece.id },
+    props: { piece },
+  }));
 }
 
 interface Props {
-  piece: CollectionEntry<'writing'>;
+  piece: CollectionEntry<"writing">;
 }
 
 const { piece } = Astro.props;
@@ -38,7 +42,7 @@ const prev = index < all.length - 1 ? all[index + 1] : null;
   published={piece.data.published}
   updated={piece.data.updated}
   tags={piece.data.tags}
-  noindex={isDemo(piece)}
+  noindex={isDemo(piece) || piece.data.draft}
 >
   <div class="container container--text">
     <a class="back-link" href="/writing/">
@@ -49,11 +53,26 @@ const prev = index < all.length - 1 ? all[index + 1] : null;
     <article class="piece">
       {isDemo(piece) && <DemoBanner kind="piece of writing" />}
 
+      {
+        piece.data.draft && (
+          <p class="draft-notice" role="note">
+            Draft — unfinished notes, not a published article. Publication date
+            to add.
+          </p>
+        )
+      }
+      <PostTools />
       <header class="piece__head">
-        <p class="piece__form mono">{formLabels[piece.data.form] ?? 'Writing'}</p>
+        <p class="piece__form mono">
+          {formLabels[piece.data.form] ?? "Writing"}
+        </p>
         <h1 class="piece__title">{piece.data.title}</h1>
         <p class="piece__desc">{piece.data.description}</p>
-        <Byline published={piece.data.published} updated={piece.data.updated} readingTime={minutes} />
+        <Byline
+          published={piece.data.published}
+          updated={piece.data.updated}
+          readingTime={minutes}
+        />
       </header>
 
       <hr class="piece__rule" />
@@ -84,7 +103,10 @@ const prev = index < all.length - 1 ? all[index + 1] : null;
               <span />
             )}
             {next && (
-              <a href={`/writing/${next.id}/`} class="piece__pager-link piece__pager-link--next">
+              <a
+                href={`/writing/${next.id}/`}
+                class="piece__pager-link piece__pager-link--next"
+              >
                 <span class="mono">Next</span>
                 <span class="piece__pager-title">{next.data.title}</span>
               </a>

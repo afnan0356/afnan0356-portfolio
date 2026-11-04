@@ -9,28 +9,28 @@
  */
 ---
 
-<script is:inline>
+<script is:inline data-astro-rerun>
   (function () {
     var root = document.documentElement;
 
     // Enables navigation enhancement styles; never gates content visibility.
-    root.classList.add('js');
+    root.classList.add("js");
 
     var theme;
     try {
-      theme = localStorage.getItem('theme');
+      theme = localStorage.getItem("theme");
     } catch (e) {
       /* Private mode / storage blocked — keep the dark default. */
     }
-    if (theme !== 'light' && theme !== 'dark') {
-      theme = 'dark';
+    if (theme !== "light" && theme !== "dark") {
+      theme = "dark";
     }
     root.dataset.theme = theme;
     root.style.colorScheme = theme;
 
     // Keep the browser UI (address bar on Android) in step with the theme.
-    var color = theme === 'dark' ? '#0d0c0b' : '#f7f3ec';
+    var color = theme === "dark" ? "#0d0c0b" : "#f7f3ec";
     var meta = document.querySelector('meta[name="theme-color"]:not([media])');
-    if (meta) meta.setAttribute('content', color);
+    if (meta) meta.setAttribute("content", color);
   })();
 </script>

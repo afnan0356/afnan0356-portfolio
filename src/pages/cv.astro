@@ -40,7 +40,7 @@ const hasContent =
 
 <BaseLayout
   title="CV"
-  description="Curriculum vitae for Md. Afnan — education, experience, selected work and technical skills."
+  description="A project-focused CV for Md. Afnan, a student interested in technology, AI, research and web development."
   path="/cv/"
 >
   <div class="container container--narrow">
@@ -295,14 +295,6 @@ const hasContent =
   </div>
 </BaseLayout>
 
-<script>
-  document
-    .querySelector<HTMLButtonElement>("[data-print]")
-    ?.addEventListener("click", () => {
-      window.print();
-    });
-</script>
-
 <style>
   .cv-toolbar {
     display: flex;
@@ -334,9 +326,39 @@ const hasContent =
     gap: 0.4rem;
   }
 
+  .cv-jumps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+    padding-block: 0.75rem 1.5rem;
+  }
+  .cv-jumps a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.8125rem;
+    color: var(--ink-soft);
+    text-underline-offset: 0.3em;
+  }
+  .cv-jumps span {
+    width: 100%;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+  }
+  .cv__contact a {
+    min-height: 32px;
+  }
+  @media print {
+    .cv-jumps {
+      display: none;
+    }
+  }
+
   /* ── Document ───────────────────────────────────────────── */
   .cv {
-    padding-block: var(--space-lg) var(--space-2xl);
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
     display: grid;
     gap: var(--space-xl);
   }
@@ -392,18 +414,17 @@ const hasContent =
   }
 
   .cv__section-title {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    font-weight: 400;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink);
     padding-block-end: 0.55rem;
     border-block-end: 1px solid var(--line);
   }
 
   .cv__summary {
-    font-size: var(--text-md);
+    font-size: 1rem;
     line-height: 1.7;
     color: var(--ink-soft);
     max-width: var(--measure);
@@ -453,10 +474,10 @@ const hasContent =
   }
 
   .cv-entry__period {
-    font-size: 0.625rem;
-    letter-spacing: 0.05em;
+    font-size: 0.6875rem;
+    letter-spacing: 0.025em;
     color: var(--ink-faint);
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .cv-entry__org {
@@ -465,9 +486,9 @@ const hasContent =
   }
 
   .cv-entry__desc {
-    font-size: var(--text-sm);
+    font-size: 0.9375rem;
     color: var(--ink-muted);
-    line-height: 1.65;
+    line-height: 1.75;
     max-width: var(--measure);
   }
 
@@ -540,19 +561,56 @@ const hasContent =
     }
   }
 
-  /* Print: drop the toolbar, tighten the spacing. */
+  /* Print: keep this concise CV together without shrinking readable type. */
   @media print {
     .cv {
-      gap: 1.2rem;
+      gap: 1rem;
       padding: 0;
+      border: 0;
+      background: #fff;
+    }
+
+    .cv__head {
+      gap: 1rem;
+      padding-block-end: 1rem;
     }
 
     .cv__section {
+      gap: 0.75rem;
       break-inside: avoid;
+    }
+
+    .cv__entries {
+      gap: 1rem;
     }
 
     .cv-entry {
       break-inside: avoid;
+    }
+
+    .cv__footer {
+      padding-block-start: 0.75rem;
+    }
+  }
+  @media screen and (max-width: 47.99rem) {
+    .cv {
+      padding: 1.25rem 0;
+      border-inline: 0;
+      background: none;
+    }
+    .cv__contact a {
+      min-height: 44px;
+    }
+    .cv__name {
+      font-size: 2.75rem;
+    }
+    .cv__skills > div {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+    .cv-entry__head {
+      display: grid;
+      gap: 0.4rem;
     }
   }
 </style>

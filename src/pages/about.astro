@@ -1,134 +1,125 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PageHeader from "../components/PageHeader.astro";
 import Icon from "../components/Icon.astro";
 import { site } from "../config/site";
-import { getProjects, getPosts } from "../lib/content";
-import { timeline, timelineStateLabels } from "../data/timeline";
-const projects = await getProjects();
-const posts = await getPosts();
-const current = timeline.filter(
-  (entry) =>
-    entry.state === "learning" ||
-    entry.state === "in-progress" ||
-    entry.state === "planned",
-);
 ---
 
 <BaseLayout
   title="About"
-  description="Md. Afnan — web projects, structured information, and a developing practice in accessible interfaces."
+  description="Md. Afnan is a student interested in technology, AI, research and web development, learning through the ongoing Nyayota project."
   path="/about/"
 >
-  <div class="container">
-    <PageHeader
-      eyebrow="About / Md. Afnan"
-      title="Making information easier to use."
-      lede="I build for the web. My main project brings Bangladeshi legal information into a searchable, readable form."
-    />
+  <div class="container about-opening" data-hero>
+    <div>
+      <p class="folio-label" data-enter>About / Md. Afnan</p><h1
+        data-title-line
+      >
+        A student.<br /><em>A work in progress.</em>
+      </h1>
+    </div>
+    <p class="about-opening__note" data-enter>
+      Technology, AI, research<br />&amp; web development.<br /><span
+        >Exploring through projects.</span
+      >
+    </p>
   </div>
-  <div class="container personal-layout">
-    <aside class="personal-margin" aria-label="Public work">
-      <p class="folio-label">A working introduction</p>
-      <p>{site.status}</p>
-      <dl class="plain-facts">
-        <div><dt>Projects</dt><dd>{projects.length} published</dd></div><div>
-          <dt>Writing</dt><dd>
-            {posts.length} blog {posts.length === 1 ? "post" : "posts"}
-          </dd>
-        </div>
-      </dl>
-      <a class="text-link" href="/cv/"
-        >View my CV <Icon name="arrow-up-right" size={15} /></a
-      >
-      <a class="text-link" href="/contact/"
-        >Contact <Icon name="arrow-up-right" size={15} /></a
-      >
-    </aside>
+  <div class="container personal-layout about-narrative">
     <div class="personal-reading">
       <section aria-labelledby="work-heading">
-        <h2 id="work-heading">Starting with the information.</h2><p
-          class="reading-lead"
-        >
-          A page can contain the right information and still be difficult to
-          use. That gap is what interests me: how structure, language and an
-          interface work together.
+        <h2 id="work-heading">Hello, I’m Afnan.</h2><p class="reading-lead">
+          I am a student with an interest in technology, AI, research and web
+          development. I am still learning, and this site is a place to show the
+          work as it develops.
         </p><p>
-          In <a href="/projects/nyayota/">Nyayota</a>, the subject is
-          Bangladeshi law. Acts, chapters, sections and cross-references need to
-          remain connected, whether someone is searching for a provision,
-          comparing two texts or checking a citation. The project is educational
-          and informational, not legal advice.
-        </p><p>
-          I use AI-assisted development. I maintain Nyayota as a personal
-          project; the case study explains its structure, implementation and
-          limits without claiming that I independently wrote every line of code.
+          What interests me is how useful information reaches someone: how it is
+          organised, how it is explained, and whether an interface makes it
+          easier to understand. Projects give those questions a concrete form
+          while I develop my technical abilities.
         </p>
       </section>
+      <section aria-labelledby="project-heading">
+        <p class="folio-label">A project to think with</p><h2
+          id="project-heading"
+        >
+          Why Nyayota is central here.
+        </h2><p>
+          <a href="/projects/nyayota/">Nyayota</a> is my main ongoing project. It
+          brings Bangladeshi legal information into a browsable web interface. The
+          subject makes questions about structure very concrete: an act has chapters
+          and sections; a summary needs to remain distinguishable from a source;
+          a reader needs to find their way back.
+        </p><p>
+          I use AI-assisted development. My involvement centres on the direction
+          of the project, its requirements and how information is presented. The
+          case study separates those decisions from the implementation visible
+          in the repository. It does not claim that I independently wrote all
+          the code.
+        </p><a class="text-link" href="/projects/nyayota/#role"
+          >Read about my contribution <Icon name="arrow-right" size={16} /></a
+        >
+      </section>
       <section aria-labelledby="interests-heading">
-        <h2 id="interests-heading">What holds my attention.</h2><dl
+        <h2 id="interests-heading">What I want to understand better.</h2><dl
           class="interest-notes"
         >
           <div>
-            <dt>Structured information</dt><dd>
-              Documents become more useful when their parts can be searched,
-              compared and cited. Nyayota is where this interest becomes a
-              concrete project.
+            <dt>Technology &amp; AI</dt><dd>
+              How tools can help turn an idea into something useful, and where
+              their output still needs checking. AI assistance is part of my
+              workflow, not a substitute for understanding it.
             </dd>
           </div><div>
-            <dt>Interfaces for reading</dt><dd>
-              Typography, spacing and hierarchy are practical decisions: they
-              affect whether a long passage is comfortable to follow, especially
-              on a phone.
+            <dt>Research &amp; sources</dt><dd>
+              How to keep an explanation connected to its source. This is an
+              interest in research and information, not a claim of published
+              research or legal expertise.
             </dd>
           </div><div>
-            <dt>Performance &amp; access</dt><dd>
-              Static output, small payloads, keyboard navigation and reduced
-              motion. A useful site should not depend on a powerful device.
-            </dd>
-          </div><div>
-            <dt>Writing</dt><dd>
-              Explanatory writing and longer work are part of the direction I
-              want to explore. There are no published articles or writing
-              entries on this site yet.
+            <dt>Web development</dt><dd>
+              How data, page structure, typography and interaction work
+              together. I am developing my technical abilities while working on
+              real interfaces.
             </dd>
           </div>
         </dl>
       </section>
-      <section aria-labelledby="current-heading">
-        <h2 id="current-heading">Still in progress.</h2><p>
-          This is a record of ongoing work and intentions, not a list of
-          completed qualifications.
-        </p><ol class="learning-ledger">
-          {
-            current.map((entry) => (
-              <li>
-                <>
-                  <div class="ledger-meta">
-                    <>
-                      <span>{timelineStateLabels[entry.state]}</span>
-                      <time datetime={entry.date}>{entry.date}</time>
-                    </>
-                  </div>
-                  <h3>{entry.title}</h3>
-                  <p>{entry.summary}</p>
-                </>
-              </li>
-            ))
-          }
-        </ol><a class="text-link" href="/vault/#progress"
-          >See the learning timeline <Icon name="arrow-right" size={16} /></a>
+      <section id="current-heading" aria-labelledby="next-heading">
+        <h2 id="next-heading">The next part is learning.</h2><p>
+          I want to better understand the systems I am working with: how
+          structured data becomes a page, how to check AI-assisted changes, and
+          how an interface behaves for someone using a phone or keyboard.
+        </p><p>
+          For now, the useful record is the ongoing project and its limitations.
+          If I publish longer writing later, it will live on this site; it is
+          not a publication record I have today.
+        </p><a class="text-link" href="/vault/#progress"
+          >Read the learning notes <Icon name="arrow-right" size={16} /></a
+        >
       </section>
     </div>
+    <aside class="personal-margin" aria-label="A short introduction">
+      <p class="folio-label">At the moment</p><p>{site.status}</p><dl
+        class="plain-facts"
+      >
+        <div>
+          <dt>Main project</dt><dd><a href="/projects/nyayota/">Nyayota</a></dd>
+        </div><div><dt>Workflow</dt><dd>AI-assisted development</dd></div>
+      </dl><a class="text-link" href="/cv/"
+        >Project-focused CV <Icon name="arrow-up-right" size={15} /></a
+      ><a class="text-link" href="/contact/"
+        >Get in touch <Icon name="arrow-up-right" size={15} /></a
+      >
+    </aside>
   </div>
   <section class="container editorial-next">
-    <p class="folio-label">Follow the work</p><h2>
-      Start with the project.<br /><em>Then look at the evidence.</em>
+    <p class="folio-label">An introduction through the work</p><h2>
+      Start with Nyayota.<br /><em>Questions are welcome.</em>
     </h2><div>
       <a class="text-link" href="/projects/nyayota/"
-        >Read Nyayota’s case study <Icon name="arrow-right" size={16} /></a
-      ><a class="text-link" href="/vault/"
-        >Public sources <Icon name="arrow-up-right" size={16} /></a>
+        >Explore the project <Icon name="arrow-right" size={16} /></a
+      ><a class="text-link" href="/contact/"
+        >Contact me <Icon name="arrow-up-right" size={16} /></a
+      >
     </div>
   </section>
 </BaseLayout>

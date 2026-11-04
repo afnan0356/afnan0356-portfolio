@@ -1,0 +1,27 @@
+<dialog class="search-dialog" data-search-dialog aria-labelledby="search-title">
+  <div class="search-dialog__head">
+    <h2 id="search-title">Find something here.</h2><button
+      class="btn"
+      type="button"
+      data-close-search>Close</button
+    >
+  </div>
+  <div data-search-root>
+    <form role="search">
+      <label for="dialog-query">Search projects, notes and sources</label><input
+        id="dialog-query"
+        type="search"
+        disabled
+        name="q"
+        autocomplete="off"
+        maxlength="160"
+        data-search-input
+      />
+    </form>
+    <p role="status" aria-live="polite" data-search-status>
+      Try “Nyayota” or “sources”.
+    </p>
+    <ul data-search-results></ul>
+  </div>
+  <a href="/search/">Open the search page</a>
+</dialog>

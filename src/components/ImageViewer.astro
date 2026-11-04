@@ -1,0 +1,28 @@
+<dialog
+  class="image-viewer"
+  data-image-viewer
+  aria-labelledby="image-viewer-title"
+>
+  <div class="image-viewer__bar">
+    <h2 id="image-viewer-title">Project screenshot</h2><button
+      type="button"
+      data-image-close>Close <span aria-hidden="true">×</span></button
+    >
+  </div>
+  <div
+    class="image-viewer__canvas"
+    data-image-canvas
+    tabindex="0"
+    role="region"
+    aria-label="Full project screenshot"
+  >
+  </div>
+  <p role="status" data-image-status></p>
+  <p>
+    Existing project screenshot. It may differ from the current live site.
+    Scroll to inspect details.
+  </p>
+</dialog>
+<script>
+  import "../lib/image-viewer";
+</script>
