@@ -13,6 +13,8 @@ import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Icon from "../../components/Icon.astro";
 import DemoBanner from "../../components/DemoBanner.astro";
+import CaseDiagram from "../../components/CaseDiagram.astro";
+import ImageViewer from "../../components/ImageViewer.astro";
 import Prose from "../../components/Prose.astro";
 import { getProjects, isDemo, statusLabels } from "../../lib/content";
 import { formatDate, isoDate } from "../../lib/text";
@@ -46,13 +48,35 @@ const sections = cs
       cs.problem && { id: "problem", label: "The problem", body: cs.problem },
       cs.goal && { id: "goal", label: "Product direction", body: cs.goal },
       cs.role && { id: "role", label: "Role & process", body: cs.role },
-      cs.approach && { id: "approach", label: "Approach", body: cs.approach },
+      cs.approach && {
+        id: "approach",
+        label: "Reading direction",
+        body: cs.approach,
+      },
+      cs.informationArchitecture && {
+        id: "information-architecture",
+        label: "Information architecture",
+        body: cs.informationArchitecture,
+      },
+      cs.technicalArchitecture && {
+        id: "technical-architecture",
+        label: "Technical architecture",
+        body: cs.technicalArchitecture,
+      },
+      cs.workflow?.length && {
+        id: "workflow",
+        label: "AI-assisted development",
+      },
       cs.decisions?.length && { id: "decisions", label: "Technical decisions" },
-      cs.features?.length && { id: "features", label: "Features" },
+      cs.features?.length && {
+        id: "features",
+        label: "Documented reading tools",
+      },
       cs.challenges?.length && { id: "challenges", label: "Challenges" },
-      cs.results?.length && { id: "results", label: "Current implementation" },
-      cs.lessons?.length && { id: "lessons", label: "Lessons" },
+      cs.results?.length && { id: "results", label: "Implementation status" },
+      cs.lessons?.length && { id: "lessons", label: "Observations & learning" },
       cs.limitations?.length && { id: "scope", label: "Status & limits" },
+      cs.future?.length && { id: "next", label: "Future direction" },
     ].filter(Boolean)
   : [];
 
@@ -96,6 +120,11 @@ const cover = data.cover;
 
         <h1 class="project__title" data-title-line>{data.title}</h1>
         <p class="project__lede" data-enter>{data.lede ?? data.summary}</p>
+        {
+          data.statusNote && (
+            <p class="project-status-note">{data.statusNote}</p>
+          )
+        }
 
         {
           (data.links.live || data.links.repo || data.links.docs) && (
@@ -153,8 +182,14 @@ const cover = data.cover;
           <figcaption>
             <>
               <span>{data.coverAlt ?? `The ${data.title} interface.`}</span>
-              <a href={cover.src} target="_blank" rel="noopener noreferrer">
-                Open original screenshot{" "}
+              <a
+                data-open-image
+                data-image-alt={data.coverAlt ?? `Screenshot of ${data.title}`}
+                href={cover.src}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Inspect original screenshot{" "}
                 <Icon name="arrow-up-right" size={14} />
               </a>
             </>
@@ -185,21 +220,23 @@ const cover = data.cover;
               data-reading-nav
               aria-labelledby="toc-title"
             >
-              <p class="project__toc-title mono" id="toc-title">
-                Contents
-              </p>
-              <ol>
-                {sections.map((section) => (
+              <details open data-reading-contents>
+                <summary class="project__toc-title mono" id="toc-title">
+                  Contents <Icon name="arrow-down" size={14} />
+                </summary>
+                <ol>
+                  {sections.map((section) => (
+                    <li>
+                      <a href={`#${(section as { id: string }).id}`}>
+                        {(section as { label: string }).label}
+                      </a>
+                    </li>
+                  ))}
                   <li>
-                    <a href={`#${(section as { id: string }).id}`}>
-                      {(section as { label: string }).label}
-                    </a>
+                    <a href="#notes">Notes &amp; further reading</a>
                   </li>
-                ))}
-                <li>
-                  <a href="#notes">Notes &amp; further reading</a>
-                </li>
-              </ol>
+                </ol>
+              </details>
             </nav>
           )
         }
@@ -223,6 +260,25 @@ const cover = data.cover;
                   </h2>
                   {entry.body && <p class="case-section__body">{entry.body}</p>}
 
+                  {entry.id === "information-architecture" &&
+                    project.id === "nyayota" && <CaseDiagram />}
+                  {entry.id === "workflow" && (
+                    <ol class="workflow-notes">
+                      {cs?.workflow?.map((step) => (
+                        <li>
+                          <h3>{step.title}</h3>
+                          <p>{step.detail}</p>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                  {entry.id === "next" && (
+                    <ul class="scope-list">
+                      {cs?.future?.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  )}
                   {entry.id === "decisions" && (
                     <ol class="decision-list">
                       {cs?.decisions?.map((decision) => (
@@ -323,7 +379,8 @@ const cover = data.cover;
           >Sources &amp; learning record <Icon
             name="arrow-up-right"
             size={15}
-          /></a>
+          /></a
+        >
       </div>
 
       {
@@ -356,6 +413,7 @@ const cover = data.cover;
       }
     </div>
   </article>
+  {cover && <ImageViewer />}
 </BaseLayout>
 
 <script>
@@ -432,7 +490,8 @@ const cover = data.cover;
     background: var(--bg-sunken);
     box-shadow: none;
     /* Screenshots are tall; cap them so the page keeps its rhythm. */
-    max-height: 38rem;
+    max-height: none;
+    aspect-ratio: 5 / 4;
     object-fit: cover;
     object-position: top center;
   }
@@ -483,7 +542,7 @@ const cover = data.cover;
   .project__content {
     display: grid;
     gap: var(--space-xl);
-    max-width: 72ch;
+    max-width: 70ch;
   }
 
   /* ── Case study sections ────────────────────────────────── */
@@ -492,13 +551,12 @@ const cover = data.cover;
   }
 
   .case-section__title {
-    font-family: var(--font-mono);
     font-size: clamp(1.5rem, 2.5vw, 2rem);
     font-weight: 400;
     letter-spacing: -0.025em;
     font-family: var(--font-display);
     text-transform: none;
-    color: var(--accent);
+    color: var(--ink);
     padding-block-end: 0.6rem;
     margin-block-end: var(--space-sm);
     border-block-end: 1px solid var(--line);
@@ -508,7 +566,7 @@ const cover = data.cover;
     font-size: var(--text-base);
     line-height: 1.8;
     color: var(--ink-soft);
-    max-width: var(--measure);
+    max-width: 64ch;
   }
 
   .decision-list {
@@ -545,9 +603,9 @@ const cover = data.cover;
   }
 
   .decision-list p {
-    color: var(--ink-muted);
-    font-size: var(--text-sm);
-    line-height: 1.65;
+    color: var(--ink-soft);
+    font-size: 0.9375rem;
+    line-height: 1.75;
     max-width: var(--measure);
   }
 
@@ -705,6 +763,12 @@ const cover = data.cover;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-faint);
+  }
+
+  @media (max-width: 47.99rem) {
+    .project__cover img {
+      aspect-ratio: auto;
+    }
   }
 
   /* ── Wide screens: add the contents rail ────────────────── */

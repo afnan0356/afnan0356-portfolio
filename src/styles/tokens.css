@@ -6,9 +6,15 @@
 
 :root {
   /* ── Type ─────────────────────────────────────────────────── */
-  --font-display: 'Newsreader Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-display:
+    "Newsreader Variable", "Noto Sans Bengali", "Iowan Old Style",
+    "Palatino Linotype", Georgia, serif;
+  --font-sans:
+    "Instrument Sans Variable", "Noto Sans Bengali", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  --font-mono:
+    "JetBrains Mono Variable", "Noto Sans Bengali", ui-monospace,
+    "SFMono-Regular", Menlo, monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -68,7 +74,7 @@
    A warm, paper-in-the-dark palette: near-black with a brown cast,
    bone-white ink, and a single vermilion accent. */
 :root,
-[data-theme='dark'] {
+[data-theme="dark"] {
   color-scheme: dark;
 
   --bg: #0d0c0b;
@@ -99,15 +105,14 @@
   --shadow-md: 0 12px 32px -12px rgb(0 0 0 / 0.7);
   --shadow-lg: 0 30px 80px -30px rgb(0 0 0 / 0.85);
 
-  --grid-line: rgb(240 235 225 / 0.05);
   --selection: rgb(240 134 79 / 0.26);
   --code-bg: #171513;
-  --project-stage: #b8a69a;
-  --project-stage-ink: #29231e;
+  --project-stage: #23201c;
+  --project-stage-ink: #c9c2b6;
 }
 
 /* ── LIGHT ────────────────────────────────────────────────── */
-[data-theme='light'] {
+[data-theme="light"] {
   color-scheme: light;
 
   --bg: #f7f3ec;
@@ -138,9 +143,8 @@
   --shadow-md: 0 12px 32px -14px rgb(60 45 25 / 0.18);
   --shadow-lg: 0 30px 80px -30px rgb(60 45 25 / 0.25);
 
-  --grid-line: rgb(23 21 15 / 0.045);
   --selection: rgb(180 70 26 / 0.16);
   --code-bg: #f2ebe0;
-  --project-stage: #d8c6b5;
-  --project-stage-ink: #342a22;
+  --project-stage: #e9e0d4;
+  --project-stage-ink: #51473c;
 }

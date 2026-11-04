@@ -1,0 +1,7 @@
+PASS One main project; no empty publishing or evidence dashboard on homepage
+PASS Inspector loads on demand, opens accessibly and returns keyboard focus
+PASS Close button and repeated navigation cleanup do not accumulate images
+PASS Dark desktop inspector, keyboard containment and case-study landmarks
+PASS No-JS original image link remains usable
+PASS Unsupported dialog API falls back to original image navigation
+PASS Image failure produces readable status and an operable close button

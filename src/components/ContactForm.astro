@@ -1,0 +1,61 @@
+---
+import { site } from "../config/site";
+import { contactForm } from "../data/contact";
+const endpoint = contactForm.endpoint;
+if (endpoint && new URL(endpoint).protocol !== "https:")
+  throw new Error("Contact form endpoint must use HTTPS.");
+---
+
+{
+  site.email && (
+    <section class="compose-note" aria-labelledby="compose-title">
+      <h2 id="compose-title">Start with a short note.</h2>
+      <p>
+        {endpoint
+          ? "This form sends your message to an external form service. Only include information you’re comfortable sharing with that provider."
+          : "This opens your email app with a draft. Nothing is sent from this website."}
+      </p>
+      <form
+        data-astro-reload
+        action={endpoint ?? `mailto:${site.email}`}
+        method={endpoint ? "post" : "get"}
+        data-mail-compose={!endpoint ? site.email : undefined}
+      >
+        {endpoint && (
+          <label>
+            Your email
+            <input
+              type="email"
+              name="email"
+              autocomplete="email"
+              required
+              maxlength="254"
+            />
+          </label>
+        )}
+        <label>
+          Subject
+          <input
+            type="text"
+            name="subject"
+            required
+            maxlength="160"
+            autocomplete="off"
+          />
+        </label>
+        <label>
+          Your message
+          <textarea name="body" required rows="5" maxlength="4000" />
+        </label>
+        <button class="btn" type="submit">
+          {endpoint ? "Send via form service" : "Open email draft"}
+        </button>
+      </form>
+      <p>
+        Prefer to write directly?{" "}
+        <a href={`mailto:${site.email}`}>{site.email}</a>. An email app is
+        needed for the draft option.
+      </p>
+    </section>
+  )
+}

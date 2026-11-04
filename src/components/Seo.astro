@@ -4,15 +4,17 @@
  * Titles, descriptions, canonical URLs, Open Graph, Twitter cards,
  * and JSON-LD structured data.
  */
-import { site } from '../config/site';
+import { site } from "../config/site";
 
 interface Props {
   title: string;
+  lang?: string;
+  locale?: string;
   description?: string;
   /** Path of the page, e.g. "/blog/" — used for canonical + og:url. */
   path: string;
   image?: string;
-  type?: 'website' | 'article' | 'profile';
+  type?: "website" | "article" | "profile";
   published?: Date;
   updated?: Date;
   noindex?: boolean;
@@ -25,11 +27,13 @@ const {
   description = site.description,
   path,
   image = site.ogImage,
-  type = 'website',
+  type = "website",
   published,
   updated,
   noindex = false,
   tags,
+  lang = site.language,
+  locale = site.locale,
 } = Astro.props;
 
 // Canonical URLs need a real domain. Until SITE_URL is configured we
@@ -37,21 +41,33 @@ const {
 // never publish a wrong URL.
 const base = Astro.site;
 const canonical = base ? new URL(path, base).href : null;
-const imageUrl = image.startsWith('http') ? image : base ? new URL(image, base).href : image;
+const imageUrl = image.startsWith("http")
+  ? image
+  : base
+    ? new URL(image, base).href
+    : image;
 
 const fullTitle = title.includes(site.name) ? title : `${title} — ${site.name}`;
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': type === 'article' ? 'BlogPosting' : 'WebSite',
+  "@context": "https://schema.org",
+  "@type": type === "article" ? "Article" : "WebSite",
   name: site.name,
   ...(canonical ? { url: canonical } : {}),
   description,
-  inLanguage: site.language,
-  ...(type === 'article' && published ? { datePublished: published.toISOString() } : {}),
-  ...(type === 'article' && updated ? { dateModified: updated.toISOString() } : {}),
-  ...(tags?.length ? { keywords: tags.join(', ') } : {}),
-  author: { '@type': 'Person', name: site.name, url: 'https://github.com/afnan0356' },
+  inLanguage: lang,
+  ...(type === "article" && published
+    ? { datePublished: published.toISOString() }
+    : {}),
+  ...(type === "article" && updated
+    ? { dateModified: updated.toISOString() }
+    : {}),
+  ...(tags?.length ? { keywords: tags.join(", ") } : {}),
+  author: {
+    "@type": "Person",
+    name: site.name,
+    url: "https://github.com/afnan0356",
+  },
 };
 ---
 
@@ -61,9 +77,15 @@ const jsonLd = {
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
-{tags?.length && <meta name="keywords" content={tags.join(', ')} />}
+{tags?.length && <meta name="keywords" content={tags.join(", ")} />}
 <meta name="author" content={site.name} />
-{noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
+{
+  noindex ? (
+    <meta name="robots" content="noindex, nofollow" />
+  ) : (
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+  )
+}
 
 {canonical && <link rel="canonical" href={canonical} />}
 
@@ -75,12 +97,24 @@ const jsonLd = {
 <meta property="og:site_name" content={site.name} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:locale" content={site.locale} />
+<meta property="og:locale" content={locale} />
 {canonical && <meta property="og:url" content={canonical} />}
 {imageUrl && <meta property="og:image" content={imageUrl} />}
-{imageUrl && <meta property="og:image:alt" content={`${site.name} — ${title}`} />}
-{type === 'article' && published && <meta property="article:published_time" content={published.toISOString()} />}
-{type === 'article' && updated && <meta property="article:modified_time" content={updated.toISOString()} />}
+{
+  imageUrl && (
+    <meta property="og:image:alt" content={`${site.name} — ${title}`} />
+  )
+}
+{
+  type === "article" && published && (
+    <meta property="article:published_time" content={published.toISOString()} />
+  )
+}
+{
+  type === "article" && updated && (
+    <meta property="article:modified_time" content={updated.toISOString()} />
+  )
+}
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -94,6 +128,15 @@ const jsonLd = {
 <link rel="manifest" href="/manifest.webmanifest" />
 
 <!-- Feeds (only emitted when a site URL is configured) -->
-{base && <link rel="alternate" type="application/rss+xml" title={`${site.name} — Blog`} href="/rss.xml" />}
+{
+  base && (
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} — Blog`}
+      href="/rss.xml"
+    />
+  )
+}
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

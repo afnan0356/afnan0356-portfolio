@@ -1,0 +1,142 @@
+[
+  {
+    "theme": "dark",
+    "route": "/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/search/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/about/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/projects/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/projects/nyayota/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/cv/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/vault/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/vault/category/evidence/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/contact/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/blog/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/writing/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/bn/",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "/404.html",
+    "violations": []
+  },
+  {
+    "theme": "dark",
+    "route": "Search dialog",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/search/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/about/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/projects/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/projects/nyayota/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/cv/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/vault/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/vault/category/evidence/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/contact/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/blog/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/writing/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/bn/",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "/404.html",
+    "violations": []
+  },
+  {
+    "theme": "light",
+    "route": "Search dialog",
+    "violations": []
+  }
+]

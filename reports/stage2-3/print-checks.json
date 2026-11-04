@@ -1,0 +1,35 @@
+{
+  "renderer": "External PyMuPDF 2.1",
+  "checks": [
+    {
+      "file": "after/cv-print.pdf",
+      "pages": 1,
+      "marginRGB": [
+        255,
+        255,
+        255
+      ],
+      "updateLineOnFirstPage": true
+    },
+    {
+      "file": "after/cv-print-dark.pdf",
+      "pages": 1,
+      "marginRGB": [
+        255,
+        255,
+        255
+      ],
+      "updateLineOnFirstPage": true
+    },
+    {
+      "file": "after/cv-print-light.pdf",
+      "pages": 1,
+      "marginRGB": [
+        255,
+        255,
+        255
+      ],
+      "updateLineOnFirstPage": true
+    }
+  ]
+}

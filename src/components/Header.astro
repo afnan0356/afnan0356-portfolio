@@ -4,26 +4,50 @@
  * Desktop: inline nav. Mobile: a full-height panel opened by one button.
  * Both navigations are derived from the same centralized route list.
  */
-import { nav, site } from '../config/site';
-import ThemeToggle from './ThemeToggle.astro';
-import Icon from './Icon.astro';
+import { nav, site } from "../config/site";
+import LanguageLink from "./LanguageLink.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import Icon from "./Icon.astro";
 
 const pathname = Astro.url.pathname;
 // Treat /projects and /projects/child/ as the same active section.
 const isActive = (href: string) => {
-  const section = href.replace(/\/$/, '');
-  if (section === '') return pathname === '/';
-  return pathname === `${section}/` || pathname === section || pathname.startsWith(`${section}/`);
+  const section = href.replace(/\/$/, "");
+  if (section === "") return pathname === "/";
+  return (
+    pathname === `${section}/` ||
+    pathname === section ||
+    pathname.startsWith(`${section}/`)
+  );
 };
 ---
 
-<header class="site-header">
+<header class="site-header" lang="en">
   <div class="site-header__inner container">
-    <a class="wordmark" href="/" aria-label={`${site.name} — home`}>
+    <a class="wordmark" href="/" aria-label={`${site.name} Portfolio — Home`}>
       <span class="wordmark__mark" aria-hidden="true">
-        <svg viewBox="0 0 32 32" width="26" height="26" fill="none" aria-hidden="true">
-          <rect x="1" y="1" width="30" height="30" rx="7" stroke="currentColor" stroke-width="1.2" opacity="0.35"></rect>
-          <path d="M9 22V10.5l7 7.5 7-7.5V22" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+        <svg
+          viewBox="0 0 32 32"
+          width="26"
+          height="26"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="1"
+            y="1"
+            width="30"
+            height="30"
+            rx="7"
+            stroke="currentColor"
+            stroke-width="1.2"
+            opacity="0.35"></rect>
+          <path
+            d="M9 22V10.5l7 7.5 7-7.5V22"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
         </svg>
       </span>
       <span class="wordmark__text">
@@ -38,19 +62,32 @@ const isActive = (href: string) => {
           nav.map((item) => (
             <li>
               <a
-                class:list={['site-nav__link', item.cta && 'site-nav__link--cta', isActive(item.href) && 'is-active']}
+                class:list={[
+                  "site-nav__link",
+                  item.cta && "site-nav__link--cta",
+                  isActive(item.href) && "is-active",
+                ]}
                 href={item.href}
-                aria-current={isActive(item.href) ? 'page' : undefined}
+                aria-current={isActive(item.href) ? "page" : undefined}
               >
                 {item.label}
               </a>
             </li>
           ))
         }
+        <li><LanguageLink compact /></li>
       </ul>
     </nav>
 
     <div class="site-header__actions">
+      <a
+        class="search-trigger"
+        href="/search/"
+        data-open-search
+        aria-keyshortcuts="Control+k Meta+k"
+        title="Search · Ctrl / ⌘ K"
+        aria-label="Search this site (Control or Command K)">Search</a
+      >
       <ThemeToggle />
       <button
         class="menu-toggle"
@@ -71,9 +108,9 @@ const isActive = (href: string) => {
       <ul class="mobile-menu__list">
         <li>
           <a
-            class:list={['mobile-menu__link', pathname === '/' && 'is-active']}
+            class:list={["mobile-menu__link", pathname === "/" && "is-active"]}
             href="/"
-            aria-current={pathname === '/' ? 'page' : undefined}
+            aria-current={pathname === "/" ? "page" : undefined}
           >
             <span>Home</span>
             <Icon name="arrow-up-right" size={16} />
@@ -83,9 +120,12 @@ const isActive = (href: string) => {
           nav.map((item, index) => (
             <li style={`--i:${index + 1}`}>
               <a
-                class:list={['mobile-menu__link', isActive(item.href) && 'is-active']}
+                class:list={[
+                  "mobile-menu__link",
+                  isActive(item.href) && "is-active",
+                ]}
                 href={item.href}
-                aria-current={isActive(item.href) ? 'page' : undefined}
+                aria-current={isActive(item.href) ? "page" : undefined}
               >
                 <span>{item.label}</span>
                 <Icon name="arrow-up-right" size={16} />
@@ -97,80 +137,11 @@ const isActive = (href: string) => {
     </nav>
     <div class="mobile-menu__foot">
       <ThemeToggle labelled />
+      <LanguageLink compact />
       <span class="mobile-menu__hint">{site.status}</span>
     </div>
   </div>
 </header>
-
-<script>
-  // ── Mobile menu ────────────────────────────────────────────
-  // Small, dependency-free controller. It keeps aria-expanded, body
-  // scroll-locking and Escape-to-close in sync, and closes itself when
-  // the viewport grows past the mobile breakpoint.
-  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
-
-  if (toggle && menu) {
-    const setOpen = (open: boolean) => {
-      toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      menu.hidden = !open;
-      // The open panel is modal: prevent focus escaping behind it.
-      document.querySelectorAll<HTMLElement>('main, .site-footer').forEach((region) => {
-        region.inert = open;
-      });
-      if (open) {
-        menu.setAttribute('role', 'dialog');
-        menu.setAttribute('aria-modal', 'true');
-        menu.setAttribute('aria-label', 'Navigation');
-      } else {
-        menu.removeAttribute('role');
-        menu.removeAttribute('aria-modal');
-        menu.removeAttribute('aria-label');
-      }
-      document.documentElement.classList.toggle('menu-open', open);
-      if (open) {
-        // Focus the first link so keyboard users land inside the panel.
-        menu.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true });
-      }
-    };
-
-    toggle.addEventListener('click', () => {
-      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-    });
-
-    menu.addEventListener('keydown', (event) => {
-      if (event.key !== 'Tab') return;
-      const controls = Array.from(menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
-      const first = controls[0];
-      const last = controls[controls.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last?.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first?.focus();
-      }
-    });
-
-    // Close after following a link (covers same-page anchors too).
-    menu.addEventListener('click', (event) => {
-      if ((event.target as HTMLElement).closest('a')) setOpen(false);
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-        setOpen(false);
-        toggle.focus();
-      }
-    });
-
-    const desktop = window.matchMedia('(min-width: 60rem)');
-    desktop.addEventListener('change', (event) => {
-      if (event.matches) setOpen(false);
-    });
-  }
-</script>
 
 <style>
   .site-header {
@@ -266,7 +237,7 @@ const isActive = (href: string) => {
   }
 
   .site-nav__link.is-active::after {
-    content: '';
+    content: "";
     position: absolute;
     inset-inline: 0.6rem;
     inset-block-end: 0.05rem;
@@ -321,11 +292,11 @@ const isActive = (href: string) => {
   }
 
   .menu-toggle__close,
-  .menu-toggle[aria-expanded='true'] .menu-toggle__open {
+  .menu-toggle[aria-expanded="true"] .menu-toggle__open {
     display: none;
   }
 
-  .menu-toggle[aria-expanded='true'] .menu-toggle__close {
+  .menu-toggle[aria-expanded="true"] .menu-toggle__close {
     display: grid;
   }
 
@@ -409,9 +380,20 @@ const isActive = (href: string) => {
   }
 
   @media (max-width: 59.99rem) {
-    :global(html:not(.js)) .mobile-menu[hidden] { display: block; }
+    :global(html:not(.js)) .mobile-menu[hidden] {
+      display: block;
+    }
     :global(html:not(.js)) .menu-toggle,
-    :global(html:not(.js)) .theme-toggle { display: none; }
+    :global(html:not(.js)) .theme-toggle {
+      display: none;
+    }
+  }
+
+  /* Keep the name and all 44px controls when fallback fonts are wider. */
+  @media (max-width: 22.49rem) {
+    .wordmark__mark {
+      display: none;
+    }
   }
 
   /* Prevent background scroll while the mobile panel is open. */

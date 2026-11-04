@@ -1,25 +1,31 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Icon from '../components/Icon.astro';
-import { site } from '../config/site';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../config/site";
 
 const links = [
-  { href: '/', label: 'Home' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/writing/', label: 'Writing' },
-  { href: '/blog/', label: 'Blog' },
-  { href: '/vault/', label: 'Vault' },
-  { href: '/contact/', label: 'Contact' },
+  { href: "/", label: "Home" },
+  { href: "/projects/", label: "Projects" },
+  { href: "/writing/", label: "Writing" },
+  { href: "/blog/", label: "Blog" },
+  { href: "/vault/", label: "Vault" },
+  { href: "/contact/", label: "Contact" },
 ];
 ---
 
-<BaseLayout title="Page not found" description="This page does not exist." path="/404/" noindex>
+<BaseLayout
+  title="Page not found"
+  description="A small wrong turn. Find Afnan’s projects, notes and a way back home."
+  path="/404/"
+  noindex
+>
   <section class="notfound">
     <div class="container container--narrow">
       <p class="notfound__code mono" aria-hidden="true">404</p>
-      <h1 class="notfound__title">This page isn’t here.</h1>
+      <h1 class="notfound__title">A small wrong turn.</h1>
       <p class="notfound__text">
-        The link may be out of date, or the page may have moved. Try one of the routes below.
+        This path doesn’t lead anywhere right now. Let’s get you back to
+        something real.
       </p>
       <ul class="notfound__links">
         {
@@ -34,8 +40,11 @@ const links = [
         }
       </ul>
       <p class="notfound__foot mono">
-        If you followed a link from {site.name} itself, that is a bug worth reporting on
-        <a href="https://github.com/afnan0356/afnan0356-portfolio/issues">GitHub</a>.
+        If you followed a link from {site.name} itself, that is a bug worth reporting
+        on
+        <a href="https://github.com/afnan0356/afnan0356-portfolio/issues"
+          >GitHub</a
+        >.
       </p>
     </div>
   </section>
@@ -43,16 +52,16 @@ const links = [
 
 <style>
   .notfound {
-    padding-block: var(--space-3xl) var(--space-2xl);
-    min-block-size: 60svh;
+    padding-block: clamp(3rem, 7vw, 5rem) 2rem;
+    min-block-size: 45svh;
   }
 
   .notfound__code {
-    font-size: clamp(3.5rem, 2rem + 8vw, 7rem);
+    font-size: 1rem;
     line-height: 1;
     letter-spacing: -0.04em;
     color: var(--accent);
-    opacity: 0.35;
+    opacity: 1;
   }
 
   .notfound__title {
@@ -81,7 +90,8 @@ const links = [
     gap: 0.4rem;
     padding: 0.45rem 0.8rem;
     border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
+    border-radius: 2px;
+    min-height: 44px;
     font-size: var(--text-sm);
     color: var(--ink-soft);
     text-decoration: none;
@@ -93,7 +103,7 @@ const links = [
   }
 
   .notfound__foot {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     color: var(--ink-faint);
     letter-spacing: 0.02em;
     line-height: 1.8;

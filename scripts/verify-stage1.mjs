@@ -69,8 +69,8 @@ for (const destination of channels) {
 assert.match(contactMain, /data-copy-status[^>]*role="status"/);
 assert.match(contactMain, /data-copy="mdafnan0356@gmail.com"/);
 const about = await readFile(path.join(dist, 'about/index.html'), 'utf8');
-assert.ok(about.includes(`${count('projects')} published`));
-assert.ok(about.includes(`${count('blog')} blog ${count('blog') === 1 ? 'post' : 'posts'}`));
+assert.ok(about.includes('href="/projects/nyayota/"'), "About links to the genuine project");
+assert.ok(/student/i.test(about), "About preserves confirmed student identity");
 const nyayota = await readFile(path.join(dist, 'projects/nyayota/index.html'), 'utf8');
 assert.ok((nyayota.match(/<img\b/g) ?? []).length >= 2, 'Nyayota cover and body image must render');
 const hasFeed = files.includes(path.join(dist, 'rss.xml'));

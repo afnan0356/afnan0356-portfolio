@@ -3,11 +3,11 @@
  * Byline — date, reading time and tags for articles and stories.
  * Dates use <time> with an ISO value so they are machine-readable.
  */
-import { formatDate, isoDate } from '../lib/text';
-import Icon from './Icon.astro';
+import { formatDate, isoDate } from "../lib/text";
+import Icon from "./Icon.astro";
 
 interface Props {
-  published: Date;
+  published?: Date;
   updated?: Date;
   readingTime?: number;
   /** Optional tag links, shown as chips. */
@@ -21,14 +21,22 @@ const { published, updated, readingTime, tags, tagBase } = Astro.props;
 <div class="byline">
   <span class="byline__item">
     <Icon name="clock" size={13} />
-    <time datetime={isoDate(published)}>{formatDate(published)}</time>
+    {
+      published ? (
+        <time datetime={isoDate(published)}>{formatDate(published)}</time>
+      ) : (
+        <span>Draft · date to add</span>
+      )
+    }
   </span>
   {readingTime && <span class="byline__item">{readingTime} min read</span>}
-  {updated && isoDate(updated) !== isoDate(published) && (
-    <span class="byline__item byline__item--muted">
-      Updated <time datetime={isoDate(updated)}>{formatDate(updated)}</time>
-    </span>
-  )}
+  {
+    updated && isoDate(updated) !== isoDate(published) && (
+      <span class="byline__item byline__item--muted">
+        Updated <time datetime={isoDate(updated)}>{formatDate(updated)}</time>
+      </span>
+    )
+  }
   {
     tags && tags.length > 0 && (
       <ul class="byline__tags" aria-label="Tags">

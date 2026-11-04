@@ -44,18 +44,6 @@ body {
     color var(--dur-mid) var(--ease-out);
 }
 
-/* Very subtle paper grain in light mode only — free, no image request. */
-[data-theme='light'] body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.5;
-  background-image: radial-gradient(circle at 1px 1px, var(--grid-line) 1px, transparent 0);
-  background-size: 4px 4px;
-}
-
 img,
 picture,
 svg,
@@ -193,39 +181,10 @@ a:hover {
 
 /* ═══════════════════════════════════════════════════════════════
    PAGE TRANSITIONS
-   Cross-document View Transitions: pure CSS, no JavaScript, and
-   simply ignored by browsers that don't support them.
+   Native fallback; Astro navigation and shared keyframes live in human.css.
    ═══════════════════════════════════════════════════════════════ */
 @view-transition {
   navigation: auto;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 220ms;
-  animation-timing-function: var(--ease-out);
-  mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-  animation-name: page-out;
-}
-
-::view-transition-new(root) {
-  animation-name: page-in;
-}
-
-@keyframes page-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -256,6 +215,13 @@ a:hover {
    PRINT — used by the CV page's "Save as PDF"
    ═══════════════════════════════════════════════════════════════ */
 @media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
   :root {
     --bg: #fff;
     --ink: #000;
@@ -283,8 +249,8 @@ a:hover {
     text-decoration: none;
   }
 
-  a[href^='http']::after {
-    content: ' (' attr(href) ')';
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
     font-size: 9pt;
     color: #555;
   }

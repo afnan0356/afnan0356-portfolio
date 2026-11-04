@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "checks": [
+    "student identity and metadata",
+    "single primary project",
+    "no home empty-publishing/evidence dashboard",
+    "case-study architecture/workflow/limits",
+    "image inspector hook",
+    "narrowed source labels",
+    "timeline dates and evidence-backed publication event"
+  ]
+}

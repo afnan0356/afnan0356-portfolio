@@ -11,13 +11,25 @@ interface Props {
   /** Optional small counter, e.g. "7 projects". */
   meta?: string;
   align?: "start" | "center";
+  quiet?: boolean;
 }
 
-const { eyebrow, title, lede, meta, align = "start" } = Astro.props;
+const {
+  eyebrow,
+  title,
+  lede,
+  meta,
+  align = "start",
+  quiet = false,
+} = Astro.props;
 ---
 
 <header
-  class:list={["page-header", align === "center" && "page-header--center"]}
+  class:list={[
+    "page-header",
+    align === "center" && "page-header--center",
+    quiet && "page-header--quiet",
+  ]}
   data-hero
 >
   {eyebrow && <p class="eyebrow">{eyebrow}</p>}
@@ -36,9 +48,13 @@ const { eyebrow, title, lede, meta, align = "start" } = Astro.props;
 <style>
   .page-header {
     display: grid;
-    gap: var(--space-sm);
-    padding-block: var(--space-xl) var(--space-lg);
-    max-width: 60ch;
+    gap: 1.2rem;
+    padding-block: clamp(2.5rem, 5vw, 4.5rem) 2.5rem;
+    max-width: 58rem;
+  }
+
+  .page-header--quiet .page-header__title {
+    font-size: clamp(2.5rem, 4.5vw, 3.75rem);
   }
 
   .page-header--center {
@@ -49,15 +65,15 @@ const { eyebrow, title, lede, meta, align = "start" } = Astro.props;
   }
 
   .page-header__title {
-    font-size: var(--text-3xl);
+    font-size: clamp(2.75rem, 5.2vw, 4.75rem);
     line-height: 1.02;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.045em;
   }
 
   .page-header__lede {
-    color: var(--ink-muted);
-    font-size: var(--text-md);
-    line-height: 1.62;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    line-height: 1.75;
     max-width: 52ch;
   }
 

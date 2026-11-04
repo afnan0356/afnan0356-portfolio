@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "name": "One main project; no empty publishing or evidence dashboard on homepage",
+      "pass": true
+    },
+    {
+      "name": "Inspector loads on demand, opens accessibly and returns keyboard focus",
+      "pass": true
+    },
+    {
+      "name": "Close button and repeated navigation cleanup do not accumulate images",
+      "pass": true
+    },
+    {
+      "name": "Dark desktop inspector, keyboard containment and case-study landmarks",
+      "pass": true
+    },
+    {
+      "name": "No-JS original image link remains usable",
+      "pass": true
+    },
+    {
+      "name": "Unsupported dialog API falls back to original image navigation",
+      "pass": true
+    },
+    {
+      "name": "Image failure produces readable status and an operable close button",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "failedRequests": []
+}

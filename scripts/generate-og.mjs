@@ -7,59 +7,27 @@
  * it to public/og/default.png, and derives the 180×180 apple-touch-icon.
  * Run it again after changing the name, headline or colours in the config.
  */
-import sharp from 'sharp';
-import { mkdir } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
+import sharp from "sharp";
+import { mkdir } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 // Kept in sync with src/config/site.ts by hand — this script runs outside Astro.
-const NAME = 'Md. Afnan';
-const HEADLINE = ['I build software that', 'makes useful knowledge', 'easier to reach.'];
-const FOOTER = 'github.com/afnan0356  ·  nyayota.vercel.app';
-
-const BG = '#0d0c0b';
-const INK = '#f0ebe1';
-const MUTED = '#9a938a';
-const ACCENT = '#f0864f';
-const LINE = 'rgba(240,235,225,0.16)';
-
-const escape = (value) =>
-  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
+const NAME = "Md. Afnan";
+const BG = "#0d0c0b";
+const ACCENT = "#f0864f";
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <radialGradient id="glow" cx="82%" cy="8%" r="70%">
-      <stop offset="0%" stop-color="${ACCENT}" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="${ACCENT}" stop-opacity="0"/>
-    </radialGradient>
-    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
-      <path d="M72 0H0V72" fill="none" stroke="${LINE}" stroke-width="1"/>
-    </pattern>
-  </defs>
-
   <rect width="1200" height="630" fill="${BG}"/>
-  <rect width="1200" height="630" fill="url(#grid)" opacity="0.5"/>
-  <rect width="1200" height="630" fill="url(#glow)"/>
-
-  <!-- mark -->
-  <g transform="translate(88, 84)">
-    <rect x="0.5" y="0.5" width="55" height="55" rx="12" fill="none" stroke="${LINE}" stroke-width="1.5"/>
-    <path d="M15 42V17l13 14 13-14v25" fill="none" stroke="${ACCENT}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
-
-  <text x="160" y="112" font-family="Georgia, 'Times New Roman', serif" font-size="26" fill="${MUTED}" letter-spacing="1">${escape(NAME)}</text>
-  <text x="160" y="134" font-family="monospace" font-size="13" fill="${MUTED}" letter-spacing="4" opacity="0.7">PORTFOLIO</text>
-
-  ${HEADLINE.map(
-    (line, i) =>
-      `<text x="88" y="${268 + i * 76}" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="${i === 2 ? ACCENT : INK}" letter-spacing="-1.5">${escape(line)}</text>`,
-  ).join('\n  ')}
-
-  <line x1="88" y1="496" x2="1112" y2="496" stroke="${LINE}" stroke-width="1"/>
-  <text x="88" y="542" font-family="monospace" font-size="19" fill="${MUTED}" letter-spacing="1">${escape(FOOTER)}</text>
-  <text x="1112" y="542" text-anchor="end" font-family="monospace" font-size="19" fill="${MUTED}" letter-spacing="1">2026</text>
+  <path d="M80 100h60" stroke="${ACCENT}" stroke-width="3"/>
+  <text x="80" y="150" font-family="sans-serif" font-size="23" fill="#c9c2b6">A PERSONAL PROJECT NOTEBOOK</text>
+  <text x="76" y="285" font-family="serif" font-size="92" fill="#f0ebe1">Hi, I’m Afnan.</text>
+  <text x="80" y="375" font-family="serif" font-style="italic" font-size="64" fill="${ACCENT}">Learning by building.</text>
+  <text x="80" y="445" font-family="sans-serif" font-size="26" fill="#c9c2b6">Student · Nyayota · AI-assisted web projects</text>
+  <path d="M80 502h1040" stroke="#544b40"/>
+  <text x="80" y="552" font-family="monospace" font-size="23" fill="#c9c2b6">github.com/afnan0356</text>
+  <text x="1120" y="552" text-anchor="end" font-family="serif" font-size="26" fill="#f0ebe1">${NAME}</text>
 </svg>`;
 
 const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 32 32">
@@ -67,10 +35,15 @@ const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180
   <path d="M8.5 23V9.5l7.5 8 7.5-8V23" fill="none" stroke="${ACCENT}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
 
-await mkdir(path.join(root, 'public/og'), { recursive: true });
+await mkdir(path.join(root, "public/og"), { recursive: true });
 
-await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path.join(root, 'public/og/default.png'));
-await sharp(Buffer.from(iconSvg)).resize(180, 180).png().toFile(path.join(root, 'public/apple-touch-icon.png'));
+await sharp(Buffer.from(svg))
+  .png({ compressionLevel: 9 })
+  .toFile(path.join(root, "public/og/default.png"));
+await sharp(Buffer.from(iconSvg))
+  .resize(180, 180)
+  .png()
+  .toFile(path.join(root, "public/apple-touch-icon.png"));
 
-console.log('✓ public/og/default.png (1200×630)');
-console.log('✓ public/apple-touch-icon.png (180×180)');
+console.log("✓ public/og/default.png (1200×630)");
+console.log("✓ public/apple-touch-icon.png (180×180)");

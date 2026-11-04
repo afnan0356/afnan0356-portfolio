@@ -1,0 +1,439 @@
+
+$ npm run check
+
+> afnan0356-portfolio@0.1.0 check
+> astro check
+
+09:52:53 [content] Syncing content
+09:52:53 [content] Astro config changed
+09:52:53 [content] Clearing content store
+09:52:53 [content] Synced content
+09:52:53 [types] Generated 733ms
+09:52:53 [check] Getting diagnostics for Astro files in /home/user/afnan0356-portfolio...
+Result (87 files): 
+- 0 errors
+- 0 warnings
+- 0 hints
+
+
+EXIT CODE: 0
+
+$ env -u SITE_URL npm run build
+
+> afnan0356-portfolio@0.1.0 build
+> astro build
+
+09:53:01 [content] Syncing content
+09:53:01 [content] Synced content
+09:53:01 [types] Generated 625ms
+09:53:01 [build] output: "static"
+09:53:01 [build] mode: "static"
+09:53:01 [build] directory: /home/user/afnan0356-portfolio/dist/
+09:53:01 [build] Collecting build info...
+09:53:01 [build] ✓ Completed in 659ms.
+09:53:01 [build] Building static entrypoints...
+09:53:04 [WARN] [vite] [esbuild css minify]
+▲ [WARNING] Expected "{" but found "and(" [css-syntax-error]
+
+    <stdin>:265:22:
+      265 │ @media (hover: hover) and(pointer:fine) and(prefers-reduced-motio...
+          │                       ~~~~
+          ╵                       {
+
+
+09:53:04 [vite] ✓ built in 2.62s
+09:53:04 [vite] ✓ built in 140ms
+09:53:04 [build] Rearranging server assets...
+
+ generating static routes 
+09:53:04   ├─ /404.html (+16ms) 
+09:53:04   ├─ /about/index.html (+5ms) 
+09:53:04   ├─ /blog/index.html (+7ms) 
+09:53:04   ├─ /contact/index.html (+6ms) 
+09:53:04   ├─ /cv/index.html (+7ms) 
+09:53:04   ├─ /projects/nyayota/index.html (+9ms) 
+09:53:04   ├─ /projects/index.html (+8ms) 
+09:53:04   ├─ /robots.txt (+2ms) 
+09:53:04   ├─ /search/index.html (+5ms) 
+09:53:04   ├─ /search.json (+2ms) 
+09:53:04   ├─ /vault/category/evidence/index.html (+4ms) 
+09:53:04   ├─ /vault/index.html (+6ms) 
+09:53:04   ├─ /writing/index.html (+5ms) 
+09:53:04   ├─ /bn/about/index.html (+4ms) 
+09:53:04   ├─ /bn/projects/index.html (+2ms) 
+09:53:04   ├─ /bn/blog/index.html (+2ms) 
+09:53:04   ├─ /bn/writing/index.html (+2ms) 
+09:53:04   ├─ /bn/vault/index.html (+2ms) 
+09:53:04   ├─ /bn/cv/index.html (+1ms) 
+09:53:04   ├─ /bn/contact/index.html (+1ms) 
+09:53:04   ├─ /bn/index.html (+2ms) 
+09:53:04   ├─ /index.html (+6ms) 
+09:53:04 ✓ Completed in 148ms.
+
+ generating optimized images 
+09:53:04   ▶ /_astro/nyayota-homepage.CpAgrO2Y_2e7306.webp (reused cache entry) (+1ms) (1/6)
+09:53:04   ▶ /_astro/nyayota-homepage.CpAgrO2Y_rdg91.webp (reused cache entry) (+0ms) (2/6)
+09:53:04   ▶ /_astro/nyayota-homepage.CpAgrO2Y_ZYexXw.webp (reused cache entry) (+0ms) (3/6)
+09:53:04   ▶ /_astro/nyayota-homepage.CpAgrO2Y_29jqsJ.webp (reused cache entry) (+0ms) (4/6)
+09:53:04   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1qhl5q.webp (reused cache entry) (+0ms) (5/6)
+09:53:04   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1JN6OP.webp (reused cache entry) (+0ms) (6/6)
+09:53:04 ✓ Completed in 4ms.
+
+09:53:04 [build] ✓ Completed in 2.97s.
+09:53:04 [build] 20 page(s) built in 3.63s
+09:53:04 [build] Complete!
+
+EXIT CODE: 0
+
+$ npm run verify:content
+
+> afnan0356-portfolio@0.1.0 verify:content
+> node scripts/verify-content.mjs
+
+
+verifying 20 pages (59 files in dist/)
+
+  pages .................. 20
+  internal links checked .. 353
+  content files ........... 6
+  drafts found (skipped) .. 3
+
+✓ all checks passed
+
+
+EXIT CODE: 0
+
+$ node scripts/verify-stage1.mjs
+Stage 1 assertions passed: 20 pages; eight channels; clean public HTML; domain-optional metadata.
+
+EXIT CODE: 0
+
+$ SITE_URL=https://afnan0356.vercel.app npm run build
+
+> afnan0356-portfolio@0.1.0 build
+> astro build
+
+09:53:06 [content] Syncing content
+09:53:06 [content] Astro config changed
+09:53:06 [content] Clearing content store
+09:53:06 [content] Synced content
+09:53:06 [types] Generated 698ms
+09:53:06 [build] output: "static"
+09:53:06 [build] mode: "static"
+09:53:06 [build] directory: /home/user/afnan0356-portfolio/dist/
+09:53:06 [build] Collecting build info...
+09:53:06 [build] ✓ Completed in 752ms.
+09:53:06 [build] Building static entrypoints...
+09:53:08 [WARN] [vite] [esbuild css minify]
+▲ [WARNING] Expected "{" but found "and(" [css-syntax-error]
+
+    <stdin>:265:22:
+      265 │ @media (hover: hover) and(pointer:fine) and(prefers-reduced-motio...
+          │                       ~~~~
+          ╵                       {
+
+
+09:53:08 [vite] ✓ built in 2.54s
+09:53:09 [vite] ✓ built in 127ms
+09:53:09 [build] Rearranging server assets...
+
+ generating static routes 
+09:53:09   ├─ /404.html (+12ms) 
+09:53:09   ├─ /about/index.html (+4ms) 
+09:53:09   ├─ /blog/index.html (+8ms) 
+09:53:09   ├─ /contact/index.html (+9ms) 
+09:53:09   ├─ /cv/index.html (+4ms) 
+09:53:09   ├─ /projects/nyayota/index.html (+10ms) 
+09:53:09   ├─ /projects/index.html (+4ms) 
+09:53:09   ├─ /robots.txt (+2ms) 
+09:53:09   ├─ /rss.xml (+27ms) 
+09:53:09   ├─ /search/index.html (+4ms) 
+09:53:09   ├─ /search.json (+2ms) 
+09:53:09   ├─ /vault/category/evidence/index.html (+4ms) 
+09:53:09   ├─ /vault/index.html (+4ms) 
+09:53:09   ├─ /writing/index.html (+6ms) 
+09:53:09   ├─ /bn/about/index.html (+4ms) 
+09:53:09   ├─ /bn/projects/index.html (+2ms) 
+09:53:09   ├─ /bn/blog/index.html (+2ms) 
+09:53:09   ├─ /bn/writing/index.html (+2ms) 
+09:53:09   ├─ /bn/vault/index.html (+2ms) 
+09:53:09   ├─ /bn/cv/index.html (+2ms) 
+09:53:09   ├─ /bn/contact/index.html (+2ms) 
+09:53:09   ├─ /bn/index.html (+3ms) 
+09:53:09   ├─ /index.html (+6ms) 
+09:53:09 ✓ Completed in 161ms.
+
+ generating optimized images 
+09:53:09   ▶ /_astro/nyayota-homepage.CpAgrO2Y_2e7306.webp (reused cache entry) (+1ms) (1/6)
+09:53:09   ▶ /_astro/nyayota-homepage.CpAgrO2Y_rdg91.webp (reused cache entry) (+0ms) (2/6)
+09:53:09   ▶ /_astro/nyayota-homepage.CpAgrO2Y_ZYexXw.webp (reused cache entry) (+0ms) (3/6)
+09:53:09   ▶ /_astro/nyayota-homepage.CpAgrO2Y_29jqsJ.webp (reused cache entry) (+0ms) (4/6)
+09:53:09   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1qhl5q.webp (reused cache entry) (+0ms) (5/6)
+09:53:09   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1JN6OP.webp (reused cache entry) (+0ms) (6/6)
+09:53:09 ✓ Completed in 4ms.
+
+09:53:09 [build] ✓ Completed in 2.89s.
+09:53:09 [@astrojs/sitemap] `sitemap-index.xml` created at `dist`
+09:53:09 [build] 20 page(s) built in 3.65s
+09:53:09 [build] Complete!
+
+EXIT CODE: 0
+
+$ npm run verify:content
+
+> afnan0356-portfolio@0.1.0 verify:content
+> node scripts/verify-content.mjs
+
+
+verifying 20 pages (62 files in dist/)
+
+  pages .................. 20
+  internal links checked .. 373
+  content files ........... 6
+  drafts found (skipped) .. 3
+
+✓ all checks passed
+
+
+EXIT CODE: 0
+
+$ node scripts/verify-stage1.mjs
+Stage 1 assertions passed: 20 pages; eight channels; clean public HTML; domain-configured metadata.
+
+EXIT CODE: 0
+
+$ node --experimental-strip-types --test scripts/test-theme.mjs scripts/test-stage1-interactions.mjs scripts/test-home-work.mjs scripts/test-human.mjs
+TAP version 13
+# Subtest: Nyayota remains a single primary feature; other featured work is secondary
+ok 1 - Nyayota remains a single primary feature; other featured work is secondary
+  ---
+  duration_ms: 0.785427
+  type: 'test'
+  ...
+# Subtest: Fallback feature heading can use the actual selected project, never hardcoded Nyayota
+ok 2 - Fallback feature heading can use the actual selected project, never hardcoded Nyayota
+  ---
+  duration_ms: 0.130091
+  type: 'test'
+  ...
+# Subtest: Empty archive returns no primary or secondary features
+ok 3 - Empty archive returns no primary or secondary features
+  ---
+  duration_ms: 0.155719
+  type: 'test'
+  ...
+# Subtest: search requires every word and prioritizes title matches
+ok 4 - search requires every word and prioritizes title matches
+  ---
+  duration_ms: 1.157408
+  type: 'test'
+  ...
+# Subtest: search handles Bengali and literal HTML without interpreting either as markup
+ok 5 - search handles Bengali and literal HTML without interpreting either as markup
+  ---
+  duration_ms: 0.240393
+  type: 'test'
+  ...
+# Subtest: no animation dependency and static production index excludes draft prompts
+ok 6 - no animation dependency and static production index excludes draft prompts
+  ---
+  duration_ms: 0.519295
+  type: 'test'
+  ...
+# Subtest: email copy: clipboard available
+ok 7 - email copy: clipboard available
+  ---
+  duration_ms: 5.761908
+  type: 'test'
+  ...
+# Subtest: email copy: clipboard denied
+ok 8 - email copy: clipboard denied
+  ---
+  duration_ms: 4.487475
+  type: 'test'
+  ...
+# Subtest: email copy: clipboard absent
+ok 9 - email copy: clipboard absent
+  ---
+  duration_ms: 1.261912
+  type: 'test'
+  ...
+# Subtest: mobile menu opens, traps focus, closes on Escape/link/desktop resize
+ok 10 - mobile menu opens, traps focus, closes on Escape/link/desktop resize
+  ---
+  duration_ms: 1.580574
+  type: 'test'
+  ...
+# Subtest: reviewed controls declare 44px targets and retain visible focus styling
+ok 11 - reviewed controls declare 44px targets and retain visible focus styling
+  ---
+  duration_ms: 0.940349
+  type: 'test'
+  ...
+# Subtest: new visitor defaults dark without consulting OS color preference
+ok 12 - new visitor defaults dark without consulting OS color preference
+  ---
+  duration_ms: 3.171278
+  type: 'test'
+  ...
+# Subtest: valid saved themes restore before controller initialization
+ok 13 - valid saved themes restore before controller initialization
+  ---
+  duration_ms: 1.371045
+  type: 'test'
+  ...
+# Subtest: invalid stored value falls back to dark
+ok 14 - invalid stored value falls back to dark
+  ---
+  duration_ms: 0.765465
+  type: 'test'
+  ...
+# Subtest: manual choices persist and restore on the next internal document
+ok 15 - manual choices persist and restore on the next internal document
+  ---
+  duration_ms: 1.850476
+  type: 'test'
+  ...
+# Subtest: blocked local storage does not break initialization or manual toggling
+ok 16 - blocked local storage does not break initialization or manual toggling
+  ---
+  duration_ms: 0.639011
+  type: 'test'
+  ...
+# Subtest: reduced motion skips supported view-transition animation
+ok 17 - reduced motion skips supported view-transition animation
+  ---
+  duration_ms: 0.691106
+  type: 'test'
+  ...
+# Subtest: theme feedback is CSS-first even when the transition API exists
+ok 18 - theme feedback is CSS-first even when the transition API exists
+  ---
+  duration_ms: 0.684043
+  type: 'test'
+  ...
+# Subtest: saved preference restores even if writes later become unavailable
+ok 19 - saved preference restores even if writes later become unavailable
+  ---
+  duration_ms: 0.760629
+  type: 'test'
+  ...
+# Subtest: synchronously failing transition API still applies and saves the theme
+ok 20 - synchronously failing transition API still applies and saves the theme
+  ---
+  duration_ms: 0.746153
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1612.678711
+
+EXIT CODE: 0
+
+$ node scripts/browser-human.mjs
+Testing dark 320
+Testing dark 360
+Testing dark 390
+Testing dark 768
+Testing dark 1024
+Testing dark 1440
+Testing light 320
+Testing light 360
+Testing light 390
+Testing light 768
+Testing light 1024
+Testing light 1440
+PASS: 132 responsive route/theme combinations, search keyboard/focus/XSS, Astro navigation rebinding, theme persistence, menu, email composer and CV action.
+PASS: CSS hero enhancement, one-time session guard, live/load reduced motion with no running animations.
+PASS: no-JavaScript content, mobile routes and complete public-entry search fallback.
+PASS: three DEV-only undated/noindex drafts, estimated reading time, clipboard, reading progress and existing neighbor navigation.
+PASS: drafts absent from static index, sitemap and RSS; no third-party browser requests.
+
+EXIT CODE: 0
+
+$ node scripts/browser-human-accessibility.mjs
+PASS: 28 route/dialog/theme axe scans without detected violations.
+
+EXIT CODE: 0
+
+$ node scripts/browser-human-cold-fonts.mjs
+{ width: 320, scrollWidth: 310, overflow: [], heroHeight: 94.03125 }
+{ width: 360, scrollWidth: 350, overflow: [], heroHeight: 105.78125 }
+{ width: 390, scrollWidth: 380, overflow: [], heroHeight: 114.609375 }
+{ width: 412, scrollWidth: 402, overflow: [], heroHeight: 121.078125 }
+{ width: 768, scrollWidth: 758, overflow: [], heroHeight: 169.28125 }
+{
+  width: 1024,
+  scrollWidth: 1014,
+  overflow: [],
+  heroHeight: 216.328125
+}
+{
+  width: 1440,
+  scrollWidth: 1430,
+  overflow: [],
+  heroHeight: 304.203125
+}
+
+EXIT CODE: 0
+
+$ node scripts/lighthouse-human.mjs
+{
+  "categories": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "first-contentful-paint": "0.9 s",
+    "largest-contentful-paint": "0.9 s",
+    "speed-index": "0.9 s",
+    "total-blocking-time": "0 ms",
+    "cumulative-layout-shift": "0.009",
+    "interactive": "0.9 s"
+  }
+}
+
+EXIT CODE: 0
+
+$ git diff --check
+
+EXIT CODE: 0
+
+$ npm ls --depth=0
+afnan0356-portfolio@0.1.0 /home/user/afnan0356-portfolio
+├── @astrojs/check@0.9.12
+├── @astrojs/mdx@6.0.3
+├── @astrojs/rss@4.0.19
+├── @astrojs/sitemap@3.7.4
+├── @fontsource-variable/instrument-sans@5.3.0
+├── @fontsource-variable/jetbrains-mono@5.3.0
+├── @fontsource-variable/newsreader@5.3.0
+├── astro@6.4.8
+├── sharp@0.35.5
+└── typescript@5.9.3
+
+
+EXIT CODE: 0
+
+$ git branch --show-current
+arena/1ace11cb-afnan0356-portfolio
+
+EXIT CODE: 0
+
+$ git rev-parse HEAD
+c82e2f3f64d43b1fc97e8a195bacf2befa4e60ff
+
+EXIT CODE: 0
+
+$ npm audit --json
+Full output: dependency-audit.json
+EXIT CODE: 1
+No forced dependency updates applied.

@@ -9,10 +9,20 @@ const require = createRequire(path.join(tools, "package.json"));
 const cm = require("@sparticuz/chromium");
 const chromium = cm.default ?? cm;
 const { chromium: pw } = require("playwright-core");
-const dir = fileURLToPath(new URL("../reports/stage2-1/", import.meta.url));
+const dir = fileURLToPath(
+  new URL(
+    process.env.BROWSER_REPORT_PATH || "../reports/stage2-1/",
+    import.meta.url,
+  ),
+);
 const browser = await pw.launch({
   executablePath: await chromium.executablePath(),
-  args: chromium.args.filter((a) => a !== "--single-process"),
+  args: [
+    ...chromium.args.filter(
+      (a) => !["--single-process", "--in-process-gpu"].includes(a),
+    ),
+    "--disable-gpu",
+  ],
   env: { ...process.env, LD_LIBRARY_PATH: path.join(tools, "libraries/lib") },
 });
 const context = await browser.newContext({
@@ -54,12 +64,10 @@ const sample = await p.evaluate(() => ({
   scrollWidth: document.documentElement.scrollWidth,
   touchPoints: navigator.maxTouchPoints,
   longTasks: window.__tasks,
-  resources: performance
-    .getEntriesByType("resource")
-    .map((e) => ({
-      url: new URL(e.name).pathname,
-      transferBytes: e.transferSize,
-    })),
+  resources: performance.getEntriesByType("resource").map((e) => ({
+    url: new URL(e.name).pathname,
+    transferBytes: e.transferSize,
+  })),
   hidden: [
     ...document.querySelectorAll(
       "[data-motion],[data-title-line],[data-enter]",

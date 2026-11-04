@@ -54,7 +54,7 @@
 }
 
 .eyebrow::before {
-  content: '';
+  content: "";
   inline-size: 1.75rem;
   block-size: 1px;
   background: var(--accent);
@@ -215,7 +215,7 @@ a.chip:hover {
 .chip--accent {
   border-color: var(--accent-soft);
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--ink);
 }
 
 /* Status dot — used for project status, build state, etc. */
@@ -231,7 +231,7 @@ a.chip:hover {
 }
 
 .status::before {
-  content: '';
+  content: "";
   inline-size: 5px;
   block-size: 5px;
   border-radius: var(--radius-full);
@@ -278,7 +278,7 @@ a.chip:hover {
 }
 
 .meta-row > * + *::before {
-  content: '';
+  content: "";
   inline-size: 3px;
   block-size: 3px;
   border-radius: 50%;
@@ -336,7 +336,7 @@ a.chip:hover {
 }
 
 .editor-hint::before {
-  content: 'Note for you';
+  content: "Note for you";
   display: block;
   font-size: 0.625rem;
   letter-spacing: 0.12em;
@@ -425,7 +425,7 @@ a.chip:hover {
 }
 
 .rule-label::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: var(--line);

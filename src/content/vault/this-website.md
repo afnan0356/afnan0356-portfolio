@@ -8,6 +8,4 @@ verification: verified
 tags: ['website', 'open source']
 ---
 
-The site you are reading is generated from Markdown files in a public repository. Everything —
-layouts, components, content schemas and copy — is in one place, which makes the design auditable
-rather than claimed.
+Public source for this Astro portfolio. The repository makes implementation and revision history inspectable; it is not independent certification of personal skills.

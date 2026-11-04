@@ -1,13 +1,14 @@
 ---
-import { render, type CollectionEntry } from 'astro:content';
-import { Image } from 'astro:assets';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Prose from '../../components/Prose.astro';
-import Byline from '../../components/Byline.astro';
-import DemoBanner from '../../components/DemoBanner.astro';
-import Icon from '../../components/Icon.astro';
-import { getPosts, isDemo } from '../../lib/content';
-import { readingTime } from '../../lib/text';
+import { render, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import PostTools from "../../components/PostTools.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Prose from "../../components/Prose.astro";
+import Byline from "../../components/Byline.astro";
+import DemoBanner from "../../components/DemoBanner.astro";
+import Icon from "../../components/Icon.astro";
+import { getPosts, isDemo } from "../../lib/content";
+import { readingTime } from "../../lib/text";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: CollectionEntry<"blog">;
 }
 
 const { post } = Astro.props;
@@ -39,7 +40,7 @@ const toc = headings.filter((heading) => heading.depth === 2);
   published={post.data.published}
   updated={post.data.updated}
   tags={post.data.tags}
-  noindex={isDemo(post)}
+  noindex={isDemo(post) || post.data.draft}
 >
   <div class="container container--text">
     <a class="back-link" href="/blog/">
@@ -50,8 +51,21 @@ const toc = headings.filter((heading) => heading.depth === 2);
     <article class="post">
       {isDemo(post) && <DemoBanner kind="article" />}
 
+      {
+        post.data.draft && (
+          <p class="draft-notice" role="note">
+            Draft — unfinished notes, not a published article. Publication date
+            to add.
+          </p>
+        )
+      }
+      <PostTools />
       <header class="post__head">
-        <Byline published={post.data.published} updated={post.data.updated} readingTime={minutes} />
+        <Byline
+          published={post.data.published}
+          updated={post.data.updated}
+          readingTime={minutes}
+        />
         <h1 class="post__title">{post.data.title}</h1>
         <p class="post__desc">{post.data.description}</p>
       </header>
@@ -61,13 +75,15 @@ const toc = headings.filter((heading) => heading.depth === 2);
           <figure class="post__cover">
             <Image
               src={post.data.cover}
-              alt={post.data.coverAlt ?? ''}
+              alt={post.data.coverAlt ?? ""}
               widths={[480, 800, 1200]}
               sizes="(min-width: 56rem) 50rem, 92vw"
               loading="eager"
               decoding="async"
             />
-            {post.data.coverAlt && <figcaption>{post.data.coverAlt}</figcaption>}
+            {post.data.coverAlt && (
+              <figcaption>{post.data.coverAlt}</figcaption>
+            )}
           </figure>
         )
       }
@@ -108,8 +124,16 @@ const toc = headings.filter((heading) => heading.depth === 2);
           )
         }
         <p class="post__signoff">
-          Written by <a href="/about/">Md. Afnan</a>. Spotted a mistake?
-          <a href="https://github.com/afnan0356/afnan0356-portfolio">Open an issue</a>.
+          {post.data.draft ? "Draft scaffold for " : "Written by "}<a
+            href="/about/">Md. Afnan</a
+          >. {
+            post.data.draft
+              ? "Personal observations still to add."
+              : "Spotted a mistake?"
+          }
+          <a href="https://github.com/afnan0356/afnan0356-portfolio"
+            >Open an issue</a
+          >.
         </p>
       </footer>
 
@@ -125,7 +149,10 @@ const toc = headings.filter((heading) => heading.depth === 2);
               <span />
             )}
             {next && (
-              <a href={`/blog/${next.id}/`} class="post__pager-link post__pager-link--next">
+              <a
+                href={`/blog/${next.id}/`}
+                class="post__pager-link post__pager-link--next"
+              >
                 <span class="mono">Next</span>
                 <span class="post__pager-title">{next.data.title}</span>
               </a>

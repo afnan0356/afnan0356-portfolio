@@ -1,0 +1,17 @@
+Testing dark 320
+Testing dark 360
+Testing dark 390
+Testing dark 768
+Testing dark 1024
+Testing dark 1440
+Testing light 320
+Testing light 360
+Testing light 390
+Testing light 768
+Testing light 1024
+Testing light 1440
+PASS: 132 responsive route/theme combinations, search keyboard/focus/XSS, Astro navigation rebinding, theme persistence, menu, email composer and CV action.
+PASS: CSS hero enhancement, one-time session guard, live/load reduced motion with no running animations.
+PASS: no-JavaScript content, mobile routes and complete public-entry search fallback.
+PASS: three DEV-only undated/noindex drafts, estimated reading time, clipboard, reading progress and existing neighbor navigation.
+PASS: drafts absent from static index, sitemap and RSS; no third-party browser requests.

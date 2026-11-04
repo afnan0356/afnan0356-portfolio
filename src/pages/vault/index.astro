@@ -1,24 +1,41 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHeader from '../../components/PageHeader.astro';
-import Icon from '../../components/Icon.astro';
-import { getVaultItems, vaultCategories, verificationLabels, isDemo } from '../../lib/content';
-import { formatDate, isoDate, groupBy } from '../../lib/text';
-import { timelineByYear, timelineStateLabels, type TimelineState } from '../../data/timeline';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Icon from "../../components/Icon.astro";
+import {
+  getVaultItems,
+  vaultCategories,
+  verificationLabels,
+  isDemo,
+} from "../../lib/content";
+import { formatDate, isoDate, groupBy } from "../../lib/text";
+import {
+  timelineByYear,
+  timelineStateLabels,
+  type TimelineState,
+} from "../../data/timeline";
 
 const items = await getVaultItems();
 const usedCategories = new Set(items.map((item) => item.data.category));
 const categories = vaultCategories.filter(
-  (category) => category.id === 'all' || usedCategories.has(category.id as never),
+  (category) =>
+    category.id === "all" || usedCategories.has(category.id as never),
 );
 
 const counts = {
-  verified: items.filter((item) => item.data.verification === 'verified').length,
-  inProgress: items.filter((item) => item.data.verification === 'in-progress').length,
+  verified: items.filter((item) => item.data.verification === "verified")
+    .length,
+  inProgress: items.filter((item) => item.data.verification === "in-progress")
+    .length,
 };
 
 const years = timelineByYear();
-const stateOrder: TimelineState[] = ['verified', 'in-progress', 'learning', 'planned'];
+const stateOrder: TimelineState[] = [
+  "completed",
+  "in-progress",
+  "learning",
+  "planned",
+];
 
 // Group by category for the library view.
 const grouped = groupBy(items, (item) => item.data.category);
@@ -26,15 +43,16 @@ const grouped = groupBy(items, (item) => item.data.category);
 
 <BaseLayout
   title="Vault"
-  description="A document library: CVs, certificates, publications, research and verified project evidence, kept apart from progress notes."
+  description="Public project sources and learning notes from Md. Afnan, with ongoing work kept separate from published updates."
   path="/vault/"
 >
   <div class="container">
     <PageHeader
+      quiet
       eyebrow="Record"
       title="Vault"
-      lede="Documents and evidence, with the verification status stated plainly. If something is unfinished or self-reported, it says so."
-      meta={`${items.length} ${items.length === 1 ? 'document' : 'documents'} · ${counts.verified} verified`}
+      lede="A small collection of public project sources, followed by notes on what I am working on and learning. A source link is not a qualification or an independent review."
+      meta={`${items.length} ${items.length === 1 ? "document" : "documents"} · ${counts.verified} public sources`}
     />
 
     <!-- ── Category filter ────────────────────────────────── -->
@@ -45,8 +63,8 @@ const grouped = groupBy(items, (item) => item.data.category);
             {categories.map((category, i) => (
               <li>
                 <a
-                  class:list={['filter', i === 0 && 'is-active']}
-                  href={i === 0 ? '/vault/' : `/vault/category/${category.id}/`}
+                  class:list={["filter", i === 0 && "is-active"]}
+                  href={i === 0 ? "/vault/" : `/vault/category/${category.id}/`}
                 >
                   {category.label}
                 </a>
@@ -74,16 +92,25 @@ const grouped = groupBy(items, (item) => item.data.category);
             {Object.entries(grouped).map(([category, entries]) => (
               <div class="library__group">
                 <h3 class="library__group-title mono">
-                  {vaultCategories.find((c) => c.id === category)?.label ?? category}
+                  {vaultCategories.find((c) => c.id === category)?.label ??
+                    category}
                   <span>{entries.length}</span>
                 </h3>
                 <ul class="library__items">
                   {entries.map((item) => {
-                    const verification = verificationLabels[item.data.verification];
+                    const verification =
+                      verificationLabels[item.data.verification];
                     return (
                       <li class="doc">
                         <div class="doc__top">
-                          <span class:list={['chip', item.data.verification === 'verified' ? 'chip--accent' : '']}>
+                          <span
+                            class:list={[
+                              "chip",
+                              item.data.verification === "verified"
+                                ? "chip--accent"
+                                : "",
+                            ]}
+                          >
                             {verification.label}
                           </span>
                           {isDemo(item) && <span class="chip">Sample</span>}
@@ -93,12 +120,20 @@ const grouped = groupBy(items, (item) => item.data.category);
                         </div>
                         <h4 class="doc__title">
                           {item.data.file ? (
-                            <a href={item.data.file} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={item.data.file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               {item.data.title}
                               <Icon name="file" size={13} />
                             </a>
                           ) : item.data.link ? (
-                            <a href={item.data.link} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={item.data.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               {item.data.title}
                               <Icon name="external" size={13} />
                             </a>
@@ -107,7 +142,11 @@ const grouped = groupBy(items, (item) => item.data.category);
                           )}
                         </h4>
                         <p class="doc__desc">{item.data.description}</p>
-                        {item.data.issuer && <p class="doc__issuer mono">Issued by {item.data.issuer}</p>}
+                        {item.data.issuer && (
+                          <p class="doc__issuer mono">
+                            Issued by {item.data.issuer}
+                          </p>
+                        )}
                       </li>
                     );
                   })}
@@ -122,12 +161,18 @@ const grouped = groupBy(items, (item) => item.data.category);
         <h3>What the labels mean</h3>
         <dl>
           <div>
-            <dt><span class="chip chip--accent">Verified</span></dt>
-            <dd>Backed by a public artefact — a repository, a live site, or an official document.</dd>
+            <dt><span class="chip chip--accent">Public source</span></dt>
+            <dd>
+              Links to an inspectable artifact. It does not independently
+              establish authorship, skill, legal accuracy or a qualification.
+            </dd>
           </div>
           <div>
             <dt><span class="chip">Self-reported</span></dt>
-            <dd>Described here, but with nothing independently checkable behind it.</dd>
+            <dd>
+              Described here, but with nothing independently checkable behind
+              it.
+            </dd>
           </div>
           <div>
             <dt><span class="chip">In progress</span></dt>
@@ -139,15 +184,20 @@ const grouped = groupBy(items, (item) => item.data.category);
   </section>
 
   <!-- ── Timeline ──────────────────────────────────────────── -->
-  <section class="timeline-section" id="progress" aria-labelledby="timeline-title">
+  <section
+    class="timeline-section"
+    id="progress"
+    aria-labelledby="timeline-title"
+  >
     <div class="container">
       <div class="section-head">
         <div class="section-head__text">
           <p class="eyebrow">Progress</p>
           <h2 id="timeline-title">Learning timeline</h2>
           <p>
-            Development notes kept separate from the documents above: what is finished, what is
-            moving, and what is only a plan.
+            Notes kept separate from the sources above. Dates mark a review of
+            ongoing work, learning or plans, except for the dated publication
+            update. Learning is not a completed qualification.
           </p>
         </div>
       </div>
@@ -155,7 +205,7 @@ const grouped = groupBy(items, (item) => item.data.category);
       <ul class="state-key" aria-label="Timeline key">
         {
           stateOrder.map((state) => (
-            <li class:list={['state-key__item', `state-key__item--${state}`]}>
+            <li class:list={["state-key__item", `state-key__item--${state}`]}>
               <span class="state-key__dot" aria-hidden="true" />
               {timelineStateLabels[state]}
             </li>
@@ -170,17 +220,26 @@ const grouped = groupBy(items, (item) => item.data.category);
               <h3 class="timeline__year-label mono">{group.year}</h3>
               <ol class="timeline__entries">
                 {group.entries.map((entry) => (
-                  <li class:list={['entry', `entry--${entry.state}`]}>
+                  <li class:list={["entry", `entry--${entry.state}`]}>
                     <div class="entry__marker" aria-hidden="true" />
                     <div class="entry__body">
                       <div class="entry__meta mono">
                         <span>{entry.track}</span>
-                        <span class:list={['entry__state', `entry__state--${entry.state}`]}>
+                        <span
+                          class:list={[
+                            "entry__state",
+                            `entry__state--${entry.state}`,
+                          ]}
+                        >
                           {timelineStateLabels[entry.state]}
                         </span>
                       </div>
                       <h4 class="entry__title">
-                        {entry.href ? <a href={entry.href}>{entry.title}</a> : entry.title}
+                        {entry.href ? (
+                          <a href={entry.href}>{entry.title}</a>
+                        ) : (
+                          entry.title
+                        )}
                       </h4>
                       <p class="entry__summary">{entry.summary}</p>
                     </div>
@@ -212,11 +271,13 @@ const grouped = groupBy(items, (item) => item.data.category);
   }
 
   .filter {
-    display: inline-block;
-    padding: 0.35rem 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.35rem 0.8rem;
     border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    font-size: var(--text-xs);
+    border-radius: 2px;
+    font-size: var(--text-sm);
     color: var(--ink-muted);
     text-decoration: none;
     transition:
@@ -280,9 +341,9 @@ const grouped = groupBy(items, (item) => item.data.category);
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.625rem;
-    color: var(--ink-faint);
-    letter-spacing: 0.04em;
+    font-size: 0.6875rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.015em;
   }
 
   .doc__top time {
@@ -395,7 +456,7 @@ const grouped = groupBy(items, (item) => item.data.category);
     background: currentColor;
   }
 
-  .state-key__item--verified .state-key__dot {
+  .state-key__item--completed .state-key__dot {
     background: var(--good);
   }
 
@@ -450,7 +511,7 @@ const grouped = groupBy(items, (item) => item.data.category);
     border: 1.5px solid var(--ink-faint);
   }
 
-  .entry--verified .entry__marker {
+  .entry--completed .entry__marker {
     border-color: var(--good);
     background: var(--good);
   }
@@ -482,7 +543,7 @@ const grouped = groupBy(items, (item) => item.data.category);
     border-radius: var(--radius-xs);
   }
 
-  .entry__state--verified {
+  .entry__state--completed {
     color: var(--good);
     border-color: color-mix(in srgb, var(--good) 40%, transparent);
   }

@@ -27,14 +27,19 @@ const bookDetails = await Promise.all(
 
 <BaseLayout
   title="Writing"
-  description="Stories, essays and longer work — fiction and non-fiction kept separate from the blog."
+  description={books.length || pieces.length
+    ? "Longer writing by Md. Afnan."
+    : "A quiet place for Afnan’s longer thoughts, with room for finished pieces when they’re ready."}
   path="/writing/"
 >
   <div class="container">
     <PageHeader
+      quiet
       eyebrow="Writing"
-      title="The shelf"
-      lede="Longer work: fiction, essays and notes that are not about software. Books are read chapter by chapter, with a quiet layout built for reading rather than skimming."
+      title="Writing"
+      lede={books.length || pieces.length
+        ? "Longer pieces, kept separate from project notes."
+        : "Longer notes, shared when they’re ready."}
       meta={`${bookDetails.length} ${bookDetails.length === 1 ? "book" : "books"} · ${pieces.length} ${pieces.length === 1 ? "piece" : "pieces"}`}
     />
   </div>
@@ -110,9 +115,18 @@ const bookDetails = await Promise.all(
   }
 
   <!-- ── Standalone pieces ─────────────────────────────────── -->
-  <section class="section section--tight" aria-labelledby="pieces-title">
+  <section
+    class="section section--tight"
+    aria-labelledby={pieces.length ? "pieces-title" : "unpublished-title"}
+  >
     <div class="container">
-      <h2 id="pieces-title" class="rule-label">Shorter pieces</h2>
+      {
+        pieces.length > 0 && (
+          <h2 id="pieces-title" class="rule-label">
+            Shorter pieces
+          </h2>
+        )
+      }
 
       {
         pieces.length > 0 ? (
@@ -123,9 +137,13 @@ const bookDetails = await Promise.all(
                   <div class="piece__meta mono">
                     <span>{formLabels[piece.data.form] ?? "Piece"}</span>
                     <span aria-hidden="true">/</span>
-                    <time datetime={isoDate(piece.data.published)}>
-                      {formatMonth(piece.data.published)}
-                    </time>
+                    {piece.data.published ? (
+                      <time datetime={isoDate(piece.data.published)}>
+                        {formatMonth(piece.data.published)}
+                      </time>
+                    ) : (
+                      <span>Draft · date to add</span>
+                    )}
                     <span aria-hidden="true">/</span>
                     <span>{readingTime(piece.body)} min</span>
                     {isDemo(piece) && <span class="chip">Sample</span>}
@@ -141,20 +159,24 @@ const bookDetails = await Promise.all(
             ))}
           </div>
         ) : (
-          <section class="unpublished" aria-labelledby="unpublished-title">
+          <div class="unpublished unpublished--quiet">
             <>
-              <p class="folio-label">No standalone pieces published yet</p>
-              <h3 id="unpublished-title">Room for longer thoughts.</h3>
+              <h2 id="unpublished-title">Room for longer thoughts.</h2>
               <p>
-                Longer-form writing is a planned direction, not a published body
-                of work. There are no essays, research papers or books to
-                present here yet.
+                Longer thoughts will live here when they’re ready. In the
+                meantime, you can explore Nyayota or send a question by email.
               </p>
+              <a class="text-link" href="https://x.com/mdafnan0356">
+                Keep in touch on X
+              </a>
+              <a class="text-link" href="mailto:mdafnan0356@gmail.com">
+                Send me a thought
+              </a>
               <a class="text-link" href="/about/#current-heading">
                 What I am exploring <Icon name="arrow-right" size={16} />
               </a>
             </>
-          </section>
+          </div>
         )
       }
 
@@ -172,12 +194,8 @@ const bookDetails = await Promise.all(
   <section class="cross-link">
     <div class="container cross-link__inner">
       <div>
-        <p class="eyebrow">Elsewhere</p>
         <h2>Looking for the blog?</h2>
-        <p>
-          Notes on building software live on a separate shelf, so neither gets
-          buried in the other.
-        </p>
+        <p>The blog is kept separate from longer writing.</p>
       </div>
       <a class="btn" href="/blog/">
         Visit the blog
@@ -406,17 +424,17 @@ const bookDetails = await Promise.all(
   /* ── Cross link ─────────────────────────────────────────── */
   .cross-link {
     border-block-start: 1px solid var(--line);
-    background: var(--bg-sunken);
+    background: none;
   }
 
   .cross-link__inner {
     display: grid;
     gap: var(--space-md);
-    padding-block: var(--space-xl);
+    padding-block: 1.5rem;
   }
 
   .cross-link h2 {
-    font-size: var(--text-xl);
+    font-size: 1.5rem;
     margin-block: 0.5rem 0.4rem;
   }
 

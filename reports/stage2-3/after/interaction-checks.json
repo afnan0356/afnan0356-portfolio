@@ -1,0 +1,49 @@
+{
+  "results": [
+    {
+      "name": "Dark default despite light OS",
+      "pass": true
+    },
+    {
+      "name": "Motion starts then completes hero",
+      "pass": true
+    },
+    {
+      "name": "Theme toggles and persists across real navigation",
+      "pass": true
+    },
+    {
+      "name": "Mobile modal: inert background, keyboard wrap, Escape focus return",
+      "pass": true
+    },
+    {
+      "name": "Resize closes mobile modal",
+      "pass": true
+    },
+    {
+      "name": "Repeated Astro init/cleanup restores animation-owned inline styles",
+      "pass": true
+    },
+    {
+      "name": "Dynamic reduced motion reveals everything immediately",
+      "pass": true
+    },
+    {
+      "name": "Reduced motion on load leaves no hidden content or running animation",
+      "pass": true
+    },
+    {
+      "name": "Secondary routes retain content with no overflow",
+      "pass": true
+    },
+    {
+      "name": "No JavaScript: mobile navigation and all homepage sections remain visible",
+      "pass": true
+    },
+    {
+      "name": "Failed motion module: visible content and working menu",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

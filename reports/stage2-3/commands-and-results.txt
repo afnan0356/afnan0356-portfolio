@@ -1,0 +1,433 @@
+
+$ npm run check
+
+> afnan0356-portfolio@0.1.0 check
+> astro check
+
+08:42:51 [content] Syncing content
+08:42:51 [content] Astro config changed
+08:42:51 [content] Clearing content store
+08:42:51 [WARN] [glob-loader] No files found matching "**/*.{md,mdx}" in directory "src/content/blog"
+08:42:51 [WARN] [glob-loader] No files found matching "**/*.{md,mdx}" in directory "src/content/writing"
+08:42:51 [content] Synced content
+08:42:51 [types] Generated 606ms
+08:42:51 [check] Getting diagnostics for Astro files in /home/user/afnan0356-portfolio...
+Result (64 files): 
+- 0 errors
+- 0 warnings
+- 0 hints
+
+
+EXIT CODE: 0
+
+$ node --test scripts/test-theme.mjs scripts/test-stage1-interactions.mjs scripts/test-home-work.mjs
+TAP version 13
+# Subtest: Nyayota remains a single primary feature; other featured work is secondary
+ok 1 - Nyayota remains a single primary feature; other featured work is secondary
+  ---
+  duration_ms: 0.781662
+  type: 'test'
+  ...
+# Subtest: Fallback feature heading can use the actual selected project, never hardcoded Nyayota
+ok 2 - Fallback feature heading can use the actual selected project, never hardcoded Nyayota
+  ---
+  duration_ms: 0.12961
+  type: 'test'
+  ...
+# Subtest: Empty archive returns no primary or secondary features
+ok 3 - Empty archive returns no primary or secondary features
+  ---
+  duration_ms: 0.103836
+  type: 'test'
+  ...
+# Subtest: email copy: clipboard available
+ok 4 - email copy: clipboard available
+  ---
+  duration_ms: 49.255362
+  type: 'test'
+  ...
+# Subtest: email copy: clipboard denied
+ok 5 - email copy: clipboard denied
+  ---
+  duration_ms: 19.469331
+  type: 'test'
+  ...
+# Subtest: mobile menu opens, focuses first link, closes on Escape/link/desktop resize
+ok 6 - mobile menu opens, focuses first link, closes on Escape/link/desktop resize
+  ---
+  duration_ms: 11.469979
+  type: 'test'
+  ...
+# Subtest: reviewed controls declare 44px targets and retain visible focus styling
+ok 7 - reviewed controls declare 44px targets and retain visible focus styling
+  ---
+  duration_ms: 0.655813
+  type: 'test'
+  ...
+# Subtest: new visitor defaults dark without consulting OS color preference
+ok 8 - new visitor defaults dark without consulting OS color preference
+  ---
+  duration_ms: 1.921689
+  type: 'test'
+  ...
+# Subtest: valid saved themes restore before controller initialization
+ok 9 - valid saved themes restore before controller initialization
+  ---
+  duration_ms: 1.155211
+  type: 'test'
+  ...
+# Subtest: invalid stored value falls back to dark
+ok 10 - invalid stored value falls back to dark
+  ---
+  duration_ms: 0.592273
+  type: 'test'
+  ...
+# Subtest: manual choices persist and restore on the next internal document
+ok 11 - manual choices persist and restore on the next internal document
+  ---
+  duration_ms: 3.708258
+  type: 'test'
+  ...
+# Subtest: blocked local storage does not break initialization or manual toggling
+ok 12 - blocked local storage does not break initialization or manual toggling
+  ---
+  duration_ms: 0.5452
+  type: 'test'
+  ...
+# Subtest: reduced motion skips supported view-transition animation
+ok 13 - reduced motion skips supported view-transition animation
+  ---
+  duration_ms: 0.608628
+  type: 'test'
+  ...
+# Subtest: supported view transition retains the circular-reveal path
+ok 14 - supported view transition retains the circular-reveal path
+  ---
+  duration_ms: 0.694752
+  type: 'test'
+  ...
+# Subtest: saved preference restores even if writes later become unavailable
+ok 15 - saved preference restores even if writes later become unavailable
+  ---
+  duration_ms: 0.550343
+  type: 'test'
+  ...
+# Subtest: synchronously failing transition API still applies and saves the theme
+ok 16 - synchronously failing transition API still applies and saves the theme
+  ---
+  duration_ms: 0.803736
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1284.036197
+
+EXIT CODE: 0
+
+$ env -u SITE_URL npm run build
+
+> afnan0356-portfolio@0.1.0 build
+> astro build
+
+08:42:58 [content] Syncing content
+08:42:58 [WARN] [glob-loader] No files found matching "**/*.{md,mdx}" in directory "src/content/blog"
+08:42:58 [WARN] [glob-loader] No files found matching "**/*.{md,mdx}" in directory "src/content/writing"
+08:42:58 [content] Synced content
+08:42:58 [types] Generated 495ms
+08:42:58 [build] output: "static"
+08:42:58 [build] mode: "static"
+08:42:58 [build] directory: /home/user/afnan0356-portfolio/dist/
+08:42:58 [build] Collecting build info...
+08:42:58 [build] ✓ Completed in 521ms.
+08:42:58 [build] Building static entrypoints...
+08:43:00 [WARN] [vite] [esbuild css minify]
+▲ [WARNING] Expected "{" but found "and(" [css-syntax-error]
+
+    <stdin>:305:22:
+      305 │ @media (hover: hover) and(pointer:fine) and(prefers-reduced-motio...
+          │                       ~~~~
+          ╵                       {
+
+
+08:43:00 [vite] ✓ built in 2.13s
+08:43:01 [vite] ✓ built in 456ms
+08:43:01 [build] Rearranging server assets...
+
+ generating static routes 
+The collection "blog" does not exist or is empty. Please check your content config file for errors.
+The collection "blog" does not exist or is empty. Please check your content config file for errors.
+The collection "blog" does not exist or is empty. Please check your content config file for errors.
+The collection "writing" does not exist or is empty. Please check your content config file for errors.
+The collection "writing" does not exist or is empty. Please check your content config file for errors.
+The collection "writing" does not exist or is empty. Please check your content config file for errors.
+08:43:01   ├─ /404.html (+11ms) 
+08:43:01   ├─ /about/index.html (+3ms) 
+08:43:01   ├─ /blog/index.htmlThe collection "blog" does not exist or is empty. Please check your content config file for errors.
+The collection "blog" does not exist or is empty. Please check your content config file for errors.
+ (+5ms) 
+08:43:01   ├─ /contact/index.html (+4ms) 
+08:43:01   ├─ /cv/index.html (+8ms) 
+08:43:01   ├─ /projects/nyayota/index.html (+8ms) 
+08:43:01   ├─ /projects/index.html (+4ms) 
+08:43:01   ├─ /robots.txt (+2ms) 
+08:43:01   ├─ /vault/category/evidence/index.html (+4ms) 
+08:43:01   ├─ /vault/index.html (+4ms) 
+08:43:01   ├─ /writing/index.htmlThe collection "writing" does not exist or is empty. Please check your content config file for errors.
+The collection "writing" does not exist or is empty. Please check your content config file for errors.
+ (+5ms) 
+08:43:01   ├─ /index.html (+4ms) 
+08:43:01 ✓ Completed in 98ms.
+
+ generating optimized images 
+08:43:01   ▶ /_astro/nyayota-homepage.CpAgrO2Y_2e7306.webp (reused cache entry) (+1ms) (1/6)
+08:43:01   ▶ /_astro/nyayota-homepage.CpAgrO2Y_rdg91.webp (reused cache entry) (+0ms) (2/6)
+08:43:01   ▶ /_astro/nyayota-homepage.CpAgrO2Y_ZYexXw.webp (reused cache entry) (+1ms) (3/6)
+08:43:01   ▶ /_astro/nyayota-homepage.CpAgrO2Y_29jqsJ.webp (reused cache entry) (+0ms) (4/6)
+08:43:01   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1qhl5q.webp (reused cache entry) (+0ms) (5/6)
+08:43:01   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1JN6OP.webp (reused cache entry) (+0ms) (6/6)
+08:43:01 ✓ Completed in 4ms.
+
+08:43:01 [build] ✓ Completed in 2.74s.
+08:43:01 [build] 11 page(s) built in 3.27s
+08:43:01 [build] Complete!
+
+EXIT CODE: 0
+
+$ npm run verify:content
+
+> afnan0356-portfolio@0.1.0 verify:content
+> node scripts/verify-content.mjs
+
+
+verifying 11 pages (45 files in dist/)
+
+  pages .................. 11
+  internal links checked .. 148
+  content files ........... 3
+  drafts found (skipped) .. 0
+
+✓ all checks passed
+
+
+EXIT CODE: 0
+
+$ node scripts/verify-stage1.mjs
+Stage 1 assertions passed: 11 pages; eight channels; clean public HTML; domain-optional metadata.
+
+EXIT CODE: 0
+
+$ REVIEW_REPORT_PATH=reports/stage2-3 node scripts/verify-stage21.mjs
+Stage 2.1 assertions passed: 11 HTML pages; 62 internal fragment links; AI-assisted scope and CV profile present.
+
+EXIT CODE: 0
+
+$ REVIEW_REPORT_PATH=reports/stage2-3 node scripts/verify-stage22.mjs
+Stage 2.2 authenticity checks passed: identity, homepage IA, case-study scope, source labels and timeline.
+
+EXIT CODE: 0
+
+$ node scripts/verify-stage23.mjs
+PASS Stage 2.3 preservation and design structure: 89 protected files unchanged.
+
+EXIT CODE: 0
+
+$ SITE_URL=https://afnan0356.vercel.app npm run build
+
+> afnan0356-portfolio@0.1.0 build
+> astro build
+
+08:43:03 [content] Syncing content
+08:43:03 [content] Astro config changed
+08:43:03 [content] Clearing content store
+08:43:03 [WARN] [glob-loader] No files found matching "**/*.{md,mdx}" in directory "src/content/blog"
+08:43:03 [WARN] [glob-loader] No files found matching "**/*.{md,mdx}" in directory "src/content/writing"
+08:43:03 [content] Synced content
+08:43:03 [types] Generated 554ms
+08:43:03 [build] output: "static"
+08:43:03 [build] mode: "static"
+08:43:03 [build] directory: /home/user/afnan0356-portfolio/dist/
+08:43:03 [build] Collecting build info...
+08:43:03 [build] ✓ Completed in 580ms.
+08:43:03 [build] Building static entrypoints...
+08:43:05 [WARN] [vite] [esbuild css minify]
+▲ [WARNING] Expected "{" but found "and(" [css-syntax-error]
+
+    <stdin>:305:22:
+      305 │ @media (hover: hover) and(pointer:fine) and(prefers-reduced-motio...
+          │                       ~~~~
+          ╵                       {
+
+
+08:43:05 [vite] ✓ built in 2.19s
+08:43:06 [vite] ✓ built in 433ms
+08:43:06 [build] Rearranging server assets...
+
+ generating static routes 
+The collection "blog" does not exist or is empty. Please check your content config file for errors.
+The collection "blog" does not exist or is empty. Please check your content config file for errors.
+The collection "blog" does not exist or is empty. Please check your content config file for errors.
+The collection "writing" does not exist or is empty. Please check your content config file for errors.
+The collection "writing" does not exist or is empty. Please check your content config file for errors.
+The collection "writing" does not exist or is empty. Please check your content config file for errors.
+08:43:06   ├─ /404.html (+11ms) 
+08:43:06   ├─ /about/index.html (+4ms) 
+08:43:06   ├─ /blog/index.htmlThe collection "blog" does not exist or is empty. Please check your content config file for errors.
+The collection "blog" does not exist or is empty. Please check your content config file for errors.
+ (+4ms) 
+08:43:06   ├─ /contact/index.html (+5ms) 
+08:43:06   ├─ /cv/index.html (+7ms) 
+08:43:06   ├─ /projects/nyayota/index.html (+10ms) 
+08:43:06   ├─ /projects/index.html (+5ms) 
+08:43:06   ├─ /robots.txt (+2ms) 
+08:43:06   ├─ /rss.xmlThe collection "blog" does not exist or is empty. Please check your content config file for errors.
+ (+29ms) 
+08:43:06   ├─ /vault/category/evidence/index.html (+4ms) 
+08:43:06   ├─ /vault/index.html (+5ms) 
+08:43:06   ├─ /writing/index.htmlThe collection "writing" does not exist or is empty. Please check your content config file for errors.
+The collection "writing" does not exist or is empty. Please check your content config file for errors.
+ (+4ms) 
+08:43:06   ├─ /index.html (+6ms) 
+08:43:06 ✓ Completed in 136ms.
+
+ generating optimized images 
+08:43:06   ▶ /_astro/nyayota-homepage.CpAgrO2Y_2e7306.webp (reused cache entry) (+1ms) (1/6)
+08:43:06   ▶ /_astro/nyayota-homepage.CpAgrO2Y_rdg91.webp (reused cache entry) (+0ms) (2/6)
+08:43:06   ▶ /_astro/nyayota-homepage.CpAgrO2Y_ZYexXw.webp (reused cache entry) (+0ms) (3/6)
+08:43:06   ▶ /_astro/nyayota-homepage.CpAgrO2Y_29jqsJ.webp (reused cache entry) (+0ms) (4/6)
+08:43:06   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1qhl5q.webp (reused cache entry) (+0ms) (5/6)
+08:43:06   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1JN6OP.webp (reused cache entry) (+0ms) (6/6)
+08:43:06 ✓ Completed in 3ms.
+
+08:43:06 [build] ✓ Completed in 2.82s.
+08:43:06 [@astrojs/sitemap] `sitemap-index.xml` created at `dist`
+08:43:06 [build] 11 page(s) built in 3.41s
+08:43:06 [build] Complete!
+
+EXIT CODE: 0
+
+$ npm run verify:content
+
+> afnan0356-portfolio@0.1.0 verify:content
+> node scripts/verify-content.mjs
+
+
+verifying 11 pages (48 files in dist/)
+
+  pages .................. 11
+  internal links checked .. 159
+  content files ........... 3
+  drafts found (skipped) .. 0
+
+✓ all checks passed
+
+
+EXIT CODE: 0
+
+$ node scripts/verify-stage1.mjs
+Stage 1 assertions passed: 11 pages; eight channels; clean public HTML; domain-configured metadata.
+
+EXIT CODE: 0
+
+$ REVIEW_REPORT_PATH=reports/stage2-3 node scripts/verify-stage21.mjs
+Stage 2.1 assertions passed: 11 HTML pages; 62 internal fragment links; AI-assisted scope and CV profile present.
+
+EXIT CODE: 0
+
+$ REVIEW_REPORT_PATH=reports/stage2-3 node scripts/verify-stage22.mjs
+Stage 2.2 authenticity checks passed: identity, homepage IA, case-study scope, source labels and timeline.
+
+EXIT CODE: 0
+
+$ node scripts/verify-stage23.mjs
+PASS Stage 2.3 preservation and design structure: 89 protected files unchanged.
+
+EXIT CODE: 0
+
+$ git diff --check
+
+EXIT CODE: 0
+
+$ git diff --exit-code HEAD -- package.json package-lock.json
+
+EXIT CODE: 0
+
+$ npm ls --depth=0
+afnan0356-portfolio@0.1.0 /home/user/afnan0356-portfolio
+├── @astrojs/check@0.9.12
+├── @astrojs/mdx@6.0.3
+├── @astrojs/rss@4.0.19
+├── @astrojs/sitemap@3.7.4
+├── @fontsource-variable/instrument-sans@5.3.0
+├── @fontsource-variable/jetbrains-mono@5.3.0
+├── @fontsource-variable/newsreader@5.3.0
+├── astro@6.4.8
+├── gsap@3.14.2
+├── sharp@0.35.5
+└── typescript@5.9.3
+
+
+EXIT CODE: 0
+
+$ node scripts/browser-stage23.mjs
+Full output: reports/stage2-3/browser-regressions.log
+EXIT CODE: 0
+
+$ node scripts/browser-stage23-polish.mjs
+Full output: reports/stage2-3/browser-polish.log
+EXIT CODE: 0
+
+$ node scripts/browser-stage23-review.mjs
+Full output: reports/stage2-3/browser-captures.log
+EXIT CODE: 0
+
+$ npm audit --json
+Full output: reports/stage2-3/dependency-audit.json
+EXIT CODE: 1
+No dependency fixes applied.
+
+$ PYTHONPATH=/tmp/portfolio-pdf python3 - <<'PYCODE'
+import pymupdf, json
+rows=[]
+for name in ['cv-print','cv-print-dark','cv-print-light']:
+    doc=pymupdf.open(f'reports/stage2-3/after/{name}.pdf')
+    assert len(doc)==1
+    pix=doc[0].get_pixmap(matrix=pymupdf.Matrix(1.25,1.25))
+    assert pix.pixel(10,10)==(255,255,255)
+    assert 'Last updated November 2026' in doc[0].get_text()
+    if name!='cv-print': pix.save(f'reports/stage2-3/after/{name}.png')
+    rows.append({'file':f'after/{name}.pdf','pages':len(doc),'marginRGB':pix.pixel(10,10),'updateLineOnFirstPage':True})
+json.dump({'renderer':'External PyMuPDF '+pymupdf.__version__,'checks':rows},open('reports/stage2-3/print-checks.json','w'),indent=2)
+print('PASS: all three current CV PDF exports one page, white margins, update line on page one.')
+PYCODE
+PASS: all three current CV PDF exports one page, white margins, update line on page one.
+
+EXIT CODE: 0
+
+$ node scripts/verify-stage23.mjs
+PASS Stage 2.3 preservation and design structure: 89 protected files unchanged.
+
+EXIT CODE: 0
+
+$ git diff --check
+
+EXIT CODE: 0
+
+$ git diff --exit-code HEAD -- package.json package-lock.json
+
+EXIT CODE: 0
+
+$ git branch --show-current
+arena/1ace11cb-afnan0356-portfolio
+
+EXIT CODE: 0
+
+$ git rev-parse HEAD
+c82e2f3f64d43b1fc97e8a195bacf2befa4e60ff
+
+EXIT CODE: 0

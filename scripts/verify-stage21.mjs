@@ -64,7 +64,7 @@ const result = {
   passed: true,
 };
 await writeFile(
-  "reports/stage2-1/fragment-checks.json",
+  `${process.env.REVIEW_REPORT_PATH || "reports/stage2-1"}/fragment-checks.json`,
   JSON.stringify(result, null, 2),
 );
 console.log(

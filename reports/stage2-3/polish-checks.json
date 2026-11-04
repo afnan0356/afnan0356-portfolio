@@ -1,0 +1,110 @@
+[
+  {
+    "theme": "dark",
+    "width": 320,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "native disclosure",
+    "inspectorPan": "keyboard pan checked",
+    "errors": []
+  },
+  {
+    "theme": "dark",
+    "width": 360,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "native disclosure",
+    "inspectorPan": "keyboard pan checked",
+    "errors": []
+  },
+  {
+    "theme": "dark",
+    "width": 390,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "native disclosure",
+    "inspectorPan": "keyboard pan checked",
+    "errors": []
+  },
+  {
+    "theme": "dark",
+    "width": 768,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "native disclosure",
+    "inspectorPan": "fit",
+    "errors": []
+  },
+  {
+    "theme": "dark",
+    "width": 1024,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "open rail",
+    "inspectorPan": "fit",
+    "errors": []
+  },
+  {
+    "theme": "dark",
+    "width": 1440,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "open rail",
+    "inspectorPan": "fit",
+    "errors": []
+  },
+  {
+    "theme": "light",
+    "width": 320,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "native disclosure",
+    "inspectorPan": "keyboard pan checked",
+    "errors": []
+  },
+  {
+    "theme": "light",
+    "width": 360,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "native disclosure",
+    "inspectorPan": "keyboard pan checked",
+    "errors": []
+  },
+  {
+    "theme": "light",
+    "width": 390,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "native disclosure",
+    "inspectorPan": "keyboard pan checked",
+    "errors": []
+  },
+  {
+    "theme": "light",
+    "width": 768,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "native disclosure",
+    "inspectorPan": "fit",
+    "errors": []
+  },
+  {
+    "theme": "light",
+    "width": 1024,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "open rail",
+    "inspectorPan": "fit",
+    "errors": []
+  },
+  {
+    "theme": "light",
+    "width": 1440,
+    "passed": true,
+    "contactDestinations": 8,
+    "contents": "open rail",
+    "inspectorPan": "fit",
+    "errors": []
+  }
+]

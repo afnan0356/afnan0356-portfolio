@@ -1,8 +1,8 @@
-import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
-import { getDemoPaths } from './scripts/demo-paths.mjs';
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
+import { getDemoPaths } from "./scripts/demo-paths.mjs";
 
 /**
  * The production URL is intentionally *not* hardcoded.
@@ -22,16 +22,19 @@ const SITE = process.env.SITE_URL ?? undefined;
 // It is marked `demo: true` in its frontmatter, and its URLs are discovered
 // automatically so example pages never enter the sitemap.
 const DEMO_PATHS = await getDemoPaths(
-  fileURLToPath(new URL('./src/content', import.meta.url)),
+  fileURLToPath(new URL("./src/content", import.meta.url)),
 );
 
 /** RSS only exists once a real site URL is configured. */
 const rssRoutes = SITE
   ? {
-      name: 'conditional-rss',
+      name: "conditional-rss",
       hooks: {
-        'astro:config:setup': ({ injectRoute }) => {
-          injectRoute({ pattern: '/rss.xml', entrypoint: './src/routes/rss.xml.ts' });
+        "astro:config:setup": ({ injectRoute }) => {
+          injectRoute({
+            pattern: "/rss.xml",
+            entrypoint: "./src/routes/rss.xml.ts",
+          });
         },
       },
     }
@@ -44,25 +47,27 @@ const rssRoutes = SITE
  * while building; add your own with DEV_ALLOWED_HOSTS="a.example,b.example".
  */
 const DEV_ALLOWED_HOSTS = [
-  '.e2b.app',
-  ...(process.env.DEV_ALLOWED_HOSTS?.split(',')
+  ".e2b.app",
+  ...(process.env.DEV_ALLOWED_HOSTS?.split(",")
     .map((host) => host.trim())
     .filter(Boolean) ?? []),
 ];
 
 export default defineConfig({
   site: SITE,
-  trailingSlash: 'always',
-  build: { format: 'directory' },
+  trailingSlash: "always",
+  build: { format: "directory" },
   prefetch: {
     prefetchAll: false,
-    defaultStrategy: 'hover',
+    defaultStrategy: "hover",
   },
   integrations: [
     mdx(),
     SITE
       ? sitemap({
-          filter: (page) => !DEMO_PATHS.includes(new URL(page).pathname),
+          filter: (page) =>
+            !DEMO_PATHS.includes(new URL(page).pathname) &&
+            new URL(page).pathname !== "/search/",
         })
       : null,
     rssRoutes,
@@ -74,7 +79,7 @@ export default defineConfig({
   },
   markdown: {
     shikiConfig: {
-      themes: { light: 'github-light', dark: 'github-dark-dimmed' },
+      themes: { light: "github-light", dark: "github-dark-dimmed" },
       defaultColor: false,
       wrap: true,
     },

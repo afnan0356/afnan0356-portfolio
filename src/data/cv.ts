@@ -32,7 +32,7 @@ export const cv = {
    * sentences about what you do and what you want to be known for.
    */
   summary:
-    'I work on web projects that make information easier to find, read and use. My selected work includes Nyayota, an open-source legal research platform for Bangladesh, and this static Astro portfolio. My workflow includes AI-assisted development, with a focus on information structure, readable interfaces and static delivery.',
+    'I am a student interested in technology, AI, research and web development. Nyayota is my main ongoing project, alongside this Astro portfolio. My workflow includes AI-assisted development; I am still developing my technical abilities and exploring how information can be organised and presented.',
   /** Marks the summary above as placeholder copy (hides it when hints are off). */
   summaryIsPlaceholder: false,
 
@@ -53,7 +53,7 @@ export const cv = {
       organisation: 'Personal project · AI-assisted development · MIT licensed',
       period: 'Repository created Aug 2026',
       description:
-        'An open-source, statically deployed legal research platform covering Bangladeshi statutes and selected international instruments.',
+        'An ongoing open-source Next.js project for exploring Bangladeshi statutes and selected international instruments. A public site is linked; the conversational assistant is documented as suspended.',
       highlights: [
         'Built with Next.js, React, TypeScript and Tailwind CSS.',
         'Statutory catalogue with section-level navigation, bilingual terminology and cross-references.',

@@ -1,7 +1,7 @@
-import { defineCollection } from 'astro:content';
-import { glob } from 'astro/loaders';
-import { z } from 'astro/zod';
-import { site } from './config/site';
+import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
+import { site } from "./config/site";
 
 /**
  * CONTENT COLLECTIONS
@@ -37,7 +37,7 @@ const link = z.url().optional();
    `caseStudy` object turns it into a long-form case-study page; without
    it the page renders in a compact, single-column layout instead. */
 const projects = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/projects" }),
   schema: ({ image }) =>
     z.object({
       ...flags,
@@ -47,7 +47,8 @@ const projects = defineCollection({
       /** A longer lead paragraph for the project page. */
       lede: z.string().optional(),
       year: z.string(),
-      status: z.enum(['live', 'in-progress', 'completed', 'archived']),
+      status: z.enum(["live", "in-progress", "completed", "archived"]),
+      statusNote: z.string().optional(),
       /** Free-form labels shown as chips (e.g. "open source", "client work"). */
       tags: z.array(z.string()).default([]),
       stack: z.array(z.string()).default([]),
@@ -70,10 +71,20 @@ const projects = defineCollection({
           goal: z.string().optional(),
           role: z.string().optional(),
           approach: z.string().optional(),
-          decisions: z.array(z.object({ title: z.string(), detail: z.string() })).optional(),
+          informationArchitecture: z.string().optional(),
+          technicalArchitecture: z.string().optional(),
+          workflow: z
+            .array(z.object({ title: z.string(), detail: z.string() }))
+            .optional(),
+          future: z.array(z.string()).optional(),
+          decisions: z
+            .array(z.object({ title: z.string(), detail: z.string() }))
+            .optional(),
           features: z.array(z.string()).optional(),
           limitations: z.array(z.string()).optional(),
-          challenges: z.array(z.object({ challenge: z.string(), response: z.string() })).optional(),
+          challenges: z
+            .array(z.object({ challenge: z.string(), response: z.string() }))
+            .optional(),
           results: z.array(z.string()).optional(),
           lessons: z.array(z.string()).optional(),
           /** Verified metrics only. Leave empty if you cannot measure them. */
@@ -89,20 +100,30 @@ const projects = defineCollection({
 /* ── BLOG ──────────────────────────────────────────────────────
    Short-to-medium articles. Reading time is calculated from the body. */
 const blog = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
   schema: ({ image }) =>
-    z.object({
-      ...flags,
-      title: z.string(),
-      description: z.string(),
-      published: isoDate,
-      updated: isoDate.optional(),
-      tags: z.array(z.string()).default([]),
-      cover: z.optional(image()),
-      coverAlt: z.string().optional(),
-      /** Pin to the top of the blog index. */
-      featured: z.boolean().default(false),
-    }),
+    z
+      .object({
+        ...flags,
+        title: z.string(),
+        description: z.string(),
+        published: isoDate.optional(),
+        updated: isoDate.optional(),
+        tags: z.array(z.string()).default([]),
+        cover: z.optional(image()),
+        coverAlt: z.string().optional(),
+        /** Pin to the top of the blog index. */
+        featured: z.boolean().default(false),
+      })
+      .superRefine((data, ctx) => {
+        if (!data.draft && !data.published)
+          ctx.addIssue({
+            code: "custom",
+            path: ["published"],
+            message:
+              "Published posts need a real publication date. Drafts may omit it.",
+          });
+      }),
 });
 
 /* ── WRITING ───────────────────────────────────────────────────
@@ -113,17 +134,25 @@ const blog = defineCollection({
    Chapters are filtered out of the Writing index and only appear on the
    book's own page, in the right order. */
 const writing = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/writing' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/writing" }),
   schema: ({ image }) =>
     z
       .object({
         ...flags,
-        kind: z.enum(['piece', 'book']).default('piece'),
+        kind: z.enum(["piece", "book"]).default("piece"),
         title: z.string(),
         description: z.string(),
         /** Shown on the card and in metadata. */
-        form: z.enum(['story', 'essay', 'novel', 'novella', 'poetry', 'note', 'research']),
-        published: isoDate,
+        form: z.enum([
+          "story",
+          "essay",
+          "novel",
+          "novella",
+          "poetry",
+          "note",
+          "research",
+        ]),
+        published: isoDate.optional(),
         updated: isoDate.optional(),
         tags: z.array(z.string()).default([]),
         cover: z.optional(image()),
@@ -137,11 +166,24 @@ const writing = defineCollection({
         chapter: z.number().optional(),
       })
       .superRefine((data, ctx) => {
-        if (data.kind === 'book' && !data.book) {
-          ctx.addIssue({ code: 'custom', message: 'Book entries need a `book` slug.' });
+        if (!data.draft && !data.published)
+          ctx.addIssue({
+            code: "custom",
+            path: ["published"],
+            message:
+              "Published writing needs a real publication date. Drafts may omit it.",
+          });
+        if (data.kind === "book" && !data.book) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Book entries need a `book` slug.",
+          });
         }
         if (data.chapter !== undefined && !data.book) {
-          ctx.addIssue({ code: 'custom', message: 'Chapter files need a `book` slug.' });
+          ctx.addIssue({
+            code: "custom",
+            message: "Chapter files need a `book` slug.",
+          });
         }
       }),
 });
@@ -150,21 +192,32 @@ const writing = defineCollection({
    The document library. Files live in /public/vault and are linked by
    path. Never add a document here that should not be public. */
 const vault = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/vault' }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/vault" }),
   schema: z.object({
     ...flags,
     title: z.string(),
     description: z.string(),
-    category: z.enum(['cv', 'certificate', 'publication', 'research', 'evidence', 'other']),
+    category: z.enum([
+      "cv",
+      "certificate",
+      "publication",
+      "research",
+      "evidence",
+      "other",
+    ]),
     date: isoDate,
     /** Where the file is. Must live under /vault/ (i.e. in public/vault/). */
     file: z
       .string()
-      .regex(/^\/vault\//, { error: 'Files must live in public/vault/ — use a /vault/… path.' })
+      .regex(/^\/vault\//, {
+        error: "Files must live in public/vault/ — use a /vault/… path.",
+      })
       .optional(),
     /** External evidence link, e.g. a repository or live site. */
     link: link,
-    verification: z.enum(['verified', 'self-reported', 'in-progress']).default('self-reported'),
+    verification: z
+      .enum(["verified", "self-reported", "in-progress"])
+      .default("self-reported"),
     issuer: z.string().optional(),
     tags: z.array(z.string()).default([]),
   }),

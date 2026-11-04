@@ -3,17 +3,25 @@
  * Book overview — the title page: description, contents, and a way in.
  * Generated from the entry with `kind: book` and matching `book` slug.
  */
-import { render } from 'astro:content';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Prose from '../../../components/Prose.astro';
-import DemoBanner from '../../../components/DemoBanner.astro';
-import Icon from '../../../components/Icon.astro';
-import { getBooks, getChapters, isDemo, formLabels, chapterSlug } from '../../../lib/content';
-import { formatMonth, isoDate, readingTime } from '../../../lib/text';
+import { render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Prose from "../../../components/Prose.astro";
+import DemoBanner from "../../../components/DemoBanner.astro";
+import Icon from "../../../components/Icon.astro";
+import {
+  getBooks,
+  getChapters,
+  isDemo,
+  formLabels,
+  chapterSlug,
+} from "../../../lib/content";
+import { formatMonth, isoDate, readingTime } from "../../../lib/text";
 
 export async function getStaticPaths() {
   const books = await getBooks();
-  const chapters = await Promise.all(books.map((book) => getChapters(book.data.book ?? book.id)));
+  const chapters = await Promise.all(
+    books.map((book) => getChapters(book.data.book ?? book.id)),
+  );
 
   return books.map((book, i) => ({
     params: { book: book.data.book ?? book.id },
@@ -30,7 +38,10 @@ const { book, chapters } = Astro.props;
 const { Content } = await render(book);
 const slug = book.data.book ?? book.id;
 const first = chapters[0];
-const totalMinutes = chapters.reduce((total, chapter) => total + readingTime(chapter.body), 0);
+const totalMinutes = chapters.reduce(
+  (total, chapter) => total + readingTime(chapter.body),
+  0,
+);
 ---
 
 <BaseLayout
@@ -51,30 +62,46 @@ const totalMinutes = chapters.reduce((total, chapter) => total + readingTime(cha
     {isDemo(book) && <DemoBanner kind="book" />}
 
     <header class="book-head">
-      <p class="book-head__form mono">{formLabels[book.data.form] ?? 'Book'}</p>
+      <p class="book-head__form mono">{formLabels[book.data.form] ?? "Book"}</p>
       <h1 class="book-head__title">{book.data.title}</h1>
       <p class="book-head__desc">{book.data.description}</p>
       <p class="book-head__meta mono">
-        <span>{chapters.length} {chapters.length === 1 ? 'chapter' : 'chapters'}</span>
+        <span
+          >{chapters.length}
+          {chapters.length === 1 ? "chapter" : "chapters"}</span
+        >
         <span aria-hidden="true">·</span>
         <span>~{Math.max(1, Math.round(totalMinutes))} min</span>
         <span aria-hidden="true">·</span>
-        <time datetime={isoDate(book.data.published)}>{formatMonth(book.data.published)}</time>
+        {
+          book.data.published ? (
+            <time datetime={isoDate(book.data.published)}>
+              {formatMonth(book.data.published)}
+            </time>
+          ) : (
+            <span>Draft · date to add</span>
+          )
+        }
       </p>
       {
         first && (
-          <a class="btn btn--primary book-head__start" href={`/writing/book/${slug}/chapter/${chapterSlug(first)}/`}>
+          <a
+            class="btn btn--primary book-head__start"
+            href={`/writing/book/${slug}/chapter/${chapterSlug(first)}/`}
+          >
             Start reading
             <Icon name="arrow-right" size={15} />
           </a>
         )
       }
-      {chapters.length === 0 && (
-        <p class="empty-state">
-          <strong>No chapters published yet</strong>
-          Published chapters will appear here.
-        </p>
-      )}
+      {
+        chapters.length === 0 && (
+          <p class="empty-state">
+            <strong>No chapters published yet</strong>
+            Published chapters will appear here.
+          </p>
+        )
+      }
     </header>
 
     <hr class="rule" />
@@ -94,13 +121,17 @@ const totalMinutes = chapters.reduce((total, chapter) => total + readingTime(cha
           <ol>
             {chapters.map((chapter) => (
               <li>
-                <a href={`/writing/book/${slug}/chapter/${chapterSlug(chapter)}/`}>
+                <a
+                  href={`/writing/book/${slug}/chapter/${chapterSlug(chapter)}/`}
+                >
                   <span class="contents__num mono">
-                    {String(chapter.data.chapter).padStart(2, '0')}
+                    {String(chapter.data.chapter).padStart(2, "0")}
                   </span>
                   <span class="contents__name">{chapter.data.title}</span>
-                  <span class="contents__dots" aria-hidden="true"></span>
-                  <span class="contents__time mono">{readingTime(chapter.body)} min</span>
+                  <span class="contents__dots" aria-hidden="true" />
+                  <span class="contents__time mono">
+                    {readingTime(chapter.body)} min
+                  </span>
                 </a>
               </li>
             ))}
