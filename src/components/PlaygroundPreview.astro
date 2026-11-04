@@ -1,0 +1,57 @@
+---
+import { experiments } from "../data/playground";
+import ExperimentArt from "./ExperimentArt.astro";
+import Icon from "./Icon.astro";
+---
+
+<section class="playground-preview container" aria-labelledby="preview-title">
+  <div class="preview-heading" data-motion="reveal">
+    <div>
+      <p class="folio-label">
+        <span class="section-index">02</span> The playground
+      </p>
+      <h2 id="preview-title">
+        Small ideas.
+        <br />
+        <em>Room to play.</em>
+      </h2>
+    </div>
+    <div>
+      <p>
+        Interface studies, sample writing and little tools. A space to see what
+        things could look like.
+      </p>
+      <a class="text-link" href="/playground/">
+        Explore the demos <Icon name="arrow-up-right" size={16} />
+      </a>
+    </div>
+  </div>
+  <p class="sample-disclosure">
+    <span class="sample-pill">Demo collection</span> Fictional concepts, not
+    completed projects or personal claims.
+  </p>
+  <div class="experiment-grid">
+    {experiments.map((item) => (
+      <article class="experiment-card" data-motion="reveal">
+        <a class="experiment-link" href={`/playground/#${item.id}`}>
+          <ExperimentArt variant={item.style} />
+          <div class="experiment-caption">
+            <div>
+              <p class="folio-label">{item.category} · Sample</p>
+              <h3>{item.name}</h3>
+            </div>
+            <span class="experiment-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </div>
+        </a>
+        <p class="experiment-description">{item.description}</p>
+      </article>
+    ))}
+  </div>
+  <a class="sample-reading-link" href="/playground/#reading">
+    <span class="folio-label">Sample essay</span>
+    <strong>A quieter corner of the internet</strong>
+    <span aria-hidden="true">↗</span>
+  </a>
+</section>

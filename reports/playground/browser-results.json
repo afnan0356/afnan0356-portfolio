@@ -1,0 +1,237 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "theme": "dark",
+      "width": 320,
+      "route": "/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "route": "/playground/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "route": "/blog/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "route": "/writing/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/playground/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/blog/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/writing/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "route": "/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "route": "/playground/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "route": "/blog/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "route": "/writing/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/playground/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/blog/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/writing/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 320,
+      "route": "/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 320,
+      "route": "/playground/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 320,
+      "route": "/blog/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 320,
+      "route": "/writing/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/playground/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/blog/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/writing/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "route": "/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "route": "/playground/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "route": "/blog/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "route": "/writing/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/playground/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/blog/",
+      "overflow": false,
+      "axeViolations": 0
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/writing/",
+      "overflow": false,
+      "axeViolations": 0
+    }
+  ],
+  "interactions": [
+    "local word count",
+    "clear and focus",
+    "native disclosure",
+    "CSS reading sizes",
+    "Astro navigation rebinding",
+    "no-JS disclosures and reading controls"
+  ]
+}

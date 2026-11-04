@@ -1,0 +1,64 @@
+---
+interface Props {
+  variant: "paper" | "garden";
+}
+const { variant } = Astro.props;
+---
+
+<div
+  class:list={["experiment-art", `experiment-art--${variant}`]}
+  aria-hidden="true"
+>
+  <div class="art-window">
+    <span></span>
+    <span></span>
+    <span></span>
+    <i>{variant === "paper" ? "a room for reading" : "a garden of ideas"}</i>
+  </div>
+  {variant === "paper" ? (
+    <div class="paper-art">
+      <span class="art-eyebrow">THE READING ROOM / 001</span>
+      <strong>
+        Less noise.
+        <br />
+        <em>More meaning.</em>
+      </strong>
+      <div class="art-lines">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="art-bookmark">
+        Keep a little
+        <br />
+        of what you read.<b>↗</b>
+      </div>
+      <span class="art-page">a quiet place to begin — 01</span>
+    </div>
+  ) : (
+    <div class="garden-art">
+      <div class="garden-node garden-node--one">
+        <span>01 / THOUGHT</span>
+        <strong>Stay curious.</strong>
+        <small>Follow the interesting questions.</small>
+      </div>
+      <div class="garden-node garden-node--two">
+        <span>02 / CONNECTION</span>
+        <strong>
+          Everything
+          <br />
+          starts somewhere.
+        </strong>
+      </div>
+      <div class="garden-node garden-node--three">
+        <span>03 / NOTE</span>
+        <strong>
+          Leave room
+          <br />
+          for a new idea.
+        </strong>
+        <b>✳</b>
+      </div>
+    </div>
+  )}
+</div>

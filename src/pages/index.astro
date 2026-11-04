@@ -6,6 +6,7 @@ import { site } from "../config/site";
 import { getProjects, statusLabels } from "../lib/content";
 import { selectHomeWork } from "../lib/home-work";
 import "../styles/home.css";
+import PlaygroundPreview from "../components/PlaygroundPreview.astro";
 import Now from "../components/Now.astro";
 import NyayotaDemo from "../components/NyayotaDemo.astro";
 import { now } from "../data/now";
@@ -60,6 +61,7 @@ if (now.photo && !now.photoAlt.trim())
           <a class="text-link" href="/about/"
             >A little about me <Icon name="arrow-up-right" size={15} /></a
           >
+          <a class="text-link" href="/playground/">Visit the playground · demos <Icon name="arrow-up-right" size={15} /></a>
         </div>
       </div>
       <aside class="hero-current" data-enter aria-label="Current work">
@@ -77,9 +79,8 @@ if (now.photo && !now.photoAlt.trim())
               />
             ) : (
               <div class="portrait-placeholder">
-                Real photo
-                <br />
-                placeholder
+                <span class="portrait-monogram" aria-hidden="true">a.</span>
+                <span>Photo placeholder</span>
               </div>
             )
           }
@@ -229,6 +230,7 @@ if (now.photo && !now.photoAlt.trim())
   }
 
   <Now />
+  <PlaygroundPreview />
 
   <section class="home-contact container" aria-labelledby="contact-title">
     <div class="contact-overline" data-motion="reveal">

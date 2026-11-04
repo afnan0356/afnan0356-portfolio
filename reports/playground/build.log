@@ -1,0 +1,59 @@
+
+> afnan0356-portfolio@0.1.0 build
+> astro build
+
+18:54:11 [content] Syncing content
+18:54:11 [content] Astro config changed
+18:54:11 [content] Clearing content store
+18:54:11 [content] Synced content
+18:54:11 [types] Generated 586ms
+18:54:11 [build] output: "static"
+18:54:11 [build] mode: "static"
+18:54:11 [build] directory: /home/user/afnan0356-portfolio/dist/
+18:54:11 [build] Collecting build info...
+18:54:11 [build] ✓ Completed in 615ms.
+18:54:11 [build] Building static entrypoints...
+18:54:13 [vite] ✓ built in 2.21s
+18:54:13 [vite] ✓ built in 126ms
+18:54:13 [build] Rearranging server assets...
+
+ generating static routes 
+18:54:13   ├─ /404.html (+13ms) 
+18:54:13   ├─ /about/index.html (+9ms) 
+18:54:13   ├─ /blog/index.html (+5ms) 
+18:54:13   ├─ /contact/index.html (+10ms) 
+18:54:13   ├─ /cv/index.html (+4ms) 
+18:54:13   ├─ /playground/index.html (+4ms) 
+18:54:13   ├─ /projects/nyayota/index.html (+9ms) 
+18:54:13   ├─ /projects/index.html (+5ms) 
+18:54:13   ├─ /robots.txt (+2ms) 
+18:54:13   ├─ /rss.xml (+21ms) 
+18:54:13   ├─ /search/index.html (+4ms) 
+18:54:13   ├─ /search.json (+2ms) 
+18:54:13   ├─ /vault/category/evidence/index.html (+6ms) 
+18:54:13   ├─ /vault/index.html (+4ms) 
+18:54:13   ├─ /writing/index.html (+3ms) 
+18:54:13   ├─ /bn/about/index.html (+2ms) 
+18:54:13   ├─ /bn/projects/index.html (+2ms) 
+18:54:13   ├─ /bn/blog/index.html (+2ms) 
+18:54:13   ├─ /bn/writing/index.html (+2ms) 
+18:54:13   ├─ /bn/vault/index.html (+1ms) 
+18:54:13   ├─ /bn/cv/index.html (+1ms) 
+18:54:13   ├─ /bn/contact/index.html (+3ms) 
+18:54:13   ├─ /bn/index.html (+2ms) 
+18:54:13   ├─ /index.html (+4ms) 
+18:54:13 ✓ Completed in 156ms.
+
+ generating optimized images 
+18:54:13   ▶ /_astro/nyayota-homepage.CpAgrO2Y_2e7306.webp (reused cache entry) (+1ms) (1/6)
+18:54:13   ▶ /_astro/nyayota-homepage.CpAgrO2Y_rdg91.webp (reused cache entry) (+0ms) (2/6)
+18:54:13   ▶ /_astro/nyayota-homepage.CpAgrO2Y_ZYexXw.webp (reused cache entry) (+0ms) (3/6)
+18:54:13   ▶ /_astro/nyayota-homepage.CpAgrO2Y_29jqsJ.webp (reused cache entry) (+0ms) (4/6)
+18:54:13   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1qhl5q.webp (reused cache entry) (+0ms) (5/6)
+18:54:13   ▶ /_astro/nyayota-homepage.CpAgrO2Y_1JN6OP.webp (reused cache entry) (+0ms) (6/6)
+18:54:13 ✓ Completed in 3ms.
+
+18:54:13 [build] ✓ Completed in 2.56s.
+18:54:13 [@astrojs/sitemap] `sitemap-index.xml` created at `dist`
+18:54:13 [build] 21 page(s) built in 3.19s
+18:54:13 [build] Complete!

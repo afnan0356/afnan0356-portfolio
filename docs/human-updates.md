@@ -1,3 +1,5 @@
+> **Demo/UI follow-up:** The owner-requested playground is now available at `/playground/`, with labelled fictional concepts, sample writing and a live local word counter. See [the latest visual-pass report](../reports/playground/REPORT.md). Earlier Lighthouse results below describe the preceding snapshot, not a newly measured score.
+
 # Human-touch update — owner checklist
 
 This update is local and uncommitted. Nothing was pushed or deployed. Existing Stage 2.2/2.3 work was continued, not reset.

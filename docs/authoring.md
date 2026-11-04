@@ -28,7 +28,7 @@ Drafts (`draft: true`) are omitted in production. Files under `public/` are alwa
 
 Use `AuthorNote.astro` for optional inline editing guidance. It checks `import.meta.env.DEV` server-side and emits no slot content in a production build. Do not put instructions in visitor-facing empty states, rely on CSS hiding, or introduce another per-page hint flag. Longer guidance belongs here or in the README. Development mode is not access control; do not put secrets in author notes.
 
-The legacy `demo` schema flag, reusable DemoBanner and sitemap discovery helper remain compatible with the content templates. No demo entries ship now. Do not reintroduce samples as real work.
+The legacy `demo` schema flag, reusable DemoBanner and sitemap discovery helper remain compatible with the content templates. No collection demo entries ship now; the explicitly labelled playground samples live separately in `src/data/playground.ts`. Do not present samples as real work.
 
 ## Local verification
 
@@ -77,3 +77,16 @@ node --experimental-strip-types --test scripts/test-theme.mjs scripts/test-stage
 Also build with `SITE_URL=https://afnan0356.vercel.app` and re-run content verification. The controller unit tests were updated to test their new shared module and CSS-first behavior; earlier stage-specific GSAP browser/preservation scripts describe historical acceptance criteria and are not the current animation test suite.
 
 External QA harnesses (not application dependencies) are documented in `reports/human-pass/REPORT.md`: `browser-human.mjs`, `browser-human-accessibility.mjs`, `browser-human-cold-fonts.mjs`, and `lighthouse-human.mjs`. The main browser suite needs a static production build on 4321 and a DEV preview on 4322 for draft-only checks.
+
+## Playground samples (owner-requested demo pass)
+
+The public `/playground/` route is deliberately a **demo gallery**, not a collection of shipped projects. It is noindex and excluded from the sitemap, search index and RSS. `src/data/playground.ts` holds two fictional interface studies and a sample essay, with no publication dates, testimonials or invented personal experience. The homepage preview and Blog/Writing invitations label them as demos. Real project/CV data is unchanged.
+
+- Edit the concepts and sample text in `src/data/playground.ts`.
+- `ExperimentArt.astro` builds the illustrated mockups entirely in HTML/CSS; they are not screenshots of real apps.
+- `/playground/#reading` has native radio/CSS reading-size controls; project explanations use native disclosures. Both work without JavaScript.
+- `/playground/#tool` is a real local word counter. The custom element cleans up listeners on disconnection and reconnects after Astro navigation. Counts use whitespace-delimited words and Unicode code points (not linguistic segmentation or grapheme clusters). No content is stored, logged or transmitted by the tool. The no-JS state is explicit.
+- All new motion is inside `prefers-reduced-motion: no-preference`; the shared reduced-motion shutdown remains active.
+- Optional browser QA: `node scripts/browser-playground.mjs`, with a production build served at port 4323 (or `TEST_URL`) and external tools configured as described in the previous human-pass report. This is not an application dependency.
+
+No new personal-information placeholders were introduced. The real portrait, monthly reading/date, recording and personal draft prompts from the owner checklist still need owner input.

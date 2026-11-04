@@ -67,7 +67,7 @@ export default defineConfig({
       ? sitemap({
           filter: (page) =>
             !DEMO_PATHS.includes(new URL(page).pathname) &&
-            new URL(page).pathname !== "/search/",
+            !["/search/", "/playground/"].includes(new URL(page).pathname),
         })
       : null,
     rssRoutes,

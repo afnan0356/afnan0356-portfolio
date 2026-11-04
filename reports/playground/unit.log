@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: Nyayota remains a single primary feature; other featured work is secondary
+ok 1 - Nyayota remains a single primary feature; other featured work is secondary
+  ---
+  duration_ms: 1.006972
+  type: 'test'
+  ...
+# Subtest: Fallback feature heading can use the actual selected project, never hardcoded Nyayota
+ok 2 - Fallback feature heading can use the actual selected project, never hardcoded Nyayota
+  ---
+  duration_ms: 0.203277
+  type: 'test'
+  ...
+# Subtest: Empty archive returns no primary or secondary features
+ok 3 - Empty archive returns no primary or secondary features
+  ---
+  duration_ms: 0.131234
+  type: 'test'
+  ...
+# Subtest: search requires every word and prioritizes title matches
+ok 4 - search requires every word and prioritizes title matches
+  ---
+  duration_ms: 0.844691
+  type: 'test'
+  ...
+# Subtest: search handles Bengali and literal HTML without interpreting either as markup
+ok 5 - search handles Bengali and literal HTML without interpreting either as markup
+  ---
+  duration_ms: 0.189619
+  type: 'test'
+  ...
+# Subtest: no animation dependency and static production index excludes draft prompts
+ok 6 - no animation dependency and static production index excludes draft prompts
+  ---
+  duration_ms: 0.44933
+  type: 'test'
+  ...
+# Subtest: email copy: clipboard available
+ok 7 - email copy: clipboard available
+  ---
+  duration_ms: 4.862582
+  type: 'test'
+  ...
+# Subtest: email copy: clipboard denied
+ok 8 - email copy: clipboard denied
+  ---
+  duration_ms: 4.389344
+  type: 'test'
+  ...
+# Subtest: email copy: clipboard absent
+ok 9 - email copy: clipboard absent
+  ---
+  duration_ms: 1.095812
+  type: 'test'
+  ...
+# Subtest: mobile menu opens, traps focus, closes on Escape/link/desktop resize
+ok 10 - mobile menu opens, traps focus, closes on Escape/link/desktop resize
+  ---
+  duration_ms: 0.968007
+  type: 'test'
+  ...
+# Subtest: reviewed controls declare 44px targets and retain visible focus styling
+ok 11 - reviewed controls declare 44px targets and retain visible focus styling
+  ---
+  duration_ms: 0.711893
+  type: 'test'
+  ...
+# Subtest: new visitor defaults dark without consulting OS color preference
+ok 12 - new visitor defaults dark without consulting OS color preference
+  ---
+  duration_ms: 2.798382
+  type: 'test'
+  ...
+# Subtest: valid saved themes restore before controller initialization
+ok 13 - valid saved themes restore before controller initialization
+  ---
+  duration_ms: 1.181718
+  type: 'test'
+  ...
+# Subtest: invalid stored value falls back to dark
+ok 14 - invalid stored value falls back to dark
+  ---
+  duration_ms: 0.629499
+  type: 'test'
+  ...
+# Subtest: manual choices persist and restore on the next internal document
+ok 15 - manual choices persist and restore on the next internal document
+  ---
+  duration_ms: 1.680138
+  type: 'test'
+  ...
+# Subtest: blocked local storage does not break initialization or manual toggling
+ok 16 - blocked local storage does not break initialization or manual toggling
+  ---
+  duration_ms: 0.796385
+  type: 'test'
+  ...
+# Subtest: reduced motion skips supported view-transition animation
+ok 17 - reduced motion skips supported view-transition animation
+  ---
+  duration_ms: 0.783655
+  type: 'test'
+  ...
+# Subtest: theme feedback is CSS-first even when the transition API exists
+ok 18 - theme feedback is CSS-first even when the transition API exists
+  ---
+  duration_ms: 0.703246
+  type: 'test'
+  ...
+# Subtest: saved preference restores even if writes later become unavailable
+ok 19 - saved preference restores even if writes later become unavailable
+  ---
+  duration_ms: 0.725688
+  type: 'test'
+  ...
+# Subtest: synchronously failing transition API still applies and saves the theme
+ok 20 - synchronously failing transition API still applies and saves the theme
+  ---
+  duration_ms: 0.742924
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1371.536544
